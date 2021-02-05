@@ -2,7 +2,7 @@
 title: 'Docker 간단 정리'
 date: 2020-03-13 10:54:00
 category: 'Docker'
-draft: true
+draft: false
 ---
 ## 1. 도커(*Docker*)란?
 컨테이너 기반의 가상화 플랫폼이다.
