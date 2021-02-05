@@ -7,6 +7,7 @@
 <url> <loc>https://blog.frec.kr/networking/rpi-wired-router/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://blog.frec.kr/golang/goquery/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://blog.frec.kr/golang/troubleshooting-0/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://blog.frec.kr/docker/docker/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://blog.frec.kr/cpp/vs2017-win32/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://blog.frec.kr/python/call-by-value-or-reference/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://blog.frec.kr/cpp/modern-cpp-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
