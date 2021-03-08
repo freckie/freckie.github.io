@@ -1,4 +1,367 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie's Lab.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 23 Feb 2021 04:31:47 GMT</lastBuildDate><item><title><![CDATA[서버리스 아키텍처(Serverless Architecture)와 콜드 스타트(Cold Start)]]></title><description><![CDATA[…]]></description><link>https://blog.frec.kr/cloud/serverless_and_cold_start/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/serverless_and_cold_start/</guid><pubDate>Thu, 18 Feb 2021 15:18:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;들어가기-전에&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90&quot; aria-label=&quot;들어가기 전에 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;들어가기 전에&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie's Lab.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 08 Mar 2021 10:45:58 GMT</lastBuildDate><item><title><![CDATA[VirtualBox로 가상머신 만들어 Kubernetes 클러스터 구성하기]]></title><description><![CDATA[환경 호스트 서버 Ubuntu 18.04 VirtualBox VirtualBox 가상머신 * 4ea vCPU 2ea, RAM 2GiB Ubuntu Server 20.04 VirtualBox 설치 VirtualBox로 가상머신 생성 VirtualBox…]]></description><link>https://blog.frec.kr/cloud/virtualbox_k8s/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/virtualbox_k8s/</guid><pubDate>Mon, 08 Mar 2021 17:13:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;환경&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%ED%99%98%EA%B2%BD&quot; aria-label=&quot;환경 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;환경&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;호스트 서버&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ubuntu 18.04&lt;/li&gt;
+&lt;li&gt;VirtualBox&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;VirtualBox 가상머신 * 4ea&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;vCPU 2ea, RAM 2GiB&lt;/li&gt;
+&lt;li&gt;Ubuntu Server 20.04&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;virtualbox-설치&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#virtualbox-%EC%84%A4%EC%B9%98&quot; aria-label=&quot;virtualbox 설치 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;VirtualBox 설치&lt;/h2&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; -y virtualbox
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; -y virtualbox-ext-pack&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;virtualbox로-가상머신-생성&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#virtualbox%EB%A1%9C-%EA%B0%80%EC%83%81%EB%A8%B8%EC%8B%A0-%EC%83%9D%EC%84%B1&quot; aria-label=&quot;virtualbox로 가상머신 생성 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;VirtualBox로 가상머신 생성&lt;/h2&gt;
+&lt;p&gt;VirtualBox를 켜고, 먼저 각 노드들이 연결될 가상 네트워크를 하나 생성할 것이다.&lt;/p&gt;
+&lt;p&gt;VirtualBox 화면에서 상단 메뉴의 File &gt; Preferences를 눌러 설정화면으로 들어가서 Networks 탭으로 들어간다. 우측의 네트워크 추가 버튼을 눌러 다음과 같이 설정한다. (10.0.0.0/8 대역은 사설 IP 대역이다.) &lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 747px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 70%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAACqklEQVQ4y32TaU8TQRzG93upEI9CavQVMfFA1E/hCxMjUaBSBTniK7+JMRI5Ss/tXbbntrvd++oBxSg8/mcqBvF48cszs7PzzP+YEW6Gr2IqdAXToQlMT00gdOMybt8K4fGju3g4ewdPSGfvz2COxg/ujZURnp7k/4eJ61OTmAtfwtOZaxCWFl4gGnmF6Osxy5GXWIku4f3GKt6tLGNz7S3WSNdXo+P5+go21t4gsjgPtjdCLCzMY3PxOT4sPoPg2gZqlSLKhSwqBRHVcp7GIkr5DHquidHAx1HPxVHfw4gYeBbnkL6dwdYHgYt+34dg6yokMknsbSOfjqMgpiCm9pHPJKHIdXTkJrqKTNqgeRM9nzYGHvpMz0OGvqVDYFHoSguZRAzFbBJZMk3EdlDKZVCXKiiViqhVqygX8ziolDEcDnA8OvqT4xEC14Lg2zr6lEIxm0IunSBNU5RJpOJ7kBtVNOo1KEqHDAvQNQ2npyc4+f4NX8mAmZzXwLUhOIbK02MRslRT+7vY2/6MNBm2mzUeJatpnkrRqB3weV0qw3dMStVBz7N/4VM/BNdUUc6LvCENqQSplP/VHLXd5JvFZIzDDt7Z+kSZxGHrCjxLg2d2Sc/QxikPA4cz8KmDvs3HrAyH1DVmGt/9wslSSVjz5LrE19le3zEQ/MSjucBPuYBrjk9zqRxWt40umbLGmTQ2VJmrpXU4bH62xg7gEV7Es5hqcCwDtm3BITRNhdIhc7UDlZrExqrShmkasEydq2v9xzAgQ83QIes2DK+HeCaLj1vbiIs57MRTRBJbuzFIrQ5MfwjN8SmAfxpqXF1Sy+jCJix6AB51kW0q0hWSDqj75RI67RaanSyydN1M+uevhudNg9++j2tcKeb4fa2W6W6qbbRkEQW6x+zV/QCAwceweViPywAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 1&quot;
+        title=&quot;20210308 1&quot;
+        src=&quot;/static/7d45450d79ab328ec4eeffe5e2b488df/d54e4/20210308-1.png&quot;
+        srcset=&quot;/static/7d45450d79ab328ec4eeffe5e2b488df/5a46d/20210308-1.png 300w,
+/static/7d45450d79ab328ec4eeffe5e2b488df/0a47e/20210308-1.png 600w,
+/static/7d45450d79ab328ec4eeffe5e2b488df/d54e4/20210308-1.png 747w&quot;
+        sizes=&quot;(max-width: 747px) 100vw, 747px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;이렇게 가상네트워크를 만들고 가상머신 생성을 시작한다. 이미지는 &lt;a href=&quot;https://ubuntu.com/download/server&quot;&gt;우분투 20.04 서버 이미지&lt;/a&gt;를 사용했다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 58.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAACl0lEQVQoz42Sy08TURTGb2KiC1cu/BPc6NbowmhcqYkCAgvLFIEaQR660EQjGggLNRg3bCQxGIPviBpfKPRJW6BQoKUPpEyfUGin7TClFRDczOeZaXFhQsLil+/MOTffOffcYbV1HGp1WrlGp0UNxdqqSlRzlaQVaGyoQ0vTJTQ36nCtpR4Nl2vAacoL9SJKrNGUy3Wa87jOla6xm2eOy21nT6Dt1FE84Ergczkx43Xjp9eFgN9DTGNWwTeNGU8hp9S2UHKR4Czi0aC8EA6AlTGGG4cPyrerdejQVoH3TsE1OQ735Bi8rgl4qIFrwgGfW4kn4J+mutOh1pV4cT6M5XRCXs9LWF0RZfa1uxv3e75B0/oU7d2faBoPrGY9Ru1DsFmMGLGaMWTSwzlqx4jNAsewFfYhI8ZGbGrsdNhhMxvUZqKwCNZ+twsf9ePo7TOg53k/TTIF40A/mRpgMQ6S2SCGrSbV1GIYgJXUpP9BfCdjEzW2wG4xkPEwpHQS7EJFE45wHXjZ+xnVjZ3weT20Qxe8dB0f4acd+WmnXvekmlP2q+QCP32Iz0cgZYQC6SUiDvaovASVzZ24dacL3JV7CPFzWIiGEAvzmI8EVeKxMC1+DtHQHBLxGCmPfFbEak5CLptBfkXCciqGTJIHa93L4Oh6CNubD+itv4psPEIHROSWBSL1j7xUICcKyNN3NpNANk1kkmq8IqaINFj9HoYnJw/hLVeGx6ePIRnlkZPSNP7W4e0QyEBQNatqIc/O7WbQ7mMo3cVw8cB+JKJBuk6m2FXYnqLB/3k28PoZzO9fwfTuBexf+iAm48XOyR1MmKLdJZT/UFX1lf9srGHz9yo2STfWf+3QLFl4WdoZHwohwPP0mAGklhbwF7nACup1iIphAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 2&quot;
+        title=&quot;20210308 2&quot;
+        src=&quot;/static/8671a5700e30b625dde2600082d541ff/c1b63/20210308-2.png&quot;
+        srcset=&quot;/static/8671a5700e30b625dde2600082d541ff/5a46d/20210308-2.png 300w,
+/static/8671a5700e30b625dde2600082d541ff/0a47e/20210308-2.png 600w,
+/static/8671a5700e30b625dde2600082d541ff/c1b63/20210308-2.png 1200w,
+/static/8671a5700e30b625dde2600082d541ff/6c2de/20210308-2.png 1334w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 55.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAACbUlEQVQoz3WSSUxTURSGb+LGxJUrF8a1O7eaGHTjkAgLh4WSoNFg2tgItGFqsahA1ehCmmhCXKgbjGJMqhAXaoIk0HlChta2r7wWaOG1b2gLHaPv974nKCouvvz3npz7n5NzDzFc13xv0V5Bq+6q3HKtGe16Hbo6WtHd2QazqQMDfWbcvmnCnf5eWPrNMPd0wNilh6nbAFPXL2RFH5javhGrpgma/Xvk9gP7oN27EzbrPczNz2A24MGXgBdelx1BrwvTfg88zikk4hFUi3mU8iLKa9JW5IKUBbGcqpMvEoLeE0dlg7YHtuFXCM0G4Hc7EPA44KOGPrddPSuo5j43LeZRc4JeJwJep6zkpJKMTKz1h9HXdAn3/TJ048BoQMS0cxwuxxQckxNUJ+H3ONVOFfVREzeNbXbPRMNYYhmkFlkUciLIk8bTePYxiM4QcOF1DWNBCSlmBuHQHJIJFtVKGbVqGZVSEZXyFrbca7UKJJ5D4msQZOj8GYyM2fFYBC5Pyng7xyMR8iM8PwsmFkGSjSO1vKhWz0vCP+TELIrFdYSDdky8ew7yqKEOt042YDSSx9MM4EgK4BJRrCwn6UwWsMjGkF5iIWVXIGYo2W3IpJETOBRoAfLw7DHodxEYDx6CsVGLz+8/oFQQVIO8sErhkONX1UfSNqjxDVMxkwIx1h/BuR0EzbsJjtPfHrbcQLVaBL+ytJH0+9HfbBcnn968wMvBu7ANDWKE7uD01DhtnYfApf4w3ESJ8xSB+2mmKM+lVVUgRbqUlfI6yqU1VQs5HuJ/zBQDJhJCJDxPFzxG55ZFPM4gHI2CXYjRecfxA2vN2HOsYMSuAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 3&quot;
+        title=&quot;20210308 3&quot;
+        src=&quot;/static/7ac8c6bc11869915592ab03f3b0b7b8c/c1b63/20210308-3.png&quot;
+        srcset=&quot;/static/7ac8c6bc11869915592ab03f3b0b7b8c/5a46d/20210308-3.png 300w,
+/static/7ac8c6bc11869915592ab03f3b0b7b8c/0a47e/20210308-3.png 600w,
+/static/7ac8c6bc11869915592ab03f3b0b7b8c/c1b63/20210308-3.png 1200w,
+/static/7ac8c6bc11869915592ab03f3b0b7b8c/c1bea/20210308-3.png 1388w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;쿠버네티스 노드는 메모리가 2GB 이상으로 설정되어야 한다고 한다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 55.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAACLklEQVQoz42SS0hUURjHD7QJWrVqEa3btS0Ia9MD0kWPRQgWiDGSlA/UHFOTYlRqkUKBtKhVElJiJEEUuElp8NE4XmfuncfVoXk4M/d6x8ZXUt1f515bWGS1+PF9cM75n///nE80XPN8v15dSW3NFbv2ahWN9TW0NNXR0lxH+80mfHc6JO10+27R09VJR1sz3hv1tLY0bMd26r3Wum+iz1OB5+A+u/HQAar372aot4tQSEEJTBGY9JNMxFkvWhQtg5WCwWrBZHV5SWL+jl2U68J3psS+JAQdp47bDZ5WXg4Moiofmfgw5grGVMUlKlGVAHFtjlBwmmhYQZubkQSJhIL2fDSMlc/Yoq/0KLcrLnN32qZmFEYCBWJBvxQcZ9I/TiQ8Kw/PEo+EpOAMwekJsqkEBWMRS+LUpXzGxenFo/KzPHkboDkM5c+/MjRpMBUPE07rJLNR5lPqLySSKrlEhLwkJV2noipxPU46nWQ+piH6L55jcGSchxZUvrcZVgwyeggjt3XjTizl0ujStS6jmtm061BGRjwoK6HzdBmvIp95nAd/qsCakXbjWD83/QlHdNnMumy/SNw/f4L6PQLv4SN4y6sZff1G/pghHWT+KrgTwlt6jAu7BFV7BSflbz/1tbG5uY65mPxr5J0Q714M8Ky3m+H+Xgb7epgZG6UoZ815o3+5cVKYcp+Z2+odxNpKgS8bq2ysr7i1KIfU+h8xiR7V0DQVLRZjQY/xaUHnBxa03IJBZiGJAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 4&quot;
+        title=&quot;20210308 4&quot;
+        src=&quot;/static/8f2db79db833922ce729afa1d5df5d18/c1b63/20210308-4.png&quot;
+        srcset=&quot;/static/8f2db79db833922ce729afa1d5df5d18/5a46d/20210308-4.png 300w,
+/static/8f2db79db833922ce729afa1d5df5d18/0a47e/20210308-4.png 600w,
+/static/8f2db79db833922ce729afa1d5df5d18/c1b63/20210308-4.png 1200w,
+/static/8f2db79db833922ce729afa1d5df5d18/c1bea/20210308-4.png 1388w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;하드디스크 설정 등을 거쳐 가상머신이 생성되면 실행해본다. 가상머신이 시작될 디스크를 선택하라는 메세지가 나오는데, 다운받았던 우분투 서버 이미지 파일(&lt;code class=&quot;language-text&quot;&gt;.iso&lt;/code&gt;)을 선택해서 부팅한다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 58.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAACl0lEQVQoz42Sy08TURTGb2KiC1cu/BPc6NbowmhcqYkCAgvLFIEaQR660EQjGggLNRg3bCQxGIPviBpfKPRJW6BQoKUPpEyfUGin7TClFRDczOeZaXFhQsLil+/MOTffOffcYbV1HGp1WrlGp0UNxdqqSlRzlaQVaGyoQ0vTJTQ36nCtpR4Nl2vAacoL9SJKrNGUy3Wa87jOla6xm2eOy21nT6Dt1FE84Ergczkx43Xjp9eFgN9DTGNWwTeNGU8hp9S2UHKR4Czi0aC8EA6AlTGGG4cPyrerdejQVoH3TsE1OQ735Bi8rgl4qIFrwgGfW4kn4J+mutOh1pV4cT6M5XRCXs9LWF0RZfa1uxv3e75B0/oU7d2faBoPrGY9Ru1DsFmMGLGaMWTSwzlqx4jNAsewFfYhI8ZGbGrsdNhhMxvUZqKwCNZ+twsf9ePo7TOg53k/TTIF40A/mRpgMQ6S2SCGrSbV1GIYgJXUpP9BfCdjEzW2wG4xkPEwpHQS7EJFE45wHXjZ+xnVjZ3weT20Qxe8dB0f4acd+WmnXvekmlP2q+QCP32Iz0cgZYQC6SUiDvaovASVzZ24dacL3JV7CPFzWIiGEAvzmI8EVeKxMC1+DtHQHBLxGCmPfFbEak5CLptBfkXCciqGTJIHa93L4Oh6CNubD+itv4psPEIHROSWBSL1j7xUICcKyNN3NpNANk1kkmq8IqaINFj9HoYnJw/hLVeGx6ePIRnlkZPSNP7W4e0QyEBQNatqIc/O7WbQ7mMo3cVw8cB+JKJBuk6m2FXYnqLB/3k28PoZzO9fwfTuBexf+iAm48XOyR1MmKLdJZT/UFX1lf9srGHz9yo2STfWf+3QLFl4WdoZHwohwPP0mAGklhbwF7nACup1iIphAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 5&quot;
+        title=&quot;20210308 5&quot;
+        src=&quot;/static/8671a5700e30b625dde2600082d541ff/c1b63/20210308-5.png&quot;
+        srcset=&quot;/static/8671a5700e30b625dde2600082d541ff/5a46d/20210308-5.png 300w,
+/static/8671a5700e30b625dde2600082d541ff/0a47e/20210308-5.png 600w,
+/static/8671a5700e30b625dde2600082d541ff/c1b63/20210308-5.png 1200w,
+/static/8671a5700e30b625dde2600082d541ff/6c2de/20210308-5.png 1334w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;가상머신이 부팅되었고 우분투 환경 세팅이 시작된다. 가상머신이 할당받은 IP를 우선은 기록해둔다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 800px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABr+ngCAAAACXBIWXMAAB2HAAAdhwGP5fFlAAABHElEQVQoz92S0W6CMBSGez2h7WkLhbYgZoo6CS7ZzZi7Qm+c2bsO3APupMwlJi7R7G5f/hz+lH6hSSFd67ptdnxf9m9lf1h0+9mw4uNLi3Efret3+XGXfx7Kfj/tWouLZBrDPFWbx6qpFpv1CtOsytd6ifOlmuN8fphhwdSFXU/c0/y+nmRozbQgAQeMyfLEOp2aODWgIgoCpy+SCYzCBIyPGA8owzJYBAA456WnKIrxeJwkiVJKax1FEZY4jofyM6WU4CHDwxhjrXXOoRN7hEeeEOecyfg19HHiCzwIXMe3zE/ALRD4A/9OxvuQAn8WELfLPGTsjsKIA+O3yAI4ZaZ2bjuBRisX/eYTeokgCHSepKUNDQMJNLy4i34Bny1WDavyRx4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 6&quot;
+        title=&quot;20210308 6&quot;
+        src=&quot;/static/9246357bb14207fa5d1a9df190d4e6a3/5a190/20210308-6.png&quot;
+        srcset=&quot;/static/9246357bb14207fa5d1a9df190d4e6a3/5a46d/20210308-6.png 300w,
+/static/9246357bb14207fa5d1a9df190d4e6a3/0a47e/20210308-6.png 600w,
+/static/9246357bb14207fa5d1a9df190d4e6a3/5a190/20210308-6.png 800w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;프로필 세팅을 거치고, OpenSSH 서버를 설치할 것인지를 묻는데 체크해줬다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 800px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABr+ngCAAAACXBIWXMAAB2HAAAdhwGP5fFlAAABLElEQVQoz82SXU+DMBSGuTVjLad8FVraOTeYGYbIHfFKN0ycvxbYD/SsZMiUJe7OJyftS9OnhxSs5k02u6Q9ZN0hxdDsZLdXWMd3fax1W6uuVu3+u46fWfuxal4FitYqgCzyXoptlW+qPKu2abnSuYpwLJbJk47L9QLD84PCKhaiTO8fE47WOmSW7QAWATZ3AMsLuc8jrEgmYSzcILSpMyOnwmAyPQVjWQDAGJNSxnHcj0IIDJxzDPjoXRIEAZyx+gmXQoPv+73Wm9IgRmitsdmFjLgGPBtGOIZxppT+7DyAp/bvNuCfGRpelYcOY/rF3zsn5L/zH2W8HpcB3hG7VWaA/xG9IzDDj+PcIqNJqChUsl86VeBJH674FpnCtu1Q8SgV85iCC2Q+uYt8AdWJVcFQC8dSAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 7&quot;
+        title=&quot;20210308 7&quot;
+        src=&quot;/static/5238325ed32ac2232c1e30746997c5ab/5a190/20210308-7.png&quot;
+        srcset=&quot;/static/5238325ed32ac2232c1e30746997c5ab/5a46d/20210308-7.png 300w,
+/static/5238325ed32ac2232c1e30746997c5ab/0a47e/20210308-7.png 600w,
+/static/5238325ed32ac2232c1e30746997c5ab/5a190/20210308-7.png 800w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;우분투가 추가적으로 서버용 툴들 설치할지 확인하고 있다. 어차피 도커를 설치해야 하니 여기서 docker를 선택했었는데, 여기서 설치하면 &lt;code class=&quot;language-text&quot;&gt;snap&lt;/code&gt;으로 설치되기 때문에 &lt;code class=&quot;language-text&quot;&gt;apt&lt;/code&gt;로 설치한 도커와 설치 위치가 달라져 나중에 쿠버네티스 설치가 조금 힘들었다. 그냥 취소하고 자신의 방법대로 &lt;strong&gt;우분투 설치 완료 후 설치&lt;/strong&gt;하자.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 800px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABr+ngCAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAB9UlEQVQoz22R65KaQBCFfQBBQWBghos3QAUveIM1lVRiNj+2Ng8b3TxgPplNbWntKWqqmT6nT3dP53IOLz+j62t+ecmur9kt+JXcLp/j63NEqv1CHfw5h39/528v6eWHgtOZelYeON8P1ddqeVoXXzblUzlrivQ4m5zK/NumqOfTpzJvFulpeTu36ahIJKpU2J1u3zIsOxlPxmnmeMK0bNv1hFSuLz2phAqFPlXoBVLIcOAJy3FR8XUsC7o9mUyWy+VwODRNMwiCw+FQVdV6vc6ybDwe53metiCAGUUREoQ38WAwIAF1Op1CTZJkt9tRa7VacS4WC8oppbhHJqUMwxDJnXi/3+vCYLvdbjYb/Nct6AiZLuF5nu/7juP0+/33thHjQ23DMCDhXBQFnpxlWc5mM/RCCDScmOP3Liai4aZp6Lnb7dIVnnpO7lFyn/4HBndinFkM4yEjQW96ZnZG8zgTUItGuNQrfFwYJKrqro7HIzI0enjWQXbYQrZ4bBsqheM4JseSiBmYRdA2bvP5HHNoBI/OJJgZHu8slcSqrutqW9VNjZ4q1KIiBP0iH2KioAXL5Jfz9qQyikQY+5GSSjc8Go2cFq7rfohBv4WOLdsyu4ZfyuCcmLVjK6dn9DSse3TMz2B0DREHQaYM2bMcyzSMT2n/AJfMek/hPgQCAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 8&quot;
+        title=&quot;20210308 8&quot;
+        src=&quot;/static/bfabe1198869e8ede4b4da458b5841ff/5a190/20210308-8.png&quot;
+        srcset=&quot;/static/bfabe1198869e8ede4b4da458b5841ff/5a46d/20210308-8.png 300w,
+/static/bfabe1198869e8ede4b4da458b5841ff/0a47e/20210308-8.png 600w,
+/static/bfabe1198869e8ede4b4da458b5841ff/5a190/20210308-8.png 800w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;다음 화면이 나오면 우분투 서버 20.04 설치 완료! 가상머신을 재부팅한다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 800px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABr+ngCAAAACXBIWXMAAB2HAAAdhwGP5fFlAAABn0lEQVQoz42S2Y6bQBBFec+Y3SzGYBw3ewBvwOQxJJGyfaxNfjBnIGMNUpBy1Wp1V9epW00j3fvtvfeHn8nwPRp+pfev4e2Td+u3t94bx8vpS85nf/gSMH7/iIdv4t57BKXI1mPHqEXYZFFXJG0quky0mfhYxIznIm6S9895dInC3HcYRbAp9z4IoPSkarJuuN42PIj8Q1nWx/J4Kqo6r2pn65u2y6lqmLJmPCkq452s6GuLIKCkaZoxyvO8qqrO5/PpdLpcLlEUKYqi67o6SnsVa8uyyGf9F2bPIs9zYEqUZdm2bZZlxN+SizDRoiiapsGZKmma7nY727a1uRadgbEFpmcwZdT/tl3X9fV65cLwh8PBH7Ver6fURXjy4apglDiO6rqOdRAErus+zP8BU36z2ZAKjDn9x3GcJAn9c0rdRWfeY7/fYwvMjCfdrlar6c5TwiKMMOFteCcujDNb0zRph1mdi3KO48zaxhOSmbcVQtAtVw3DkNeihDUX8Znz5DNZTRF+OMjpa9G28UaPW0jyqNWrHlsYSL4iSfKC/gCpE2sT7fm1NgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 9&quot;
+        title=&quot;20210308 9&quot;
+        src=&quot;/static/b4c74b12a60109145f31f9ade05409ec/5a190/20210308-9.png&quot;
+        srcset=&quot;/static/b4c74b12a60109145f31f9ade05409ec/5a46d/20210308-9.png 300w,
+/static/b4c74b12a60109145f31f9ade05409ec/0a47e/20210308-9.png 600w,
+/static/b4c74b12a60109145f31f9ade05409ec/5a190/20210308-9.png 800w&quot;
+        sizes=&quot;(max-width: 800px) 100vw, 800px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;지금 생성된 가상머신을 마스터 노드로 사용하고, 워커 노드로 사용할 가상머신을 3개 더 만들자. 지금 했던 과정을 3번 더 반복하고, 각 노드의 이름만 &lt;code class=&quot;language-text&quot;&gt;node1&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;node2&lt;/code&gt;등으로 설정해주었다.&lt;/p&gt;
+&lt;p&gt;(나중에 보니 VM 화면에서 가상머신을 우클릭하고 복제를 누르면 된다. 물론 복제 후 노드 이름은 변경해줘야 한다.)&lt;/p&gt;
+&lt;h2 id=&quot;가상머신-포트포워딩&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EA%B0%80%EC%83%81%EB%A8%B8%EC%8B%A0-%ED%8F%AC%ED%8A%B8%ED%8F%AC%EC%9B%8C%EB%94%A9&quot; aria-label=&quot;가상머신 포트포워딩 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;가상머신 포트포워딩&lt;/h2&gt;
+&lt;p&gt;호스트에서 가상머신들에 SSH 접속을 하기 위해서 포트포워딩 설정을 해줘야 한다.&lt;/p&gt;
+&lt;p&gt;VirtualBox 화면에서 상단 메뉴의 Files &gt; Preference를 클릭, Network 탭으로 가서 이전에 만들어두었던 NAT Network를 수정한다.&lt;/p&gt;
+&lt;p&gt;Port Forwarding 버튼을 누르고 다음 화면처럼 세팅한다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 71.00000000000001%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVQ4y61Ta1PbMBDUb6aBGdyktJl2gH7qT+sjhARDHDvxmxgrluW3tieTZBi+AdHMju7Op92VZLHR57Puy/AMw/OBGhoDjIxT6Hl4/gnfLgxcfr/A1Y+v+Hk1xvXlGGOqUe9zzw4jY6AMWvdrdKJYlm6Q8Sflr20kUYBSpAfI7RPKLEWR7WKh4+e5yvmhT38vBVcy42BJHKg0ifFgzpVjWyjyLWzrHvPZFDx5pPoMy8U9kscI039/sHaW2MQBJn9/I/Rd+K4Dcz5T1nIGx50qFvprWJYFx3FQVRX0iKIQUkp0XQfXdRGEIYqigG3baJoWZVlisVggyzKkaYq6blCVEunGA4sCt29crVb0oe4J4zjqCZRS8H2P8rgn0aJt2xJpDZvinES3nFPeQHUkRLtjobeGaZo96d5hHEUHhx45DHcO9U704rquKF5CCAFOhNpISyKSzpKJbbpTbXpHGjp/Ge/zl3VNogX3ta5tUNAFMX0zxxgdbbknzMmmHnvl9+AVIT824ccdasr+DPWlSHGcM6T/Rr8W9E+vLHKUUhDyN6PQ6wqJPM/AiYslkYdN6L4b89sJ7m5vcPcwwQ3N/wFs/B31YpSHSQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20210308 10&quot;
+        title=&quot;20210308 10&quot;
+        src=&quot;/static/fac9f2eed2b52c59534a48001e5072ac/c1b63/20210308-10.png&quot;
+        srcset=&quot;/static/fac9f2eed2b52c59534a48001e5072ac/5a46d/20210308-10.png 300w,
+/static/fac9f2eed2b52c59534a48001e5072ac/0a47e/20210308-10.png 600w,
+/static/fac9f2eed2b52c59534a48001e5072ac/c1b63/20210308-10.png 1200w,
+/static/fac9f2eed2b52c59534a48001e5072ac/6569d/20210308-10.png 1328w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;이제 각 노드는 다음 명령을 통해 접속할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;ssh&lt;/span&gt; -p &lt;span class=&quot;token number&quot;&gt;11001&lt;/span&gt; node@127.0.0.1 &lt;span class=&quot;token comment&quot;&gt;# Node1&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;자주 접속을 하게 될 것 같아서 호스트의 &lt;code class=&quot;language-text&quot;&gt;~/.ssh/config&lt;/code&gt; 파일을 다음과 같이 수정했다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Host node1
+	HostName 127.0.0.1
+	User node
+	Port 11001
+
+Host node2
+	HostName 127.0.0.1
+	User node
+	Port 11002
+
+Host node3
+	HostName 127.0.0.1
+	User node
+	Port 11003
+
+Host node4
+	HostName 127.0.0.1
+	User node
+	Port 11004&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;ssh&lt;/span&gt; node1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;각-노드에-kubernetes-설치&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EA%B0%81-%EB%85%B8%EB%93%9C%EC%97%90-kubernetes-%EC%84%A4%EC%B9%98&quot; aria-label=&quot;각 노드에 kubernetes 설치 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;각 노드에 Kubernetes 설치&lt;/h2&gt;
+&lt;p&gt;먼저 도커부터 설치한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -fsSL https://get.docker.com/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;도커가 설치되면 &lt;code class=&quot;language-text&quot;&gt;systemctl status docker&lt;/code&gt; 명령을 통해 서비스가 동작하고 있는지(&lt;em&gt;running&lt;/em&gt;) 확인하고 쿠버네티스를 설치한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update &lt;span class=&quot;token operator&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; upgrade
+$ &lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; -s https://packages.cloud.google.com/apt/doc/apt-key.gpg &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; apt-key &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; -
+
+$ &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;EOF&lt;span class=&quot;token bash punctuation&quot;&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; /etc/apt/sources.list.d/kubernetes.list&lt;/span&gt;
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF&lt;/span&gt;
+
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; -y kubelet kubeadm kubectl&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;쿠버네티스는 &lt;strong&gt;Swap이 설정된 머신에서는 동작하지 않고 에러&lt;/strong&gt;를 낸다. Swap이 설정되어 있으면 pod들이 일관적인 성능을 내는 것을 보장할 수 없다고 한다. 쿠버네티스 개발진은 이를 해결할 수는 있지만, &lt;strong&gt;해결해서 얻는 이득이 딱히 크지 않다&lt;/strong&gt;고 판단해 우선순위를 뒤로 미뤄둔 것 같다.&lt;/p&gt;
+&lt;p&gt;다음 명령을 통해 swap을 영구적으로 비활성화한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; swapoff -a
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sed&lt;/span&gt; -i &lt;span class=&quot;token string&quot;&gt;&apos;/ swap / s/^\(.*\)$/#&lt;span class=&quot;token entity&quot; title=&quot;\1&quot;&gt;\1&lt;/span&gt;/g&apos;&lt;/span&gt; /etc/fstab&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;쿠버네티스 실행에 앞서 한 가지 더 필요한 설정이 있는데, &lt;strong&gt;쿠버네티스와 도커의 cgroup 드라이버가 동일해야 한다&lt;/strong&gt;는 것이다. 도커의 cgroup 기본 드라이버는 &lt;code class=&quot;language-text&quot;&gt;cgroupfs&lt;/code&gt;인데, 쿠버네티스에서 권장하는 드라이버는 &lt;code class=&quot;language-text&quot;&gt;systemd&lt;/code&gt;라고 한다.&lt;/p&gt;
+&lt;p&gt;우선 도커의 cgroup 드라이버를 확인해보자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; docker info &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;grep&lt;/span&gt; -i cgroup
+
+&lt;span class=&quot;token comment&quot;&gt;# output&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;.
+Cgroup Driver: cgroupfs
+&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;다음 명령들을 통해 드라이버를 변경하고, 도커 서비스를 재시작한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# 권한 부여&lt;/span&gt;
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chown&lt;/span&gt; &lt;span class=&quot;token environment constant&quot;&gt;$USER&lt;/span&gt;:docker /etc/docker
+
+&lt;span class=&quot;token comment&quot;&gt;# 도커 대몬 교체&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /etc/docker/daemon.json &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;EOF
+{
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
+  &quot;log-driver&quot;: &quot;json-file&quot;,
+  &quot;log-opts&quot;: {
+    &quot;max-size&quot;: &quot;100m&quot;
+  },
+  &quot;storage-driver&quot;: &quot;overlay2&quot;
+}
+EOF&lt;/span&gt;
+
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkdir&lt;/span&gt; -p /etc/systemd/system/docker.service.d
+
+&lt;span class=&quot;token comment&quot;&gt;# 도커 서비스 재시작&lt;/span&gt;
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl daemon-reload
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl restart docker&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;kubeadm-이용해서-클러스터-구성&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#kubeadm-%EC%9D%B4%EC%9A%A9%ED%95%B4%EC%84%9C-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0-%EA%B5%AC%EC%84%B1&quot; aria-label=&quot;kubeadm 이용해서 클러스터 구성 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;kubeadm 이용해서 클러스터 구성&lt;/h2&gt;
+&lt;p&gt;kubernetes.io에 따르면 kubeadm은 &lt;strong&gt;쿠버네티스 클러스터 생성 용도의 툴&lt;/strong&gt;로, 시스템 프로비저닝까지 다루지 않고 부트스트랩(bootstrapping)까지만 다루도록 설계되었다고 한다.&lt;/p&gt;
+&lt;p&gt;여기서는 kubeadm을 이용해 클러스터를 구성할 것이다. &lt;/p&gt;
+&lt;p&gt;마스터 노드에서 다음 명령을 입력해 클러스터를 구성한다.&lt;/p&gt;
+&lt;p&gt;(물론 kubeadm init 명령에서 IP는 자신이 세팅한 마스터 노드의 IP로 설정한다.)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; kubeadm init --apiserver-advertise-address&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;10.0&lt;/span&gt;.2.15
+
+$ &lt;span class=&quot;token function&quot;&gt;mkdir&lt;/span&gt; -p &lt;span class=&quot;token environment constant&quot;&gt;$HOME&lt;/span&gt;/.kube
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cp&lt;/span&gt; -i /etc/kubernetes/admin.conf &lt;span class=&quot;token environment constant&quot;&gt;$HOME&lt;/span&gt;/.kube/config
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chown&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;id&lt;/span&gt; -u&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;id&lt;/span&gt; -g&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token environment constant&quot;&gt;$HOME&lt;/span&gt;/.kube/config
+
+&lt;span class=&quot;token comment&quot;&gt;# root 권한으로 설정&lt;/span&gt;
+$ &lt;span class=&quot;token builtin class-name&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;KUBECONFIG&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/etc/kubernetes/admin.conf&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;마스터노드에서 &lt;code class=&quot;language-text&quot;&gt;kubeadm init&lt;/code&gt; 명령이 완료되면 그 클러스터로 참가할 수 있는 명령이 출력된다. 이 명령을 워커 노드에서 입력해야 하므로 복사해둔다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; kubeadm &lt;span class=&quot;token function&quot;&gt;join&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;10.0&lt;/span&gt;.2.15:6443 --token 8rzhrw.av7q1aoyqwsco3q --discovery-token-ca-cert-hash sha256:3be2271256e896a6762f7b39a69f38c990cafbfd39ab92c01df6fdbf4bfc3d9&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Calico&lt;/code&gt;와 &lt;code class=&quot;language-text&quot;&gt;Flannel&lt;/code&gt;이라는 두 가지 애드온을 설치한다. 마스터 노드에서 입력하자. 이 둘은 CNI(Container Network Interface) 플러그인으로, &lt;strong&gt;기본 쿠버네티스 자체적으로는 pod간 통신을 위한 네트워크를 구성해주지 않기 때문&lt;/strong&gt;에 추가로 설치해 사용하게 된다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; kubectl apply -f &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;https://docs.projectcalico.org/v3.8/manifests/calico.yaml&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;https://docs.projectcalico.org/v3.8/manifests/calico.yaml&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; kubectl apply -f &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이제 마스터 노드의 설정이 끝났고, 위에서 복사해둔 &lt;code class=&quot;language-text&quot;&gt;kubeadm join&lt;/code&gt; 명령을 각 워커 노드에서 실행하면 클러스터 구성이 완료된다.&lt;/p&gt;
+&lt;p&gt;워커들이 클러스터에 제대로 참여했는지 마스터 노드에서 확인해보자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; kubectl get nodes
+
+&lt;span class=&quot;token comment&quot;&gt;# output&lt;/span&gt;
+NAME    STATUS   ROLES                  AGE   VERSION
+node1   Ready    control-plane,master   40m   v1.20.4
+node2   Ready    &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;none&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;                 21m   v1.20.4
+node3   Ready    &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;none&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;                 21m   v1.20.4
+node4   Ready    &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;none&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;                 21m   v1.20.4&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;troubleshooting&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#troubleshooting&quot; aria-label=&quot;troubleshooting permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Troubleshooting&lt;/h2&gt;
+&lt;p&gt;이번 포스팅에서 다룬 가상머신으로 클러스터 구성한 것과, 연구실 서버로 클러스터 구성하면서 해결한 몇몇 에러를 소개한다. 아직 쿠버네티스 실력 수준이 낮고, 복잡한 클러스터를 다뤄보지 못해서 이 정도 에러만 소개하고 포스팅을 마치려 한다.&lt;/p&gt;
+&lt;h3 id=&quot;워커-노드들의-status가-전부-notready로-뜨는-경우&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%9B%8C%EC%BB%A4-%EB%85%B8%EB%93%9C%EB%93%A4%EC%9D%98-status%EA%B0%80-%EC%A0%84%EB%B6%80-notready%EB%A1%9C-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0&quot; aria-label=&quot;워커 노드들의 status가 전부 notready로 뜨는 경우 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;워커 노드들의 Status가 전부 NotReady로 뜨는 경우&lt;/h3&gt;
+&lt;p&gt;Calico와 Flannel 애드온 설정을 빼먹어서, 진행해줬더니 Ready 상태로 변경되었다.&lt;/p&gt;
+&lt;h3 id=&quot;kubelet-서비스가-실행되지-않는-경우&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#kubelet-%EC%84%9C%EB%B9%84%EC%8A%A4%EA%B0%80-%EC%8B%A4%ED%96%89%EB%90%98%EC%A7%80-%EC%95%8A%EB%8A%94-%EA%B2%BD%EC%9A%B0&quot; aria-label=&quot;kubelet 서비스가 실행되지 않는 경우 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;kubelet 서비스가 실행되지 않는 경우&lt;/h3&gt;
+&lt;p&gt;마스터 노드에서 클러스터에 계속 접속이 되지 않아 kubelet 서비스가 제대로 동작하고 있는지 확인을 해봤다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status kubelet&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;보통 때면 초록색으로 active (running)이 표시될텐데 그렇지 않았다.&lt;/p&gt;
+&lt;p&gt;이 상황은 세 번을 겪었는데, &lt;ins&gt;한 번은 도커가 실행되지 않고 있던 경우&lt;/ins&gt;, 도커는 실행되었지만 &lt;ins&gt;도커와 쿠버네티스의 cgroup 드라이버가 서로 맞지 않던 경우&lt;/ins&gt;, 마지막으로 &lt;ins&gt;머신에 swap이 켜져있던 경우&lt;/ins&gt;였다.&lt;/p&gt;
+&lt;p&gt;journalctl 명령을 통해 kubelet 서비스의 로그를 먼저 확인해서 각 경우를 해결했다.&lt;/p&gt;
+&lt;p&gt;도커와 쿠버네티스 cgroup 드라이버가 일치하지 않던 경우는 위에서 했던대로 도커의 드라이버를 변경해주고 서비스를 재시작하면 바로 해결되었다.&lt;/p&gt;
+&lt;p&gt;swap이 켜져있던 경우도 위에서 설정했던대로 다시 swap을 꺼주었다. swap을 비활성화하는 &lt;code class=&quot;language-text&quot;&gt;swapoff -a&lt;/code&gt; 명령만 수행했더니 영구적으로 적용되지 않아 머신이 재부팅한 후에 swap이 다시 활성화됐던 것이었다. 그 밑의 명령까지 수행하자.&lt;/p&gt;
+&lt;p&gt;도커가 실행되지 않던 상황은, /etc/docker/daemon.json 파일이 어떤 이유로 비워졌기 때문이었다. cgroup 드라이버 변경할 때 넣었던 내용을 다시 입력해주었다.&lt;/p&gt;
+&lt;h2 id=&quot;references&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#references&quot; aria-label=&quot;references permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;VirtualBox 설치 : &lt;a href=&quot;https://phoenixnap.com/kb/install-virtualbox-on-ubuntu&quot;&gt;https://phoenixnap.com/kb/install-virtualbox-on-ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Swap을 꺼야하는 이유 : &lt;a href=&quot;https://github.com/kubernetes/kubernetes/issues/53533&quot;&gt;https://github.com/kubernetes/kubernetes/issues/53533&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;kubeadm : &lt;a href=&quot;https://velog.io/@seunghyeon/Kubeadm%EC%9C%BC%EB%A1%9C-K8S-%EA%B5%AC%EC%84%B1&quot;&gt;https://velog.io/@seunghyeon/Kubeadm으로-K8S-구성&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;가상머신 구성 : &lt;a href=&quot;https://velog.io/@evanjin/kubernetes-virtualbox%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%EC%84%A4%EC%B9%98mac-ijk495l4e9&quot;&gt;https://velog.io/@evanjin/kubernetes-virtualbox를-이용하여-설치mac-ijk495l4e9&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Calico, Flannel : &lt;a href=&quot;https://jonnung.dev/kubernetes/2020/02/24/kubernetes-pod-networking/&quot;&gt;https://jonnung.dev/kubernetes/2020/02/24/kubernetes-pod-networking/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[서버리스 아키텍처(Serverless Architecture)와 콜드 스타트(Cold Start)]]></title><description><![CDATA[…]]></description><link>https://blog.frec.kr/cloud/serverless_and_cold_start/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/serverless_and_cold_start/</guid><pubDate>Thu, 18 Feb 2021 15:18:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;들어가기-전에&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90&quot; aria-label=&quot;들어가기 전에 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;들어가기 전에&lt;/h2&gt;
 &lt;p&gt;우선 서버리스는 문자 그대로 서버가 없다는 뜻은 전혀 아니다. &lt;strong&gt;서버에 대해 고려를 할 필요가 없는&lt;/strong&gt; 구조라고 이해하는 것이 좋다. 서버리스라는 단어는 실제 이 아키텍처를 함축한 단어로는 적합하지 않고, 오히려 상술에 가까운 말이라고 생각한다. 다만 용어가 가지는 파급력과 간결함 때문에 논문에도 자주 등장하며 이 아키텍처를 표현하는 단어로 곧잘 사용되는 것 같다.&lt;/p&gt;
 &lt;h2 id=&quot;서버리스-아키텍처의-개념&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%84%9C%EB%B2%84%EB%A6%AC%EC%8A%A4-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98%EC%9D%98-%EA%B0%9C%EB%85%90&quot; aria-label=&quot;서버리스 아키텍처의 개념 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;서버리스 아키텍처의 개념&lt;/h2&gt;
 &lt;p&gt;우선 서버리스 아키텍처라는 개념에 대한 설명을 가져왔다.
