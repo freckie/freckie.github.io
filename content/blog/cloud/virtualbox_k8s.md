@@ -209,8 +209,8 @@ $ sudo kubeadm join 10.0.2.15:6443 --token 8rzhrw.av7q1aoyqwsco3q --discovery-to
 `Calico`와 `Flannel`이라는 두 가지 애드온을 설치한다. 마스터 노드에서 입력하자. 이 둘은 CNI(Container Network Interface) 플러그인으로, **기본 쿠버네티스 자체적으로는 pod간 통신을 위한 네트워크를 구성해주지 않기 때문**에 추가로 설치해 사용하게 된다.
 
 ```bash
-$ sudo kubectl apply -f [https://docs.projectcalico.org/v3.8/manifests/calico.yaml](https://docs.projectcalico.org/v3.8/manifests/calico.yaml)
-$ sudo kubectl apply -f [https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml](https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml)
+$ sudo kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+$ sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 이제 마스터 노드의 설정이 끝났고, 위에서 복사해둔 `kubeadm join` 명령을 각 워커 노드에서 실행하면 클러스터 구성이 완료된다.
@@ -263,3 +263,7 @@ swap이 켜져있던 경우도 위에서 설정했던대로 다시 swap을 꺼�
 - kubeadm : [https://velog.io/@seunghyeon/Kubeadm으로-K8S-구성](https://velog.io/@seunghyeon/Kubeadm%EC%9C%BC%EB%A1%9C-K8S-%EA%B5%AC%EC%84%B1)
 - 가상머신 구성 : [https://velog.io/@evanjin/kubernetes-virtualbox를-이용하여-설치mac-ijk495l4e9](https://velog.io/@evanjin/kubernetes-virtualbox%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%EC%84%A4%EC%B9%98mac-ijk495l4e9)
 - Calico, Flannel : [https://jonnung.dev/kubernetes/2020/02/24/kubernetes-pod-networking/](https://jonnung.dev/kubernetes/2020/02/24/kubernetes-pod-networking/)
+
+
+수정사항
+- 2021.03.09 13:48 :: calico, flannel 설치 명령 오타 수정
