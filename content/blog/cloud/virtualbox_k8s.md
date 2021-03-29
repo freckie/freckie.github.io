@@ -7,6 +7,7 @@ draft: false
 수정사항
 - 2021.03.09 13:48 :: calico, flannel 설치 명령 오타 수정
 - 2021.03.17 13:22 :: flannel 제외
+- 2021.03.29 16.24 :: kubeadm init 시 pod-network-cidr 옵션 추가, calico 대신 flannel 설치
   
 
 ## 환경
@@ -195,7 +196,7 @@ kubernetes.io에 따르면 kubeadm은 **쿠버네티스 클러스터 생성 용�
 (물론 kubeadm init 명령에서 IP는 자신이 세팅한 마스터 노드의 IP로 설정한다.)
 
 ```bash
-$ sudo kubeadm init --apiserver-advertise-address=10.0.2.15
+$ sudo kubeadm init --apiserver-advertise-address=10.0.2.15 --pod-network-cidr=10.244.0.0/16
 
 $ mkdir -p $HOME/.kube
 $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -211,10 +212,10 @@ $ export KUBECONFIG=/etc/kubernetes/admin.conf
 $ sudo kubeadm join 10.0.2.15:6443 --token 8rzhrw.av7q1aoyqwsco3q --discovery-token-ca-cert-hash sha256:3be2271256e896a6762f7b39a69f38c990cafbfd39ab92c01df6fdbf4bfc3d9
 ```
 
-`Calico`라는 두 가지 애드온을 설치한다. 마스터 노드에서 입력하자. 이는 CNI(Container Network Interface) 플러그인으로, **기본 쿠버네티스 자체적으로는 pod간 통신을 위한 네트워크를 구성해주지 않기 때문**에 추가로 설치해 사용하게 된다.
+`Flannel`이라는 쿠버네티스 애드온을 설치한다. 마스터 노드에서 입력하자. 이는 CNI(Container Network Interface) 플러그인으로, **기본 쿠버네티스 자체적으로는 pod간 통신을 위한 네트워크를 구성해주지 않기 때문**에 추가로 설치해 사용하게 된다.
 
 ```bash
-$ sudo kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
 이제 마스터 노드의 설정이 끝났고, 위에서 복사해둔 `kubeadm join` 명령을 각 워커 노드에서 실행하면 클러스터 구성이 완료된다.
