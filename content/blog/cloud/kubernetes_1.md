@@ -4,8 +4,6 @@ date: 2021-06-03 15:43:00
 category: 'Cloud'
 draft: false
 ---
-# 쿠버네티스 쿲벖넶팂슶 1
-
 ![](../images/20210603-1.png)  
 
 ## 소개
