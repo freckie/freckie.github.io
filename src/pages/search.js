@@ -70,7 +70,7 @@ export default ({ data, location }) => {
   }, [searchPost, location.href])
 
   return (
-    <Layout location={location} title={"공부를 해보자."}>
+    <Layout location={location} title={"Fr3ky's Lab."}>
       {/* <SEO title="Search" /> */}
       <Wrapper>
         <Search
