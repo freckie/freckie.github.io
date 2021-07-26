@@ -1,5 +1,5 @@
 ---
-title: '쿠버네티스 | 쿲벖넶팂슶 1'
+title: '쿠버네티스 | 쿲벖넶팂슶 Ep.1'
 date: 2021-06-03 15:43:00
 category: 'Cloud'
 draft: false
