@@ -94,6 +94,5 @@ LoadBalancer 서비스를 사용한 구조는 다음과 같다.
 
 ### References
 
-[1] [https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/](https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/)
-
-[이미지 1-5] M. Lukša, Kubernetes in Action, Manning Publications, 2018.
+- [1] [https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/](https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/)
+- [이미지 1-5] M. Lukša, Kubernetes in Action, Manning Publications, 2018.
