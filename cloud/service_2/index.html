@@ -122,7 +122,7 @@
       />
     </span></p>
 <p>책에서 생성한 서비스를 <code class="language-text">kubectl describe</code> 명령을 통해 확인한 예시이다. 서비스 하위에 Endpoints라는 항목이 <strong>서비스와 연결된 파드들의 IP와 포트를 리스트 형태</strong>로 가지고 있다. 쿠버네티스는 서비스에 요청이 들어오면 이 엔드포인트 중 하나로 리다이렉트한다.</p>
-<p>쿠버네티스에서는 서비스와 엔드포인트의 연결 관리를 프록시 모듈에서 수행하고 있다. (<code class="language-text">[/pkg/proxy/endpoints.go](https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/endpoints.go)</code>)</p>
+<p>쿠버네티스에서는 서비스와 엔드포인트의 연결 관리를 프록시 모듈에서 수행하고 있다. (<code class="language-text">/pkg/proxy/endpoints.go</code>)</p>
 <h2 id="5-endpointslice-리소스" style="position:relative;"><a href="#5-endpointslice-%EB%A6%AC%EC%86%8C%EC%8A%A4" aria-label="5 endpointslice 리소스 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. EndpointSlice 리소스</h2>
 <p>엔드포인트 리소스는 위에서 언급한대로 서비스와 연결된 파드의 IP, 포트를 가지고 있다. 다만 쿠버네티스 클러스터에서 서비스가 초창기 설계보다 더 많은 수의 파드로 더 많은 트래픽을 전송하는 방향으로 성장함에 따라, 엔드포인트 리소스가 처리할 수 있는 한계에 도달했다고 한다. [1]</p>
 <p>서비스에 연결된 모든 네트워크 엔드포인트가 한 엔드포인트 리소스에 연결되다보니 엔드포인트가 변경될 때 성능에 큰 영향을 미쳤다고 공식 문서에서 표현하고 있다.</p>
