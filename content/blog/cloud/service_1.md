@@ -1,5 +1,5 @@
 ---
-title: '쿠버네티스 서비스 | 쿲벖넶팂슶 Ep.3'
+title: '쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3'
 date: 2021-07-26 23:50:00
 category: 'Cloud'
 draft: false
@@ -9,8 +9,8 @@ draft: false
 서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.
 
 - **쿠버네티스 서비스 1**
-- 쿠버네티스 서비스 2 (예정)
-- 쿠버네티스 서비스 : 인그레스 (예정)
+- [쿠버네티스 서비스 2](https://blog.frec.kr/cloud/service_2/)
+- [쿠버네티스 서비스 : 인그레스](https://blog.frec.kr/cloud/service_ingress/) (작성 중)
 
 ---
 
