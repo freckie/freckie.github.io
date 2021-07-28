@@ -34,7 +34,7 @@ draft: false
 
 책에서 생성한 서비스를 `kubectl describe` 명령을 통해 확인한 예시이다. 서비스 하위에 Endpoints라는 항목이 **서비스와 연결된 파드들의 IP와 포트를 리스트 형태**로 가지고 있다. 쿠버네티스는 서비스에 요청이 들어오면 이 엔드포인트 중 하나로 리다이렉트한다.
 
-쿠버네티스에서는 서비스와 엔드포인트의 연결 관리를 프록시 모듈에서 수행하고 있다. (`[/pkg/proxy/endpoints.go](https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/endpoints.go)`)
+쿠버네티스에서는 서비스와 엔드포인트의 연결 관리를 프록시 모듈에서 수행하고 있다. (`/pkg/proxy/endpoints.go`)
 
 ## 5. EndpointSlice 리소스
 
