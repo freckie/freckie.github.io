@@ -15,9 +15,22 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
+          
       - uses: fregante/setup-git-user@v1
+      
       - run: npm install -g gatsby-cli gh-pages
       - run: npm install
-      - run: npm run deploy
+      
+      - name: Build 
+        run: gatsby build
+      
+      - name: Set CNAME
+        run: echo "blog.frec.kr" > ./public/CNAME
+      
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v2.5.0
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          PERSONAL_TOKEN: ${{secrets.REPO_HOOK_TOKEN}}
+          PUBLISH_BRANCH: master
+          PUBLISH_DIR: ./public
+          SCRIPT_MODE: true
