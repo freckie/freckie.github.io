@@ -12,8 +12,8 @@ class NotFoundPage extends React.Component {
     return (
       <Layout location={this.props.location} title={siteTitle}>
         <Head title="404: Not Found" />
-        <h1>404 Not Found</h1>
-        <p>잘못된 주소로 찾아오셨습니다!</p>
+        <h1>404호 "Not Found"</h1>
+        <p>우리 아파트에 404호는 존재하지 않아..</p>
       </Layout>
     )
   }
