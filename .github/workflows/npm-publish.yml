@@ -15,8 +15,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
+      - uses: fregante/setup-git-user@v1
       - run: npm install -g gatsby-cli gh-pages
       - run: npm install
-      - run: git config --global user.email "freckie@frec.kr"
-      - run: git config --global user.name "freckie"
       - run: npm run deploy
