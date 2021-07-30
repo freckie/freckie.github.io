@@ -21,7 +21,7 @@ jobs:
       - run: npm install -g gatsby-cli gh-pages
       - run: npm install
       
-      - name: Build 
+      - name: Build
         run: gatsby build
       
       - name: Set CNAME
@@ -31,6 +31,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v2.5.0
         env:
           PERSONAL_TOKEN: ${{secrets.REPO_HOOK_TOKEN}}
-          PUBLISH_BRANCH: master
+          PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: ./public
           SCRIPT_MODE: true
