@@ -1,5 +1,5 @@
 ---
-title: 'etcd에 대해 알아보자 | 쿲벖넶팂슶 2'
+title: 'etcd에 대해 알아보자 | 쿲벖넶팂슶 Ep.2'
 date: 2021-06-30 20:17:00
 category: 'Cloud'
 draft: false
