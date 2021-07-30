@@ -17,4 +17,5 @@ jobs:
           node-version: 14
       - run: npm install -g gatsby-cli gh-pages
       - run: npm install
+      - run: git config --global user.email "freckie@frec.kr" && git config --global user.name "freckie"
       - run: npm run deploy
