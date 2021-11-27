@@ -1,5 +1,5 @@
 module.exports = {
-  title: `Fr3ky's Lab.`,
+  title: `Freckie et al.`,
   description: `나는야 깃허브 스타될거야.`,
   author: `Freckie`,
   introduction: `깃허브 스타될거야.`,
@@ -9,7 +9,7 @@ module.exports = {
     github: `freckie`, // Your GitHub account
     medium: ``, // Your Medium account
     facebook: ``, // Your Facebook account
-    linkedin: ``, // Your LinkedIn account
+    linkedin: `김명현`, // Your LinkedIn account
   },
   icon: `content/assets/felog.png`, // Add your favicon
   keywords: [`blog`],
