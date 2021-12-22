@@ -1,0 +1,29 @@
+@import '../../styles/variables.scss';
+
+.post-series-info {
+  background-color: rgb(245, 245, 245);
+  width: 90%;
+  margin: 2rem auto;
+  padding: 1rem 2rem 2rem 2rem;
+  border-radius: 10px;
+
+  ol {
+    li {
+      a {
+        color: black;
+      }
+
+      :hover {
+        text-decoration: underline;
+        color: #117893;
+      }
+    }
+
+    li.current {
+      a {
+        color: #117893;
+        font-weight: bold;
+      }
+    }
+  }
+}

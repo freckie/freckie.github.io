@@ -5,6 +5,7 @@ import * as Elements from '../components/elements'
 import { Layout } from '../layout'
 import { Head } from '../components/head'
 import { PostTitle } from '../components/post-title'
+import { PostSeriesInfo } from '../components/post-series-info'
 import { PostDate } from '../components/post-date'
 import { PostContainer } from '../components/post-container'
 import { SocialShare } from '../components/social-share'
@@ -28,13 +29,18 @@ export default ({ data, pageContext, location }) => {
   const metaData = data.site.siteMetadata
   const { title, comment, siteUrl, author, sponsor } = metaData
   const { disqusShortName, utterances } = comment
-  const { title: postTitle, date } = post.frontmatter
+  const { title: postTitle, date, series } = post.frontmatter
+
+  const hasSeries = (series != null)
 
   return (
     <Layout location={location} title={title}>
       <Head title={postTitle} description={post.excerpt} />
       <PostTitle title={postTitle} />
       <PostDate date={date} />
+      {!!hasSeries && (
+        <PostSeriesInfo series={series} />
+      )}
       <PostContainer html={post.html} />
       <SocialShare title={postTitle} author={author} />
       {!!sponsor.buyMeACoffeeId && (
@@ -78,7 +84,12 @@ export const pageQuery = graphql`
       html
       frontmatter {
         title
-        date(formatString: "MMMM DD, YYYY")
+        date(formatString: "YYYY년 MM월 DD일 작성")
+        series {
+          title
+          link
+          current
+        }
       }
     }
   }
