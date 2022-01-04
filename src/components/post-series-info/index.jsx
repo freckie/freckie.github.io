@@ -21,7 +21,7 @@ export const PostSeriesInfo = ({ series }) => {
   return (
     <div>
       <div className='post-series-info'>
-        <h3>❗️이 포스트는 시리즈로 구성되었습니다.</h3>
+        <h3>❗️&nbsp;이 포스트는 시리즈로 구성되었습니다.</h3>
         <ol>
           {rendering()}
         </ol>
