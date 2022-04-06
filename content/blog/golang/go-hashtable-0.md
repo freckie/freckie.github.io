@@ -9,7 +9,8 @@ draft: false
 
 - Hash Table에서 해시 충돌(Hash Collision)에 대한 해결책으로 Open Addressing, Separate Chaining 등이 있다.
     - Go에서는 **Separate Chaining** 방법으로 구현되어 있는데, 이 방법은 링크드 리스트와 같이 버킷의 엔트리에 엔트리를 붙이는 방법이다.
-    - 링크드 리스트나 트리의 구조로 chaining을 수행하는 다른 언어들과 달리 **Go는 배열(Array)로 chaining을 수행**한다.  
+    - 링크드 리스트나 트리의 구조로 chaining을 수행하는 다른 언어들과 달리 **Go는 배열(Array)로 chaining을 수행**한다.
+
 <br>
 
 - 한 버킷에는 **8개의 tophash 배열과 Key 배열, Value 배열**이 존재한다.
@@ -18,6 +19,7 @@ draft: false
         - 해시 충돌이 발생해 같은 버킷에 데이터를 저장할 경우, 그냥 비어있는 슬롯을 사용한다.
     - 버킷은 메모리 상에 Key와 Value를 한 쌍으로 저장하지 않고, Key들을 먼저 할당하고 그 뒤에 Value들을 모아서 할당해둔다.
         - 이는 **메모리 정렬(memory alignment)의 효율**을 얻기 위함이다.
+
 <br>
 
 - Go 해시 테이블의 **Load Factor는 6.5**로 설정되어 있다.
@@ -25,10 +27,12 @@ draft: false
     - `make(map[K]V, 100)`과 같이 맵 생성 시 Key-Value의 개수에 대해 힌트를 주는 경우, 런타임은 다음 과정을 통해 버킷 개수를 설정한다.
         - $min_B \,\,LoadFactor * B \ge hint$
         - 버킷 개수는 $2^B$개
+
 <br>
 
 - Key-Value 데이터에 접근하기 위해서 다음과 같이 포인터 연산을 하여 Value를 찾는다.
     - $value_i = {dataOffset}\, +\, 8 * keySize\, +\, i*elemSize$
+
 <br>
 
 이번 포스팅에서는 `runtime/map.go` 파일을 훑어보며 Go에서 해시 테이블이 어떻게 구현되어 있는지 살펴본다.
@@ -68,6 +72,7 @@ type hmap struct {
 - `oldbuckets` (*unsafe.Pointer*) : 버킷이 충분히 많이 차서 해시 충돌이 우려될 경우 버킷 개수를 늘려 재할당하는데, 이 과정(growing)이 진행될 때 이전 버킷 array를 가리킴. growing이 진행되지 않을 때는 `nil`값을 가짐.
 - `nevacuate` (*uintptr*) : growing이 진행 중에 oldbuckets에서 새로운 buckets로 버킷이 옮겨가게 되는데, 다음으로 옮겨갈 버킷에 대한 주소를 가리킴.
 - `extra` (*mapextra) : 버킷의 수가 오버플로우되는 상황을 대비해서 미리 메모리 할당해둔 부분.
+
 <br>
 
 💡 **`uintptr` vs `unsafe.Pointer`**
@@ -94,6 +99,7 @@ type bmap struct {
 `tophash`는 이 버킷에 포함된 **각 키의 해시 값에서 최상위 바이트(8비트)**, 즉 키의 해시값에서 왼쪽부터 8비트를 가지고 있는 배열이다.
 
 이렇게 버킷 내의 키들에 대해 해시 값을 또 갖고 있는 이유는 Go에서의 해시테이블이 **Separate Chaining** 방식을 사용하는 다른 언어 구현체들과 다르게 버킷이 Linked List 기반이 아니고 그냥 **Array**이기 때문이다.
+
 <br>
 
 여기서 버킷이 실제 키-밸류 데이터를 담는 부분이라 *bmap*에 키 값과 밸류 값, 혹은 키와 밸류를 가리키는 포인터가 있을 것이라고 생각할 수 있다.
@@ -101,6 +107,7 @@ type bmap struct {
 그러나 `map.go` 코드 상의 구현에는 *bmap* struct의 필드로 `tophash`만이 존재하며 키와 밸류는 존재하지 않는다.
 
 그렇다면 키와 밸류는 어디에 저장되어 있을까?
+
 <br>
 
 실제로 *bmap*이 할당되는 과정이나 밸류를 갖고 오는 과정을 살펴보면 메모리 상에 다음과 같이 할당되어 있음을 알 수 있다.
@@ -114,6 +121,7 @@ values [8]V
 ```
 
 코드 상에 keys와 values가 이렇게 나타나있지는 않지만 ***bmap*이 할당된 메모리 이후에 실제로 8개의 키 함께 할당되어 있고 그 후에 8개의 밸류가 선형적으로 할당**되어 있는 것을 알 수 있다.
+
 <br>
 
 여기서 < key0 | key1 | ... | key7 | val0 | val 1 | ... | val7 > 이렇게 키끼리 밸류끼리 묶는 것보다, < key0 | val0 | ... | key7 | val7 > 과 같이 키와 밸류를 교대하며 할당하는 것이 더 편하지 않을까 하는 의문이 들 수 있다.
@@ -123,6 +131,7 @@ values [8]V
 그러나 `map[int64]int8`과 같은 타입의 경우 키-밸류를 페어로 할당하면 < 64비트 | 8비트 | 64비트 | 8비트 | ... > 와 같이 할당되는데, **메모리 정렬(memory alignment)** 관점에서 봤을 때 비효율이 발생할 수밖에 없다.
 
 따라서 `map[int64]int8`을 Go의 구현대로 생성하면 < 64비트 | 64비트 | ... | 8비트 | 8비트 | ... >와 같은 형태로 할당되어 패딩을 제거할 수 있어 더 효율적이다.
+
 <br>
 
 우선 지금은 *bmap*에 대해서 이 정도로만 알아보고 추후에 `mapaccess()`나 `mapassign()` 함수를 설명할 때 자세히 살펴보도록 하겠다.
@@ -182,6 +191,7 @@ func makemap(t *maptype, hint int, h *hmap) *hmap {
 	return h
 }
 ```
+
 <br>
 
 파라미터로 `*maptype`, `int`, `*hmap`이 들어가는데, `maptype`은 `runtime/type.go`에 다음과 같이 정의되어 있다.
@@ -279,6 +289,7 @@ func overLoadFactor(count int, B uint bool) {
 - 즉, Load Factor에 따라 시간과 공간이 trade-off 관계에 놓이게 되며, 이 값을 적당히 조정하는 것이 성능을 좌우한다고 할 수 있다.
 
 - Java에서는 HashTable의 Load Factor로 75%를 사용한다.
+
 <br>
 
 추가) `bucketShift(B)` 함수는 $2^B$를 리턴하고 B의 범위는 32bit 시스템에서 $0 \le B \le 31$, 64bit 시스템에서 $0 \le B \le 63$이다.
@@ -308,6 +319,7 @@ return h
 <br>
 
 `makemap()` 함수에 파라미터로 받았던 `t *maptype`, 위에서 계산했던 `B`값을 `makeBucketArray()` 함수에 넣으면, 해당 함수에서 버킷 사이즈를 계산하여 메모리를 할당하고 반환해준다.
+
 <br>
 
 `makeBucketArray()` 함수에서 주목할 점은 버킷 개수가 충분히 클 때($B \ge 4$) 미리 overflow 버킷을 할당해둔다는 것이다.
@@ -354,6 +366,7 @@ func lookup(t *mapType, m *mapHeader, k unsafe.Pointer) unsafe.Pointer
 특정 타입에 대해 따로 구현되어 있는 lookup 함수를 호출하는 대신, 단일로 존재하는 lookup 함수에 맵 타입, 헤더, 그리고 키에 대한 포인터를 파라미터로 입력함으로써 값에 대해 접근한다.
 
 키가 어떤 타입인지 런타임에 알 수 있으므로 파라미터에 키(k)가 unsafe.Pointer로 설정되어 있다.
+
 <br>
 
 실제 `map.go` 파일에는 맵 접근 함수가 리턴 타입에 따라 여러 버전으로 구현되어 있다.
@@ -456,6 +469,7 @@ return zero
 그리고 키가 존재하는지 한 번 더 확인 후 다음 과정을 통해 밸류(elem)에 접근하여 포인터를 반환한다.
 
 - $value_i = {dataOffset}\, +\, 8 * keySize\, +\, i*elemSize$
+
 <br>
 
 `dataOffset`은 map.go 상단에 다음과 같이 상수로 정의되어 있다.
@@ -484,6 +498,7 @@ func mapassign(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
 다만 `mapaccess1()`이 현재 존재하는 키를 찾아 밸류를 포인터로 돌려줬다면, `mapassign()`은 키가 존재할 경우 밸류에 대한 포인터를 돌려주고 **키가 존재하지 않을 경우 버킷에 슬롯을 할당하는 과정이 추가**되어 있다.
 
 또한 슬롯을 추가하기 전에 현재 맵이 Load Factor에 도달했거나 overflow 버킷이 너무 많을 경우 **growing을 시작하는 과정을 포함**한다.
+
 <br>
 
 이전에 *bmap*과 mapaccess 과정을 살펴볼 때 Go에서의 해시테이블은 Linked List가 아니라 버킷마다 8개의 슬롯을 가진 Array를 미리 할당하여 chaining을 구현한다고 소개했다.
@@ -491,6 +506,7 @@ func mapassign(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
 따라서 새로운 키를 할당할 시, 해시 충돌이 발생하여 같은 버킷에 키가 할당될 경우 mapassign() 함수는 mapaccess()와 마찬가지로 **버킷 내부 Array를 선형 탐색하다 빈 슬롯에 단순히 키를 할당**하는 방법을 사용한다.
 
 키를 할당하고 밸류가 들어갈 슬롯의 주소를 가리키는 포인터를 리턴하여 키를 할당하는 과정이 완료된다.
+
 <br>
 
 Java와 같이 링크드 리스트, 혹은 트리로 chaining이 구현되었다면 버킷에 키를 할당하는 과정이 보다 더 복잡했을 것이다.
@@ -513,6 +529,7 @@ Java와 같이 링크드 리스트, 혹은 트리로 chaining이 구현되었다
 - [Hash Tables Implementation in Go](https://medium.com/kalamsilicon/hash-tables-implementation-in-go-48c165c54553)
 - [Why Go cares about the difference between unsafe.Pointer and uintptr](https://utcc.utoronto.ca/~cks/space/blog/programming/GoUintptrVsUnsafePointer)
 - [How the Go runtime implements maps efficiently (without generics)](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)
+
 <br>
 
 - [1] [golang/go :: src/runtime/malloc.go](https://github.com/golang/go/blob/23756207fb68c34ae15a030319dc31248e21cf45/src/runtime/malloc.go#L225) (accessed on 2022/04/06)
