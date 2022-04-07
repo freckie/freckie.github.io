@@ -66,7 +66,7 @@ type hmap struct {
 여기서 알고넘어가야 할 중요한 필드들은 다음과 같다.
 
 - `B` (*uint8*) : map이 가지는 버킷의 수에 $log_2$를 취한 값.
-    - map이 최대 $log_2B$개의 버킷을 가질 수 있도록 B값을 결정한다.
+    - map이 최대 $2^B$개의 버킷을 가질 수 있도록 B값을 결정한다.
 - `hash0` (*uint32*) : 해시 충돌을 피하기 위한 랜덤 시드.
 - `buckets` (*unsafe.Pointer*) : 실제 버킷들(array)을 가리키는 포인터.
 - `oldbuckets` (*unsafe.Pointer*) : 버킷이 충분히 많이 차서 해시 충돌이 우려될 경우 버킷 개수를 늘려 재할당하는데, 이 과정(growing)이 진행될 때 이전 버킷 array를 가리킴. growing이 진행되지 않을 때는 `nil`값을 가짐.
@@ -75,7 +75,7 @@ type hmap struct {
 
 <br>
 
-💡 **`uintptr` vs `unsafe.Pointer`**
+💡 (참고) **`uintptr` vs `unsafe.Pointer`**
 - uintptr은 builtin.go의 주석에 따르면 **어떤 포인터든 주소를 담을 수 있게 충분히 큰 integer** 타입이라고 한다.
 - unsafe.Pointer는 **임의의 포인터 타입**(`*ArbitraryType`)을 표현하며, 실제 Go object를 가리키고 있다. C의 `*void` 처럼 어떤 타입의 포인터로든 변환할 수 있다.
 
@@ -281,7 +281,7 @@ func overLoadFactor(count int, B uint bool) {
 
 <br>
 
-💡 **Load Factor**
+💡 (참고) **Load Factor**
 - Load Factor가 버킷 당 평균 키-밸류 데이터 개수를 뜻하는데 현재 맵에 저장된 데이터가 Load Factor를 넘어가게 된다면 맵은 자동으로 용량을 늘리게 된다. (growing 과정)
 
 - 만약 이 Load Factor가 너무 작다면 growing 과정이 자주 트리거되어 오버헤드가 발생하여 접근 시간이 낭비될 것이고, 너무 크다면 메모리 공간이 낭비될 것이다.
