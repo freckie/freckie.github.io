@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie et al.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 07 Apr 2022 04:04:15 GMT</lastBuildDate><item><title><![CDATA[Go에서 해시 테이블(Map)은 어떻게 구현되어 있을까?]]></title><description><![CDATA[요약 Hash Table에서 해시 충돌(Hash Collision)에 대한 해결책으로 Open Addressing, Separate Chaining 등이 있다. Go에서는 Separate Chaining…]]></description><link>https://blog.frec.kr/golang/go-hashtable-0/</link><guid isPermaLink="false">https://blog.frec.kr/golang/go-hashtable-0/</guid><pubDate>Thu, 07 Apr 2022 02:00:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;요약&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%9A%94%EC%95%BD&quot; aria-label=&quot;요약 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;요약&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie et al.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 08 Apr 2022 10:14:21 GMT</lastBuildDate><item><title><![CDATA[Go에서 해시 테이블(Map)은 어떻게 구현되어 있을까?]]></title><description><![CDATA[요약 Hash Table에서 해시 충돌(Hash Collision)에 대한 해결책으로 Open Addressing, Separate Chaining 등이 있다. Go에서는 Separate Chaining…]]></description><link>https://blog.frec.kr/golang/go-hashtable-0/</link><guid isPermaLink="false">https://blog.frec.kr/golang/go-hashtable-0/</guid><pubDate>Thu, 07 Apr 2022 02:00:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;요약&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%9A%94%EC%95%BD&quot; aria-label=&quot;요약 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;요약&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Hash Table에서 해시 충돌(Hash Collision)에 대한 해결책으로 Open Addressing, Separate Chaining 등이 있다.&lt;/p&gt;
@@ -55,7 +55,7 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;br&gt;
-&lt;p&gt;이번 포스팅에서는 &lt;code class=&quot;language-text&quot;&gt;runtime/map.go&lt;/code&gt; 파일을 훑어보며 Go에서 해시 테이블이 어떻게 구현되어 있는지 살펴본다.&lt;/p&gt;
+&lt;p&gt;이번 포스팅에서는 1.18 버전의 &lt;code class=&quot;language-text&quot;&gt;runtime/map.go&lt;/code&gt; 파일을 훑어보며 Go에서 해시 테이블이 어떻게 구현되어 있는지 살펴본다.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;hmap&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;bmap&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;maptype&lt;/code&gt;이 어떻게 정의되어 있는지 살펴본다.&lt;/li&gt;
 &lt;li&gt;맵을 생성하는 &lt;code class=&quot;language-text&quot;&gt;makemap()&lt;/code&gt; 함수에 대해 살펴본다.&lt;/li&gt;
@@ -114,17 +114,38 @@
 &lt;p&gt;그렇다면 키와 밸류는 어디에 저장되어 있을까?&lt;/p&gt;
 &lt;br&gt;
 &lt;p&gt;실제로 &lt;em&gt;bmap&lt;/em&gt;이 할당되는 과정이나 밸류를 갖고 오는 과정을 살펴보면 메모리 상에 다음과 같이 할당되어 있음을 알 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1195px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 29.000000000000004%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAy0lEQVQY03VRhwrFQAi7///FLtrSTfeeeUTweIMnSDEXY7TmOA4wnufBdV02Wfd9D9/3kSQJwjDEsiy47/uDp0kd9ph931HXNcZx/CGf54lt24RMHrFvDmsmeSJYFAXiOEaapiI8DIOI0808z5imSZKYJnG+K85v0zQiKoKO44gYV6QbTuaKxDiVTsuytI7Ic11XhFmT07Yt1nWFybIMQRBIgzrsug6e5yGKIusqz3PrhttQkL26QVVV4tpwAuP7Nhrvt9K70tG/H/kCy/LP/PxZYNgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20220407 1&quot;
+        title=&quot;20220407 1&quot;
+        src=&quot;/static/819e228b9e4b144d9bc599f3256cb6fd/4d383/20220407-1.png&quot;
+        srcset=&quot;/static/819e228b9e4b144d9bc599f3256cb6fd/5a46d/20220407-1.png 300w,
+/static/819e228b9e4b144d9bc599f3256cb6fd/0a47e/20220407-1.png 600w,
+/static/819e228b9e4b144d9bc599f3256cb6fd/4d383/20220407-1.png 1195w&quot;
+        sizes=&quot;(max-width: 1195px) 100vw, 1195px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt; bmap &lt;span class=&quot;token keyword&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 	tophash &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;uint8&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 keys &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;K
 values &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;V&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;코드 상에 keys와 values가 이렇게 나타나있지는 않지만 &lt;strong&gt;&lt;em&gt;bmap&lt;/em&gt;이 할당된 메모리 이후에 실제로 8개의 키 함께 할당되어 있고 그 후에 8개의 밸류가 선형적으로 할당&lt;/strong&gt;되어 있는 것을 알 수 있다.&lt;/p&gt;
+&lt;p&gt;코드 상에 keys와 values가 이렇게 나타나있지는 않지만 &lt;strong&gt;&lt;em&gt;bmap&lt;/em&gt;이 할당된 메모리 이후에 실제로 8개의 키 함께 할당되어 있고 그 후에 8개의 밸류가 선형적으로 할당&lt;/strong&gt;되어 있다.&lt;/p&gt;
 &lt;br&gt;
-&lt;p&gt;여기서 &amp;#x3C; key0 | key1 | … | key7 | val0 | val 1 | … | val7 &gt; 이렇게 키끼리 밸류끼리 묶는 것보다, &amp;#x3C; key0 | val0 | … | key7 | val7 &gt; 과 같이 키와 밸류를 교대하며 할당하는 것이 더 편하지 않을까 하는 의문이 들 수 있다.&lt;/p&gt;
+&lt;p&gt;여기서 &lt;code class=&quot;language-text&quot;&gt;&amp;lt; key0 | key1 | ... | key7 | val0 | val1 | ... | val7 &amp;gt;&lt;/code&gt; 이렇게 키끼리 밸류끼리 묶는 것보다, &lt;code class=&quot;language-text&quot;&gt;&amp;lt; key0 | val0 | ... | key7 | val7 &amp;gt;&lt;/code&gt; 과 같이 키와 밸류를 교대하며 할당하는 것이 더 편하지 않을까 하는 의문이 들 수 있다.&lt;/p&gt;
 &lt;p&gt;물론 키-밸류를 교대하며 각각을 한 쌍으로 할당하는 것이 데이터의 접근에 있어 코드가 덜 복잡하다.&lt;/p&gt;
-&lt;p&gt;그러나 &lt;code class=&quot;language-text&quot;&gt;map[int64]int8&lt;/code&gt;과 같은 타입의 경우 키-밸류를 페어로 할당하면 &amp;#x3C; 64비트 | 8비트 | 64비트 | 8비트 | … &gt; 와 같이 할당되는데, &lt;strong&gt;메모리 정렬(memory alignment)&lt;/strong&gt; 관점에서 봤을 때 비효율이 발생할 수밖에 없다.&lt;/p&gt;
-&lt;p&gt;따라서 &lt;code class=&quot;language-text&quot;&gt;map[int64]int8&lt;/code&gt;을 Go의 구현대로 생성하면 &amp;#x3C; 64비트 | 64비트 | … | 8비트 | 8비트 | … &gt;와 같은 형태로 할당되어 패딩을 제거할 수 있어 더 효율적이다.&lt;/p&gt;
+&lt;p&gt;그러나 &lt;code class=&quot;language-text&quot;&gt;map[int64]int8&lt;/code&gt;과 같은 타입의 경우 키-밸류를 페어로 할당하면 &lt;code class=&quot;language-text&quot;&gt;&amp;lt; 64비트 | 8비트 | 64비트 | 8비트 | ... &amp;gt;&lt;/code&gt; 와 같이 할당되는데, &lt;strong&gt;메모리 정렬(memory alignment)&lt;/strong&gt; 관점에서 봤을 때 8비트 후에 다량의 패딩이 추가되어 비효율이 발생할 수밖에 없다.&lt;/p&gt;
+&lt;p&gt;따라서 &lt;code class=&quot;language-text&quot;&gt;map[int64]int8&lt;/code&gt;을 Go의 구현대로 생성하면 &lt;code class=&quot;language-text&quot;&gt;&amp;lt; 64비트 | 64비트 | ... | 8비트 | 8비트 | ... &amp;gt;&lt;/code&gt;와 같은 형태로 할당되어 패딩을 제거할 수 있어 더 효율적이다.&lt;/p&gt;
 &lt;br&gt;
 &lt;p&gt;우선 지금은 &lt;em&gt;bmap&lt;/em&gt;에 대해서 이 정도로만 알아보고 추후에 &lt;code class=&quot;language-text&quot;&gt;mapaccess()&lt;/code&gt;나 &lt;code class=&quot;language-text&quot;&gt;mapassign()&lt;/code&gt; 함수를 설명할 때 자세히 살펴보도록 하겠다.&lt;/p&gt;
 &lt;br&gt;
@@ -367,6 +388,27 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;v&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;이번 포스트의 1번 섹션에서 &lt;em&gt;bmap&lt;/em&gt;에는 tophash만 구현되어 있고 키와 밸류에 대한 정보가 없다고 소개한 바 있다.&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;dataOffset&lt;/code&gt;이 bmap과 int64를 필드로 가지는 구조체에서 int64가 시작하는 위치의 오프셋을 가리키게 되므로, 키와 밸류에 대한 정보는 bmap 바깥에 저장된다는 것을 알 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1190px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 33.33333333333333%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABFUlEQVQoz2VRa6uCQBTc//9XIoQw8kuBYBDhB5EgIlCQMkIT8pGPyrnMgXOReweGZc/OecxZ8/l8QIzjiO/3+0uiqiokSYL7/Y7r9Yqu6/7plKzDN0NR0zTo+16CwzAI3+832rbF8/mUwjypZXxK1b5eL8k3ZVkijmNkWSZF2YWkSCflXU+dUN+VzGXMpGkqF9LzPMznc6xWK7F5Op2w3+8RBAFmsxls24ZlWRKr61ri2+0W5/MZjuPIlOZ2u6EoCrHt+z6WyyVc10We5zgcDpJwPB6xWCywXq8lMQxD0BnjzOGeN5uN1DDcz263AwsrODqLXS4X+Qy1rHg8HjIdmxK0rKsw0x0ppr9GG1EUyQqmDVXzFz+E7RBw5h2DpQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20220407 2&quot;
+        title=&quot;20220407 2&quot;
+        src=&quot;/static/9a7bdb56da0c936df31a0091eff9f4ec/393aa/20220407-2.png&quot;
+        srcset=&quot;/static/9a7bdb56da0c936df31a0091eff9f4ec/5a46d/20220407-2.png 300w,
+/static/9a7bdb56da0c936df31a0091eff9f4ec/0a47e/20220407-2.png 600w,
+/static/9a7bdb56da0c936df31a0091eff9f4ec/393aa/20220407-2.png 1190w&quot;
+        sizes=&quot;(max-width: 1190px) 100vw, 1190px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
 &lt;br&gt;
 &lt;h2 id=&quot;5-mapassign--맵에-키-할당하기&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#5-mapassign--%EB%A7%B5%EC%97%90-%ED%82%A4-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot; aria-label=&quot;5 mapassign  맵에 키 할당하기 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;5. &lt;em&gt;mapassign()&lt;/em&gt; :: 맵에 키 할당하기&lt;/h2&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mapassign&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;t &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;maptype&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; h &lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt;hmap&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; key unsafe&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Pointer&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; unsafe&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Pointer&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -396,7 +438,15 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&quot;https://github.com/golang/go/blob/23756207fb68c34ae15a030319dc31248e21cf45/src/runtime/malloc.go#L225&quot;&gt;golang/go :: src/runtime/malloc.go&lt;/a&gt; (accessed on 2022/04/06)&lt;/li&gt;
 &lt;li&gt;[2] &lt;a href=&quot;https://youtu.be/Tl7mi9QmLns&quot;&gt;Keith Randall, “Inside the Map Implementation”, GopherCon 2016.&lt;/a&gt; (&lt;a href=&quot;https://docs.google.com/presentation/d/1CxamWsvHReswNZc7N2HMV7WPFqS8pvlPVZcDegdC_T4/edit#slide=id.g15413b4d29_0_6&quot;&gt;slide&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 2 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_2/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_2/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 : 인그레스 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_ingress/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_ingress/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_1/&quot;&gt;쿠버네티스 서비스 1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_2/&quot;&gt;쿠버네티스 서비스 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 : 인그레스&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;(작성 중)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 2 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_2/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_2/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
 &lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
 &lt;h2 id=&quot;들어가기-전에&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90&quot; aria-label=&quot;들어가기 전에 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;들어가기 전에&lt;/h2&gt;
 &lt;p&gt;지난 포스팅에서는 서비스라는 리소스에 대해 간략하게 알아봤고 가장 기본적인 서비스인 ClusterIP 타입의 서비스를 예시로 들었다. 다만 이 ClusterIP 타입은 이름에서도 알 수 있듯이 클러스터의 IP를 할당받는다. 다시 말하면, 서비스를 생성했는데 &lt;strong&gt;이 서비스는 클러스터 내부에서만 접속이 가능&lt;/strong&gt;하다는 의미이다.&lt;/p&gt;
@@ -544,15 +594,7 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&quot;https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/&quot;&gt;https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[이미지 1-5] M. Lukša, Kubernetes in Action, Manning Publications, 2018.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 : 인그레스 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_ingress/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_ingress/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
-&lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_1/&quot;&gt;쿠버네티스 서비스 1&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_2/&quot;&gt;쿠버네티스 서비스 2&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 : 인그레스&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;(작성 중)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_1/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_1/</guid><pubDate>Mon, 26 Jul 2021 23:50:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_1/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_1/</guid><pubDate>Mon, 26 Jul 2021 23:50:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
 &lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 1&lt;/strong&gt;&lt;/li&gt;
