@@ -1,4 +1,223 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie et al.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 28 Oct 2022 09:48:24 GMT</lastBuildDate><item><title><![CDATA[파이썬 SharedMemory 사용 시 자동으로 unlink가 호출되는 문제]]></title><description><![CDATA[문제점 Python 3.8에서 추가된  모듈의 를 사용하는 경우, SharedMemory를 사용하던 프로세스가 종료되었을 때, 연결된 공유 메모리 블록까지 릴리즈되어 다른 프로세스에서 사용이 불가능한 문제 발생한다. SharedMemory…]]></description><link>https://blog.frec.kr/troubleshooting/py_shm_unlink/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/py_shm_unlink/</guid><pubDate>Fri, 28 Oct 2022 18:42:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제점&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C%EC%A0%90&quot; aria-label=&quot;문제점 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제점&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie et al.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 28 May 2023 07:50:08 GMT</lastBuildDate><item><title><![CDATA[Spring Batch 5.0에서 배치용 메타데이터 DB와 서비스 DB 분리하기]]></title><description><![CDATA[스프링 배치 메타데이터 스프링 배치에서는 과 의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. 1 메타데이터 엔티티들은 , , ,  등이 있고, 이들을 관리하는 테이블들은 총 6개로 다음과 같다.  : Job…]]></description><link>https://blog.frec.kr/spring/spring-batch-5-metadata-db/</link><guid isPermaLink="false">https://blog.frec.kr/spring/spring-batch-5-metadata-db/</guid><pubDate>Fri, 26 May 2023 16:54:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;스프링-배치-메타데이터&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98-%EB%A9%94%ED%83%80%EB%8D%B0%EC%9D%B4%ED%84%B0&quot; aria-label=&quot;스프링 배치 메타데이터 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;스프링 배치 메타데이터&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;스프링 배치에서는 &lt;code class=&quot;language-text&quot;&gt;Job&lt;/code&gt;과 &lt;code class=&quot;language-text&quot;&gt;Step&lt;/code&gt;의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. [1]&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;메타데이터 엔티티들은 &lt;code class=&quot;language-text&quot;&gt;JobInstance&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;JobExecution&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;JobParameters&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;StepExecution&lt;/code&gt; 등이 있고, 이들을 관리하는 테이블들은 총 6개로 다음과 같다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;BATCH_JOB_INSTANCE&lt;/code&gt; : Job이 실행될 때마다 생성된 JobInstance&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;BATCH_JOB_EXECUTION&lt;/code&gt; : JobInstance의 시작/종료 시간, 상태, 종료 메세지 등 정보&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;BATCH_JOB_EXECUTION_PARAMS&lt;/code&gt; : JobExecution에 전달되는 JobParameters&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;BATCH_JOB_EXECUTION_CONTEXT&lt;/code&gt; : Job 범위에서 관리하는 컨텍스트가 serialize되어 기록됨.&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;BATCH_STEP_EXECUTION&lt;/code&gt; : Job 하위 Step들의 시작/종료 시간, 상태, read/write/skip/commit 카운트 등 상세한 정보&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;BATCH_STEP_EXECUTION_CONTEXT&lt;/code&gt; : Step 범위에서 관리하는 컨텍스트가 serialize되어 기록됨.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 831px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 81.66666666666667%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAIAAACZeshMAAAACXBIWXMAAAsTAAALEwEAmpwYAAACT0lEQVQoz4VTaW/TQBD1//8nQCUEAtSWAoW2aRNKnMTnem3vrm8nduw2vq8wcaV+IRGr0Wr9PO/N7Mws96iyz3eLi6nw5XZ+ORW+88jwt/v9fhiG/f8W57g2UlWsIYRUy7Lqum6b2ouz38heGN5MoSINT+lwiNhzEfGS9igoIia8gp1g7YSbq8mfn7PFr9lCNp3+BJt7PeV58XpOn59sRpipr3136Luu74+Td0X14WZ+9m0K9uZyciuYgLrBeilrc1HhRUXG5gu57wdI4bC/2DBwVdMYlKqqZphkvYnKqoJSVe2Q1V38lD3lVQYfp+5cN43jupQQ0zSDMKzrBtA5Ym+/Ppxd3b+7nJxPxabrg3h3tzKmkjlZ4fsVvlthFm65pm1t1yXjatt27NAQRxvDMEDQ87w8z0DO8jfX0wWU8HrKAxG7UZjsRrLjMEoxxlEU9X3fdt0mjimlkAs0DxS7rnvOdq5jhb7r2Ax6CXIAck3TABmcNE1br9cAlWUJZMYYyMVxDH5VVW2ThFkWKPpB8HJhCHOIzGybjUvX9TRN4UeSJhajkA5knqYJINs0hTECB9uymrouirwsiwPZsm168KQmIclIZo63FJWFIPOCJCEMmYdxImpEwnQ0slQMywsOZD/wGSWUmI5td2PN8rKGJgVREj/nyS7vTw1JUZYy0peSuoBQokIth/jxxxv+/EF4/+P3p1v+YibNkH2cDNOTZmWaV2BJVu6KepsmkqoqKkJYVzW8y4uqaY8+Mu5faBNvVzISZBV2WdNVneiEHY38F+2HdOuc9sscAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20230526 1&quot;
+        title=&quot;20230526 1&quot;
+        src=&quot;/static/51ef1ae3594608675717babc0d7d96ad/5b4a1/20230526-1.png&quot;
+        srcset=&quot;/static/51ef1ae3594608675717babc0d7d96ad/5a46d/20230526-1.png 300w,
+/static/51ef1ae3594608675717babc0d7d96ad/0a47e/20230526-1.png 600w,
+/static/51ef1ae3594608675717babc0d7d96ad/5b4a1/20230526-1.png 831w&quot;
+        sizes=&quot;(max-width: 831px) 100vw, 831px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;(이미지 출처 : &lt;a href=&quot;https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html&quot;&gt;https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html&lt;/a&gt;)&lt;/p&gt;
+&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;문제 상황&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;배치 Job에서 사용하는 서비스 DB에 배치 메타데이터 테이블이 위치하는 것이 바람직하지 않을 수 있다.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;혹은 비주류 DB에 메타데이터를 저장하려 할 경우, 스프링 배치에서 지원하지 않을 수 있다. [2] (ex. Tibero)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;지원하는 DB: DB2, Derby, H2, HANA, HSQL, MariaDB, MySQL, Postgres, Sqlite, SqlServer, Sybase&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;메타데이터-db-분리하기-spring-batch-50-이전&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%A9%94%ED%83%80%EB%8D%B0%EC%9D%B4%ED%84%B0-db-%EB%B6%84%EB%A6%AC%ED%95%98%EA%B8%B0-spring-batch-50-%EC%9D%B4%EC%A0%84&quot; aria-label=&quot;메타데이터 db 분리하기 spring batch 50 이전 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;메타데이터 DB 분리하기 (Spring Batch 5.0 이전)&lt;/h2&gt;
+&lt;p&gt;웹에서 찾아보면 주로 다음 솔루션이 보인다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;DefaultBatchConfigurer&lt;/code&gt;를 구현하고 DataSource를 설정하는 부분을 비워두는 방법&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ex) &lt;a href=&quot;https://stackoverflow.com/a/42677607&quot;&gt;https://stackoverflow.com/a/42677607&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DataSource가 설정되지 않을 때, 스프링 배치는 &lt;code class=&quot;language-text&quot;&gt;MapJobRepositoryFactoryBean&lt;/code&gt;을 이용해 메타데이터를 &lt;strong&gt;Map 기반으로 인메모리 관리&lt;/strong&gt;한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;이 경우 Thread-safe하지 않아 Job을 병렬로 구동할 경우 문제가 발생할 수 있으며,&lt;/li&gt;
+&lt;li&gt;퍼포먼스 또한 형편없어서 deprecated 처리되었다. [3]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;또한 Spring Batch 5.0에서는 DefaultBatchConfigurer가 제거되어 이 방법을 사용할 수 없는데,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;대체로 생긴 DefaultBatchConfiguration은 DataSource 설정을 지원하지 않는다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;spring-batch-50에서&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-batch-50%EC%97%90%EC%84%9C&quot; aria-label=&quot;spring batch 50에서 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Batch 5.0에서&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;@EnableBatchProcessing&lt;/code&gt; 어노테이션은 5.0 버전에서 몇가지 변경점이 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;dataSourceRef 속성을 통해 DataSource 빈을 직접 지정해줄 수 있고,&lt;/li&gt;
+&lt;li&gt;transactionManagerRef 속성을 통해 TransactionManager 빈을 직접 지정할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Configuration에서 DataSource 빈을 두 개 등록해주고 서비스 데이터가 들어갈 데이터소스에 &lt;code class=&quot;language-text&quot;&gt;@Primary&lt;/code&gt; 어노테이션을 설정해두었다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;다음 BatchConfig.java 코드와 같이 batch 메타데이터가 저장될 데이터소스(batchDataSource)를 따로 생성하였다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;TransactionManager 빈을 등록할 때 사용할 데이터소스를 지정해주었으며,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;최종적으로 JobConfig에서 &lt;code class=&quot;language-text&quot;&gt;@EnableBatchProcessing(dataSourceRef = &amp;quot;batchDataSource&amp;quot;, transactionManagerRef = &amp;quot;jpaTransactionManager&amp;quot;)&lt;/code&gt; 어노테이션을 통해 두 데이터소스를 분리 지정했다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;추가로, batchDataSource 빈을 &lt;code class=&quot;language-text&quot;&gt;EmbeddedDataSource&lt;/code&gt;로 구성하여 H2와 같은 인메모리 DB를 사용할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;전체 코드는 다음과 같다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;config/BatchConfig.java&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BatchConfig&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource.url}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; url&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource.username}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; username&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource.password}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; password&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource.driver-class-name}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; driverClassName&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource-batch.url}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; batchUrl&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource-batch.username}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; batchUsername&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource-batch.password}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; batchPassword&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Value&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;${spring.datasource-batch.driver-class-name}&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; batchDriverClassName&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Primary&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSourceBuilder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;url&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;username&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;password&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;driverClassName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;driverClassName&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSource&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;batchDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DataSourceBuilder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;batchUrl&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;batchUsername&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;batchPassword&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;driverClassName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;batchDriverClassName&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PlatformTransactionManager&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;jpaTransactionManager&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;EntityManagerFactory&lt;/span&gt; entityManagerFactory&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token class-name&quot;&gt;JpaTransactionManager&lt;/span&gt; jpaTransactionManager &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JpaTransactionManager&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entityManagerFactory&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        jpaTransactionManager&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setDataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; jpaTransactionManager&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;JobConfig&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@RequiredArgsConstructor&lt;/span&gt;
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@EnableBatchProcessing&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dataSourceRef &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;batchDataSource&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; transactionManagerRef &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;jpaTransactionManager&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationJobConfig&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; jobName &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;dailyAggregationJob&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JobRepository&lt;/span&gt; jobRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PlatformTransactionManager&lt;/span&gt; jpaTransactionManager&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;EntityManagerFactory&lt;/span&gt; entityManagerFactory&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Qualifier&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;jobName&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Job&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dailyAggregationJob&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JobBuilder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;jobName&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; jobRepository&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dailyAggregationStep1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+		&lt;span class=&quot;token annotation punctuation&quot;&gt;@JobScope&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Step&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dailyAggregationStep1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;StepBuilder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;jobName &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Step1&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; jobRepository&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;DailyAggregationVo&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregatedData&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; jpaTransactionManager&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;reader&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dailyAggregationItemReader&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;processor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dailyAggregationItemProcessor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;writer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;dailyAggregationItemWriter&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+		&lt;span class=&quot;token annotation punctuation&quot;&gt;@StepScope&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationItemReader&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dailyAggregationItemReader&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationItemReader&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entityManagerFactory&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+		&lt;span class=&quot;token annotation punctuation&quot;&gt;@StepScope&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationItemReader&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dailyAggregationItemProcessor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationItemReader&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+		&lt;span class=&quot;token annotation punctuation&quot;&gt;@StepScope&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationItemReader&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;dailyAggregationItemWriter&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DailyAggregationItemReader&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entityManagerFactory&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;resources/application.yaml&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;spring&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+	&lt;span class=&quot;token comment&quot;&gt;// ...&lt;/span&gt;
+  datasource&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    driver&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;name&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;org&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mariadb&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;jdbc&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;Driver&lt;/span&gt;
+    url&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; jdbc&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;mariadb&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;localhost&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;20000&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;playground&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;characterEncoding&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;UTF&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;serverTimezone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Asia&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Seoul&lt;/span&gt;
+    username&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; username
+    password&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; password
+  datasource&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;batch&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;
+    driver&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;name&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;org&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;mariadb&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;jdbc&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;Driver&lt;/span&gt;
+    url&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; jdbc&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;mariadb&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;localhost&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;20001&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;batch_metadata&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;characterEncoding&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;UTF&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;amp;&lt;/span&gt;serverTimezone&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Asia&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Seoul&lt;/span&gt;
+    username&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; username
+    password&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; password
+	&lt;span class=&quot;token comment&quot;&gt;// ...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;references&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#references&quot; aria-label=&quot;references permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;[1] &lt;a href=&quot;https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html&quot;&gt;https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;[2] org.springframework.batch.support.DatabaseType (&lt;a href=&quot;https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/support/DatabaseType.html&quot;&gt;https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/support/DatabaseType.html&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;[3] &lt;a href=&quot;https://github.com/spring-projects/spring-batch/issues/3780&quot;&gt;https://github.com/spring-projects/spring-batch/issues/3780&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[파이썬 SharedMemory 사용 시 자동으로 unlink가 호출되는 문제]]></title><description><![CDATA[문제점 Python 3.8에서 추가된  모듈의 를 사용하는 경우, SharedMemory를 사용하던 프로세스가 종료되었을 때, 연결된 공유 메모리 블록까지 릴리즈되어 다른 프로세스에서 사용이 불가능한 문제 발생한다. SharedMemory…]]></description><link>https://blog.frec.kr/troubleshooting/py_shm_unlink/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/py_shm_unlink/</guid><pubDate>Fri, 28 Oct 2022 18:42:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제점&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C%EC%A0%90&quot; aria-label=&quot;문제점 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제점&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Python 3.8에서 추가된 &lt;code class=&quot;language-text&quot;&gt;multiprocessing.shared_memory&lt;/code&gt; 모듈의 &lt;code class=&quot;language-text&quot;&gt;SharedMemory&lt;/code&gt;를 사용하는 경우,&lt;/li&gt;
 &lt;li&gt;
@@ -591,7 +810,15 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&quot;https://github.com/golang/go/blob/23756207fb68c34ae15a030319dc31248e21cf45/src/runtime/malloc.go#L225&quot;&gt;golang/go :: src/runtime/malloc.go&lt;/a&gt; (accessed on 2022/04/06)&lt;/li&gt;
 &lt;li&gt;[2] &lt;a href=&quot;https://youtu.be/Tl7mi9QmLns&quot;&gt;Keith Randall, “Inside the Map Implementation”, GopherCon 2016.&lt;/a&gt; (&lt;a href=&quot;https://docs.google.com/presentation/d/1CxamWsvHReswNZc7N2HMV7WPFqS8pvlPVZcDegdC_T4/edit#slide=id.g15413b4d29_0_6&quot;&gt;slide&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 2 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_2/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_2/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 : 인그레스 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_ingress/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_ingress/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_1/&quot;&gt;쿠버네티스 서비스 1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_2/&quot;&gt;쿠버네티스 서비스 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 : 인그레스&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;(작성 중)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 2 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_2/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_2/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
 &lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
 &lt;h2 id=&quot;들어가기-전에&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90&quot; aria-label=&quot;들어가기 전에 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;들어가기 전에&lt;/h2&gt;
 &lt;p&gt;지난 포스팅에서는 서비스라는 리소스에 대해 간략하게 알아봤고 가장 기본적인 서비스인 ClusterIP 타입의 서비스를 예시로 들었다. 다만 이 ClusterIP 타입은 이름에서도 알 수 있듯이 클러스터의 IP를 할당받는다. 다시 말하면, 서비스를 생성했는데 &lt;strong&gt;이 서비스는 클러스터 내부에서만 접속이 가능&lt;/strong&gt;하다는 의미이다.&lt;/p&gt;
@@ -739,15 +966,7 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&quot;https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/&quot;&gt;https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[이미지 1-5] M. Lukša, Kubernetes in Action, Manning Publications, 2018.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 : 인그레스 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_ingress/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_ingress/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
-&lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_1/&quot;&gt;쿠버네티스 서비스 1&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_2/&quot;&gt;쿠버네티스 서비스 2&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 : 인그레스&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;(작성 중)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_1/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_1/</guid><pubDate>Mon, 26 Jul 2021 23:50:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_1/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_1/</guid><pubDate>Mon, 26 Jul 2021 23:50:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
 &lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 1&lt;/strong&gt;&lt;/li&gt;
