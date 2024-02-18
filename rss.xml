@@ -1,4 +1,166 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie et al.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 28 May 2023 08:25:18 GMT</lastBuildDate><item><title><![CDATA[Spring Batch 5.0에서 배치용 메타데이터 DB와 서비스 DB 분리하기]]></title><description><![CDATA[스프링 배치 메타데이터 스프링 배치에서는 과 의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. 1 메타데이터 엔티티들은 , , ,  등이 있고, 이들을 관리하는 테이블들은 총 6개로 다음과 같다.  : Job…]]></description><link>https://blog.frec.kr/spring/spring-batch-5-metadata-db/</link><guid isPermaLink="false">https://blog.frec.kr/spring/spring-batch-5-metadata-db/</guid><pubDate>Fri, 26 May 2023 16:54:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;스프링-배치-메타데이터&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98-%EB%A9%94%ED%83%80%EB%8D%B0%EC%9D%B4%ED%84%B0&quot; aria-label=&quot;스프링 배치 메타데이터 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;스프링 배치 메타데이터&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Freckie et al.]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 18 Feb 2024 13:20:29 GMT</lastBuildDate><item><title><![CDATA[Ingress에 정의된 path에 regex 사용시 라우팅되지 않던 이슈]]></title><description><![CDATA[문제 상황  표면적으로 보이던 에러 상황 프론트엔드에서 로의 모든 request가 404 에러 발생 request가 도착해야할 pod에 어떠한 로그도 찍히지 않았다. 다만, ingress-nginx-controller 로그에는 request…]]></description><link>https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</guid><pubDate>Sun, 18 Feb 2024 21:48:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제-상황&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C-%EC%83%81%ED%99%A9&quot; aria-label=&quot;문제 상황 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제 상황&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Ingress.yaml&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; networking.k8s.io/v1
+&lt;span class=&quot;token key atrule&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Ingress
+&lt;span class=&quot;token key atrule&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; api&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;ingress
+  &lt;span class=&quot;token key atrule&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; mynamespace
+  &lt;span class=&quot;token key atrule&quot;&gt;annotations&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;kubernetes.io/ingress.class&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;nginx&quot;&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;nginx.ingress.kubernetes.io/use-regex&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;true&quot;&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;nginx.ingress.kubernetes.io/rewrite-target&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; /$2
+&lt;span class=&quot;token key atrule&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;/api(/|$)(.*)&quot;&lt;/span&gt;
+            &lt;span class=&quot;token key atrule&quot;&gt;pathType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Prefix
+            &lt;span class=&quot;token key atrule&quot;&gt;backend&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+              &lt;span class=&quot;token key atrule&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; api&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;spring&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;service
+                &lt;span class=&quot;token key atrule&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+                  &lt;span class=&quot;token key atrule&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;80&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;표면적으로-보이던-에러-상황&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%ED%91%9C%EB%A9%B4%EC%A0%81%EC%9C%BC%EB%A1%9C-%EB%B3%B4%EC%9D%B4%EB%8D%98-%EC%97%90%EB%9F%AC-%EC%83%81%ED%99%A9&quot; aria-label=&quot;표면적으로 보이던 에러 상황 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;표면적으로 보이던 에러 상황&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;프론트엔드에서 &lt;code class=&quot;language-text&quot;&gt;/api/*&lt;/code&gt;로의 모든 request가 404 에러 발생&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;request가 도착해야할 pod에 어떠한 로그도 찍히지 않았다.&lt;/li&gt;
+&lt;li&gt;다만, ingress-nginx-controller 로그에는 request가 도착했고 404를 돌려줬다는 로그가 찍혔다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;여기서, 다음 상황이라고 추측했다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;프론트엔드 → ingress-nginx-controller —(연결 두절?)→ 백엔드 service → pod&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;원인-추적&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%9B%90%EC%9D%B8-%EC%B6%94%EC%A0%81&quot; aria-label=&quot;원인 추적 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;원인 추적&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Ingress를 살짝 바꿔 적용 후 ingress-nginx-controller 로그를 살펴봄.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;I0216 08:16:46.523876       7 main.go:100] &amp;quot;successfully validated configuration, accepting&amp;quot; ingress=&amp;quot;mynamespace/api-ingress&amp;quot;
+
+I0216 08:16:46.529334       7 store.go:434] &amp;quot;Found valid IngressClass&amp;quot; ingress=&amp;quot;mynamespace/api-ingress&amp;quot; ingressclass=&amp;quot;nginx&amp;quot;
+
+W0216 08:16:46.529372       7 store.go:869] ingress mynamespace/api-ingress contains invalid path /api(/|$)(.*)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;ingress가 변경된 후, controller에서 변경을 감지해 reconcile하는 과정에서 path가 잘못되었다고 얘기하고 있다.&lt;/li&gt;
+&lt;li&gt;에러도 아니고 경고였기 때문에 무시하고 지나쳤지만.. 해당 path는 아예 라우팅을 못해준다는 상황을 겨우 경고로 내뱉다니?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;이전에 성공적으로 동작하던 클러스터와 동작하지 않는 클러스터의 ingress-nginx-controller 이미지를 비교해봤다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;이전 클러스터 (동작O) : &lt;code class=&quot;language-text&quot;&gt;registry.k8s.io/ingress-nginx/controller:v1.6.4&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 56.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAABYlAAAWJQFJUiTwAAACiUlEQVQozzWSTW/bRhCGeWoNJKgtS9SS3G/ukiuSomRJVuwyVCMjQdDmFORYoC7QP1cg7KG/rUiUD0YzXdHO4cHMuzOYnZnd4NpafbMt/l5tn/1zvb19v1pvu2px1dm86ExedcvVdbf75a67bdquXq47k80668ohnrmic7PBvrd5+a8/a4JwOt3VRYLtiz3u7l5iVi4w4ilOCMURn2GoCkxdiYm0OIkFXkYMxxEfiChHqRgKybwVyJX5KyDRtHEZ/Zym9tuUp18viOjHieqJtH3MXU953itd9FLP+oTbPmH+nJp+4nPCRPoc2RPKv4jU4NXm5o/gPFJNnFa+iEZpZ+DmS2DGgS5roNxCnKTgC3geLGUZxMxAmCgYx9KjYETEMVIOr2/b++CCZg2189ONaGcllIslRkwhoRKnTCLhahhzNPUrOK3B25Oe+JEn8QCMCT3GKsfNzfP74GnIfcG6Z9nCd+ggzQtU1qEwOUqP9loYh4lIMX7ktL9Lwh7hcBHSYySzh4I/EdEwW/a+S6TagqsqyMs5FPXC+3OoVhvYv3kH86sV1Os1LDcbKBZLyH0sr+ohNy+rY1Ytcf2suQ+ejFkjVNbr1GFM1VG5BZhZBambgR8dyAkqBz/mGmKhgSozkMgUqDTHROhv3Ba4fhz5ud69PBa/vcX1vsHXO4smtziKpEcMXH73yQMXhA981+chAyIy/yi7P4MwZjf5/tV/5u7XT3Wz/bjfsoM2+hBSfaDKerIDYfoQC3Ng3vf/8UA9TOdDbNAq+6BsAVV99XuQRNGTURD8fB4Eu7Pgxzb4gbejS9LGJGy1lK3RqiXhpOU0aTOTtkrwVivR5ta0qZKDdpk9xXZnZ2eT/wH07QzFKQsH4AAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20240218-1.png&quot;
+        title=&quot;20240218-1.png&quot;
+        src=&quot;/static/6a91092c17055b05312ca502c046a1c6/c1b63/20240218-1.png&quot;
+        srcset=&quot;/static/6a91092c17055b05312ca502c046a1c6/5a46d/20240218-1.png 300w,
+/static/6a91092c17055b05312ca502c046a1c6/0a47e/20240218-1.png 600w,
+/static/6a91092c17055b05312ca502c046a1c6/c1b63/20240218-1.png 1200w,
+/static/6a91092c17055b05312ca502c046a1c6/d61c2/20240218-1.png 1800w,
+/static/6a91092c17055b05312ca502c046a1c6/97a96/20240218-1.png 2400w,
+/static/6a91092c17055b05312ca502c046a1c6/6149e/20240218-1.png 2784w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;    &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;지금 클러스터 (동작X) : &lt;code class=&quot;language-text&quot;&gt;registry.k8s.io/ingress-nginx/controller:v1.6.3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 56.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAABYlAAAWJQFJUiTwAAACaElEQVQoz0WSS2/UMBDHcwIkkLqPZBPHdvyI89o8lrYspWmWLqJA1RPiiIADXw6p4cBnQ7A80rWZ9bbi8NN/xhn9PTOxs1RKnCzzL0+enX5tz55fHx0/7cv6ca/SoldZ1Sd52Z+tzvu2O++TbL4/vyXJij7LrV6rdP4NtHVm/mxV58hcvH5jXl1eGTVvTEClcX1sxlFuPF4Ymc1NyJRxUWQmATHTgFoCTA3jxERsB+SEf3b8YNZmCf4tpbrxiPw78ukwDfngMzUgmg2YpgMXxcBEPoRUDZgkAyLxMEVs8EIGNWwISPQnjDhcwD44BwFvkSzBRBimcp1VC03iTMuy0SFROgilRjgG9kppas/dkOsp2jMJ2NbFMXQoPjojnLRYVQMUGJXPdV43xsfMMiMMxhdm4hMznsEKYA0j0N3YLqJ3aDegWw+LveEjj4JhPZCkgQ4zLdJ8pxYOiCQ3VKYmjCTsMba4QWQvuUUDWze8NTzwozZKKzCsDRZKZ2Wp03ml580CYtDFkV5fvdPV4aFujo/1AijqRufVjtrWpmW1lXllZiGDDl3aUpYMUhUGEbHlWaPjvNQyzTX8NQuMbxVRoVEkNGaxhXC1023I5A1iCayJ25HPxOrltrh8a47WrXm9UiZOlRkHDIgsk7vY/w+8BouNZ1RPkB35k+MhcpKuL77HLy5/1e3y53pJNiIWG1jyBnMFJBufiA2K4g2BGN7jBgNEpPZbuI9/UJHqAEfvnTAIHo4d5/TAcVYPnPudc49244nfId/rBGNdLHjne25Hcdglsex4RDvBoy5VcSc5s3mWqF2+Go1G7j9RRQpU+9vKRgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20240218-2.png&quot;
+        title=&quot;20240218-2.png&quot;
+        src=&quot;/static/18a1dad3cfdb365d4d4cb289df1ce7c6/c1b63/20240218-2.png&quot;
+        srcset=&quot;/static/18a1dad3cfdb365d4d4cb289df1ce7c6/5a46d/20240218-2.png 300w,
+/static/18a1dad3cfdb365d4d4cb289df1ce7c6/0a47e/20240218-2.png 600w,
+/static/18a1dad3cfdb365d4d4cb289df1ce7c6/c1b63/20240218-2.png 1200w,
+/static/18a1dad3cfdb365d4d4cb289df1ce7c6/d61c2/20240218-2.png 1800w,
+/static/18a1dad3cfdb365d4d4cb289df1ce7c6/97a96/20240218-2.png 2400w,
+/static/18a1dad3cfdb365d4d4cb289df1ce7c6/6149e/20240218-2.png 2784w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;    &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;태그의 마이너 버전이 하나가 다운그레이드 된 것.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;현재 클러스터는 ingress-nginx-controller를 다음 가이드대로 설치하고 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/baremetal/deploy.yaml&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;yaml 파일의 브랜치도 controller-v1.6.4로 설정돼있으니 설치되는 것들도 동일하다 판단했으나, 실제로 구동된 이미지의 버전이 달랐다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;원인&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%9B%90%EC%9D%B8&quot; aria-label=&quot;원인 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;원인&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;ingress-nginx 리포지토리가 v1.6.3 → v1.6.4로 업데이트될 때, controller 부분에 변경사항이 있었다. (&lt;a href=&quot;https://github.com/kubernetes/ingress-nginx/pull/9626/files#diff-5f4da05f4716a8d567db533819486a784e3f4993c11021da3b569564c78a5935L868&quot;&gt;이슈 #9626&lt;/a&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;1.6.4에선 다음 코드가 삭제됐다. (L868)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;go&quot;&gt;&lt;pre class=&quot;language-go&quot;&gt;&lt;code class=&quot;language-go&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;ingressutils&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;IsSafePath&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;copyIng&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; path&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Path&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    klog&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;Warningf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;ingress %s contains invalid path %s&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; path&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Path&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;ingress path를 검증하고 warning을 내뱉는 코드로, 위에서 발생했던 로그와 일치한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;해당 검증 코드가 문제를 일으켰는지 1.6.4에서 검증이 제거됐고, v1.6.4를 설치한 기존 클러스터는 잘 동작한 것.&lt;/li&gt;
+&lt;li&gt;다만 무슨 이유에서인지 deploy.yaml 파일에 이미지들의 버전이 1.6.3으로 변경됐고, 오류가 있는 검증 코드가 동작하게 된 것이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1168px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 12%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVQI1x2NQQ6DIBREvf+huuoJml6gaYyKIF/gA0baJ+1iMslMZt4Qk2JWi6pyno3WPl2NXA/es+c1bRivWFHWn+8Zs0VW59lTxucDt0ckKM4Hhlwqtpdyv1Gmkdq+lJ6VWgkhkDrIeMviHMYJi5X/MPUjkYh9PpjHqQMTdgtcZECYWGroHqgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20240218-3.png&quot;
+        title=&quot;20240218-3.png&quot;
+        src=&quot;/static/9ae38dded346d9270ca37159c9651b16/8cdda/20240218-3.png&quot;
+        srcset=&quot;/static/9ae38dded346d9270ca37159c9651b16/5a46d/20240218-3.png 300w,
+/static/9ae38dded346d9270ca37159c9651b16/0a47e/20240218-3.png 600w,
+/static/9ae38dded346d9270ca37159c9651b16/8cdda/20240218-3.png 1168w&quot;
+        sizes=&quot;(max-width: 1168px) 100vw, 1168px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;    &lt;/p&gt;
+&lt;h2 id=&quot;해결-방법&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%ED%95%B4%EA%B2%B0-%EB%B0%A9%EB%B2%95&quot; aria-label=&quot;해결 방법 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;해결 방법&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;딱히 ingress-nginx-controller 버전에 민감한 클러스터나 프로젝트가 아니었기 때문에, 바로 윗 버전인 v1.7.0으로 업데이트했다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;느낀 점&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;웹에 있는 yaml 파일은 static 하지 않다.. 같은 파일인 듯 해도 언제든지 바뀔 수 있었다.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Spring Batch 5.0에서 배치용 메타데이터 DB와 서비스 DB 분리하기]]></title><description><![CDATA[스프링 배치 메타데이터 스프링 배치에서는 과 의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. 1 메타데이터 엔티티들은 , , ,  등이 있고, 이들을 관리하는 테이블들은 총 6개로 다음과 같다.  : Job…]]></description><link>https://blog.frec.kr/spring/spring-batch-5-metadata-db/</link><guid isPermaLink="false">https://blog.frec.kr/spring/spring-batch-5-metadata-db/</guid><pubDate>Fri, 26 May 2023 16:54:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;스프링-배치-메타데이터&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98-%EB%A9%94%ED%83%80%EB%8D%B0%EC%9D%B4%ED%84%B0&quot; aria-label=&quot;스프링 배치 메타데이터 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;스프링 배치 메타데이터&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;스프링 배치에서는 &lt;code class=&quot;language-text&quot;&gt;Job&lt;/code&gt;과 &lt;code class=&quot;language-text&quot;&gt;Step&lt;/code&gt;의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. [1]&lt;/li&gt;
 &lt;li&gt;
