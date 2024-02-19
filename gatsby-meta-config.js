@@ -1,5 +1,5 @@
 module.exports = {
-  title: `Freckie et al.`,
+  title: `킹명현 블로그`,
   description: `나는야 깃허브 스타될거야.`,
   author: `Freckie`,
   introduction: `깃허브 스타될거야.`,
