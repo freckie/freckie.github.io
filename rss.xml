@@ -1,4 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[킹명현 블로그]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 19 Feb 2024 01:32:32 GMT</lastBuildDate><item><title><![CDATA[Ingress에 정의된 path에 regex 사용시 라우팅되지 않던 이슈]]></title><description><![CDATA[문제 상황  표면적으로 보이던 에러 상황 프론트엔드에서 로의 모든 request가 404 에러 발생 request가 도착해야할 pod에 어떠한 로그도 찍히지 않았다. 다만, ingress-nginx-controller 로그에는 request…]]></description><link>https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</guid><pubDate>Sun, 18 Feb 2024 21:48:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제-상황&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C-%EC%83%81%ED%99%A9&quot; aria-label=&quot;문제 상황 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제 상황&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[킹명현 블로그]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 12 Jun 2025 04:39:07 GMT</lastBuildDate><item><title><![CDATA[Jetbrains IDE Kubernetes Plugin에서 CRD Validation 설정하기 (Unknown resource 해결)]]></title><description><![CDATA[Goland나 IntelliJ 등 Jetbrains IDE에서 ArgoCD Application을 작성할 때, IDE가 모르는 CRD를 
+만나면 Unknown resource라며 아래 이미지처럼 거슬리게 만드는 경우가 있다.  툴팁에 있는 Find…]]></description><link>https://blog.frec.kr/dev/jetbrains-ide-k8s-plugin/</link><guid isPermaLink="false">https://blog.frec.kr/dev/jetbrains-ide-k8s-plugin/</guid><pubDate>Thu, 12 Jun 2025 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Goland나 IntelliJ 등 Jetbrains IDE에서 ArgoCD Application을 작성할 때, IDE가 모르는 CRD를
+만나면 &lt;em&gt;Unknown resource&lt;/em&gt;라며 아래 이미지처럼 거슬리게 만드는 경우가 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 721px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 48%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABfklEQVQoz41SaU/CUBDs/1AUIgYo5bWvx2uh9Fl6oBxyeWDi//8d474lQMQY/TCZ2Z3tpLutpYSAEj6yIEMkFHp3fciuj07bxlXjFo2bFhqNJnHzzIzWd4/0NWkrpsBRFGOz2mA+WyLLK0TJGEJGkEECz49P/B3qR+3TnJWHLkZKYVyukREm0x10ucG4WEFXG+7paouM6y17pjfWJVJdsTZIdY00K2DZPQf9gQdNbzYpn5A9lCiqGaI4Ra/vkifZP/BZ24570T941tATcByBUA2hkpTZhHl+BEdIhhm8ZOEFJ23Cj7BCx4ZjO6ifFpgv13ikO05JL1dbxmyxwvN6x9r425d3rnevH3jbf1K9Z8wWa7gyhBUMBjBr148LfriazjnQwISbXj6pkYwyOkfB0HnJnBc1HibmVFMMU31Yud+zEUkJP0p4ZT+MeW0ZKATUM9oMdu0B3VSc+KiPMDWv3Gm3EbguNcVp8BKH4/8PFHgPn/5F+4/B81f93Tcf6QsDEUN4YrswIAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20250612 1&quot;
+        title=&quot;20250612 1&quot;
+        src=&quot;/static/4b3a42207d15eae3c50b27adcfb16875/01dae/20250612-1.png&quot;
+        srcset=&quot;/static/4b3a42207d15eae3c50b27adcfb16875/5a46d/20250612-1.png 300w,
+/static/4b3a42207d15eae3c50b27adcfb16875/0a47e/20250612-1.png 600w,
+/static/4b3a42207d15eae3c50b27adcfb16875/01dae/20250612-1.png 721w&quot;
+        sizes=&quot;(max-width: 721px) 100vw, 721px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;툴팁에 있는 &lt;em&gt;Find and use matching Custom Resource Definition as validation schema&lt;/em&gt; 를
+시도해도 IDE가 CRD 정의를 마법처럼 어디선가 긁어오는 것이 아니기에.. 직접 설정을 해줘야 한다.&lt;/p&gt;
+&lt;p&gt;설정 페이지를 열어 &lt;strong&gt;Language &amp;#x26; Frameworks &gt; Kubernetes&lt;/strong&gt;에 찾아가보면 CRD에 대한 정의를
+추가해줄 수 있는데, 현재 프로젝트에서는 ArgoCD 관련 yaml을 다룰거라 해당 내용만 추가했다.&lt;/p&gt;
+&lt;p&gt;ArgoCD 깃허브 &lt;a href=&quot;https://github.com/argoproj/argo-cd/tree/master/manifests/crds&quot;&gt;https://github.com/argoproj/argo-cd/tree/master/manifests/crds&lt;/a&gt;
+에 정의된 파일들의 raw content에 대한 URL을 모두 추가해주었다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 64.33333333333333%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACRUlEQVQ4y5WTyY7TQBCGnYQJAokDFyQEZLJ4HO9LvKVtx0ns7AzrgbPHSDwArz34ioTS6aLaZjgMMwgOn6q7bf+u+qtamJt2zw2dL5Kql6pmlgqiGXZpWJNSN+1S1c3SD0hpT7xyrOilohql/CefkauhKD0VFFm7wpdBNx1AIUAhCEkCwTQG15/Wax6b504d76M/GBHhfCAW6WIF+Xr3wwsItRyPxrMlRUEaJQu6O7yji2xLp1FKQ9LghzGS/CI+Yjy6PmHDkRgJ/aFYLFdbngXFcpnluMwPIjbxQsZfStKMoVgNSeaMxHNmTwLmuOEtAhiJEhH6g2GRo2C22lASJcz1QrBsD0zbvUVzxkvjttyA56zBBfFiHAmv+lKRZnvYXX6kYZxjVhEvH3aHN7DeHmC7v4T967f1nq8X2RqW+Qbmy1Xtr4kVzeZZLYgZoqDoFGT5HqLsA1UmObP9FLxgWjcFPQU/jOr1TeQiTdMSQFtA1a26ZJ5tk2GvV5AohhxL9vyAmZYD6OW94Hj8hu9xMhj3HkcMLiQ5Enrnw4LEKS+POtgInjofn/+AqQj3thZ82esX02gGq83+iPFkT/wT/rEGy/lHzJNuWCCNZd7lUZkuckjSZd1F7gWOCwTccNzjB3/JrrkMmondt0MYDMWYz+EnPPyOf7mWZK2SZLVCfypFMyq8alVzdjeG7VaKIn9TvG1lrL5eP3/Rd4VWq/VEEAQV0drtttbpdDS+5rRazb7dvptut6s9wOeds0f62eNn41a78/AnD+RgvNef8w0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20250612 2&quot;
+        title=&quot;20250612 2&quot;
+        src=&quot;/static/13253ac8a85ae9083949ef77bacf38b8/c1b63/20250612-2.png&quot;
+        srcset=&quot;/static/13253ac8a85ae9083949ef77bacf38b8/5a46d/20250612-2.png 300w,
+/static/13253ac8a85ae9083949ef77bacf38b8/0a47e/20250612-2.png 600w,
+/static/13253ac8a85ae9083949ef77bacf38b8/c1b63/20250612-2.png 1200w,
+/static/13253ac8a85ae9083949ef77bacf38b8/78612/20250612-2.png 1260w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 IDE가 웹에서 가져오도록 URL을 세팅하면 실제 클러스터에 설치된 버전과 IDE가 요구하는 버전이
+맞지 않을 수 있기 때문에, 특정 브랜치로 고정해서 URL을 추가하거나 아예 로컬에 다운받아 설정하는
+것도 좋아보인다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Ingress에 정의된 path에 regex 사용시 라우팅되지 않던 이슈]]></title><description><![CDATA[문제 상황  표면적으로 보이던 에러 상황 프론트엔드에서 로의 모든 request가 404 에러 발생 request가 도착해야할 pod에 어떠한 로그도 찍히지 않았다. 다만, ingress-nginx-controller 로그에는 request…]]></description><link>https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</guid><pubDate>Sun, 18 Feb 2024 21:48:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제-상황&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C-%EC%83%81%ED%99%A9&quot; aria-label=&quot;문제 상황 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제 상황&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Ingress.yaml&lt;/code&gt;&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; networking.k8s.io/v1
 &lt;span class=&quot;token key atrule&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Ingress
