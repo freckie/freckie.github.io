@@ -1,6 +1,6 @@
 ---
 title: 'OpenFGA를 사용한 세세한 권한 관리'
-date: 2024-06-24 23:00:00
+date: 2025-06-24 23:00:00
 category: 'CNCF'
 draft: false
 ---
