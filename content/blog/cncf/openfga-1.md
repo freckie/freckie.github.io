@@ -1,5 +1,5 @@
 ---
-title: 'OpenFGA를 사용한 세세한 권한 관리'
+title: 'OpenFGA를 사용한 세세한 권한 관리 - 1'
 date: 2025-06-24 23:00:00
 category: 'CNCF'
 draft: false
@@ -51,7 +51,7 @@ RBAC 시스템에서 유저는 특정 "역할(Role)"을 가지고, 역할에는 
 
 이해를 위해 "특정 문서에 대해 편집이 가능해야 하는" 구글 드라이브 예시를 생각할 수 있을 것 같다. 
 
-"editor_role" 라는 역할을 만들어 유저에게 주는 정도로는 구현이 불가능해서, 속성 기반으로 편집 가능한 사람을 처리해 준다든지 추가적인 로직이 필수적이다. ReBAC에서는 유저와 문서 간 _editor_ 관계만 설정한다면 이 관계가 존재하는지만 질의하면 쉽게 구현이 가능하다.
+"editor role" 라는 역할을 만들어 유저에게 주는 정도로는 구현이 불가능해서, 속성 기반으로 편집 가능한 사람을 처리해 준다든지 추가적인 로직이 필수적이다. ReBAC에서는 유저와 문서 간 _editor_ 관계만 설정한다면 이 관계가 존재하는지만 질의하면 쉽게 구현이 가능하다.
 
 또한 리소스 수와 유저 수가 많아진다면 폴더→문서 등 계층구조로 모델링하여 권한을 상속, 공유 등이 가능하다.
 
@@ -115,8 +115,8 @@ OpenFGA에서 사용하는 용어들에 대해 간단히 정리해본다. 여기
 
 ```json
 check(
-  user = "user:freckie",    // U
-  relation = "editor",      // R
+  user = "user:freckie",        // U
+  relation = "editor",          // R
   object = "document:some.txt", // O
   authorization_model_id = "01HVMMBCMGZNT3SED4Z17ECXCA"
 );
@@ -132,7 +132,7 @@ Reply: true
 listObjects(
   "user:freckie", // U
   "editor",       // R
-  "document", //      // T_O : document 타입 오브젝트에서 찾는다.
+  "document",     // T_O : document 타입 오브젝트에서 찾는다.
   authorization_model_id = "01HVMMBCMGZNT3SED4Z17ECXCA"
 );
 
