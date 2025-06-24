@@ -1,58 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[킹명현 블로그]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 24 Jun 2025 06:25:44 GMT</lastBuildDate><item><title><![CDATA[Jetbrains IDE Kubernetes Plugin에서 CRD Validation 설정하기 (Unknown resource 해결)]]></title><description><![CDATA[Goland나 IntelliJ 등 Jetbrains IDE에서 ArgoCD Application을 작성할 때, IDE가 모르는 CRD를 
-만나면 Unknown resource라며 아래 이미지처럼 거슬리게 만드는 경우가 있다.  툴팁에 있는 Find…]]></description><link>https://blog.frec.kr/dev/jetbrains-ide-k8s-plugin/</link><guid isPermaLink="false">https://blog.frec.kr/dev/jetbrains-ide-k8s-plugin/</guid><pubDate>Thu, 12 Jun 2025 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Goland나 IntelliJ 등 Jetbrains IDE에서 ArgoCD Application을 작성할 때, IDE가 모르는 CRD를
-만나면 &lt;em&gt;Unknown resource&lt;/em&gt;라며 아래 이미지처럼 거슬리게 만드는 경우가 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 721px; &quot;
-    &gt;
-      &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 48%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABfklEQVQoz41SaU/CUBDs/1AUIgYo5bWvx2uh9Fl6oBxyeWDi//8d474lQMQY/TCZ2Z3tpLutpYSAEj6yIEMkFHp3fciuj07bxlXjFo2bFhqNJnHzzIzWd4/0NWkrpsBRFGOz2mA+WyLLK0TJGEJGkEECz49P/B3qR+3TnJWHLkZKYVyukREm0x10ucG4WEFXG+7paouM6y17pjfWJVJdsTZIdY00K2DZPQf9gQdNbzYpn5A9lCiqGaI4Ra/vkifZP/BZ24570T941tATcByBUA2hkpTZhHl+BEdIhhm8ZOEFJ23Cj7BCx4ZjO6ifFpgv13ikO05JL1dbxmyxwvN6x9r425d3rnevH3jbf1K9Z8wWa7gyhBUMBjBr148LfriazjnQwISbXj6pkYwyOkfB0HnJnBc1HibmVFMMU31Yud+zEUkJP0p4ZT+MeW0ZKATUM9oMdu0B3VSc+KiPMDWv3Gm3EbguNcVp8BKH4/8PFHgPn/5F+4/B81f93Tcf6QsDEUN4YrswIAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;20250612 1&quot;
-        title=&quot;20250612 1&quot;
-        src=&quot;/static/4b3a42207d15eae3c50b27adcfb16875/01dae/20250612-1.png&quot;
-        srcset=&quot;/static/4b3a42207d15eae3c50b27adcfb16875/5a46d/20250612-1.png 300w,
-/static/4b3a42207d15eae3c50b27adcfb16875/0a47e/20250612-1.png 600w,
-/static/4b3a42207d15eae3c50b27adcfb16875/01dae/20250612-1.png 721w&quot;
-        sizes=&quot;(max-width: 721px) 100vw, 721px&quot;
-        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
-        loading=&quot;lazy&quot;
-      /&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;툴팁에 있는 &lt;em&gt;Find and use matching Custom Resource Definition as validation schema&lt;/em&gt; 를
-시도해도 IDE가 CRD 정의를 마법처럼 어디선가 긁어오는 것이 아니기에.. 직접 설정을 해줘야 한다.&lt;/p&gt;
-&lt;p&gt;설정 페이지를 열어 &lt;strong&gt;Language &amp;#x26; Frameworks &gt; Kubernetes&lt;/strong&gt;에 찾아가보면 CRD에 대한 정의를
-추가해줄 수 있는데, 현재 프로젝트에서는 ArgoCD 관련 yaml을 다룰거라 해당 내용만 추가했다.&lt;/p&gt;
-&lt;p&gt;ArgoCD 깃허브 &lt;a href=&quot;https://github.com/argoproj/argo-cd/tree/master/manifests/crds&quot;&gt;https://github.com/argoproj/argo-cd/tree/master/manifests/crds&lt;/a&gt;
-에 정의된 파일들의 raw content에 대한 URL을 모두 추가해주었다.&lt;/p&gt;
-&lt;p&gt;&lt;span
-      class=&quot;gatsby-resp-image-wrapper&quot;
-      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
-    &gt;
-      &lt;span
-    class=&quot;gatsby-resp-image-background-image&quot;
-    style=&quot;padding-bottom: 64.33333333333333%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACRUlEQVQ4y5WTyY7TQBCGnYQJAokDFyQEZLJ4HO9LvKVtx0ns7AzrgbPHSDwArz34ioTS6aLaZjgMMwgOn6q7bf+u+qtamJt2zw2dL5Kql6pmlgqiGXZpWJNSN+1S1c3SD0hpT7xyrOilohql/CefkauhKD0VFFm7wpdBNx1AIUAhCEkCwTQG15/Wax6b504d76M/GBHhfCAW6WIF+Xr3wwsItRyPxrMlRUEaJQu6O7yji2xLp1FKQ9LghzGS/CI+Yjy6PmHDkRgJ/aFYLFdbngXFcpnluMwPIjbxQsZfStKMoVgNSeaMxHNmTwLmuOEtAhiJEhH6g2GRo2C22lASJcz1QrBsD0zbvUVzxkvjttyA56zBBfFiHAmv+lKRZnvYXX6kYZxjVhEvH3aHN7DeHmC7v4T967f1nq8X2RqW+Qbmy1Xtr4kVzeZZLYgZoqDoFGT5HqLsA1UmObP9FLxgWjcFPQU/jOr1TeQiTdMSQFtA1a26ZJ5tk2GvV5AohhxL9vyAmZYD6OW94Hj8hu9xMhj3HkcMLiQ5Enrnw4LEKS+POtgInjofn/+AqQj3thZ82esX02gGq83+iPFkT/wT/rEGy/lHzJNuWCCNZd7lUZkuckjSZd1F7gWOCwTccNzjB3/JrrkMmondt0MYDMWYz+EnPPyOf7mWZK2SZLVCfypFMyq8alVzdjeG7VaKIn9TvG1lrL5eP3/Rd4VWq/VEEAQV0drtttbpdDS+5rRazb7dvptut6s9wOeds0f62eNn41a78/AnD+RgvNef8w0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
-  &gt;&lt;/span&gt;
-  &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        alt=&quot;20250612 2&quot;
-        title=&quot;20250612 2&quot;
-        src=&quot;/static/13253ac8a85ae9083949ef77bacf38b8/c1b63/20250612-2.png&quot;
-        srcset=&quot;/static/13253ac8a85ae9083949ef77bacf38b8/5a46d/20250612-2.png 300w,
-/static/13253ac8a85ae9083949ef77bacf38b8/0a47e/20250612-2.png 600w,
-/static/13253ac8a85ae9083949ef77bacf38b8/c1b63/20250612-2.png 1200w,
-/static/13253ac8a85ae9083949ef77bacf38b8/78612/20250612-2.png 1260w&quot;
-        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
-        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
-        loading=&quot;lazy&quot;
-      /&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이렇게 IDE가 웹에서 가져오도록 URL을 세팅하면 실제 클러스터에 설치된 버전과 IDE가 요구하는 버전이
-맞지 않을 수 있기 때문에, 특정 브랜치로 고정해서 URL을 추가하거나 아예 로컬에 다운받아 설정하는
-것도 좋아보인다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[OpenFGA를 사용한 세세한 권한 관리]]></title><description><![CDATA[1. OpenFGA OpenFGA는 유저-리소스 간 관계 기반의 접근 제어를 수행한다. 시스템이 복잡해짐에 따라 Authorization 모델 또한 복잡성이 증가할 수 있다. 전통적으로 사용하는 RBAC 및 ABAC…]]></description><link>https://blog.frec.kr/cncf/openfga-1/</link><guid isPermaLink="false">https://blog.frec.kr/cncf/openfga-1/</guid><pubDate>Mon, 24 Jun 2024 23:00:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;1-openfga&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#1-openfga&quot; aria-label=&quot;1 openfga permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;1. OpenFGA&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[킹명현 블로그]]></title><description><![CDATA[나는야 깃허브 스타될거야.]]></description><link>https://blog.frec.kr</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 24 Jun 2025 07:52:40 GMT</lastBuildDate><item><title><![CDATA[OpenFGA를 사용한 세세한 권한 관리]]></title><description><![CDATA[1. OpenFGA OpenFGA는 유저-리소스 간 관계 기반의 접근 제어를 수행한다. 시스템이 복잡해짐에 따라 Authorization 모델 또한 복잡성이 증가할 수 있다. 전통적으로 사용하는 RBAC 및 ABAC…]]></description><link>https://blog.frec.kr/cncf/openfga-1/</link><guid isPermaLink="false">https://blog.frec.kr/cncf/openfga-1/</guid><pubDate>Tue, 24 Jun 2025 23:00:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;1-openfga&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#1-openfga&quot; aria-label=&quot;1 openfga permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;1. OpenFGA&lt;/h2&gt;
 &lt;p&gt;OpenFGA는 유저-리소스 간 관계 기반의 접근 제어를 수행한다.&lt;/p&gt;
 &lt;p&gt;시스템이 복잡해짐에 따라 Authorization 모델 또한 복잡성이 증가할 수 있다. 전통적으로 사용하는 RBAC 및 ABAC은 단순하고 빠르게 모델을 세우고 구현할 수 있지만, 리소스가 복잡한 계층으로 구조화되어 있거나 사용자 간 관계에 따라 접근을 제어해야 하는 등의 상황에서 한계를 보인다.&lt;/p&gt;
 &lt;p&gt;구글에서는 역할 기반, 속성 기반이 아닌 현실 세계의 관계를 기반으로 권한을 evaluate하는 새로운 접근 제어 시스템을 시도했다. 이는 Zanzibar라는 이름으로 구현되어, 여러 구글 서비스를 넘나들며 수문장 역할을 한다.&lt;/p&gt;
@@ -234,7 +180,61 @@ type document
 &lt;h2 id=&quot;references&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#references&quot; aria-label=&quot;references permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;References&lt;/h2&gt;
 &lt;p&gt;[1] Pang, Ruoming, et al. “Zanzibar:{Google’s} Consistent, Global Authorization System.” &lt;em&gt;2019 USENIX Annual Technical Conference (USENIX ATC 19)&lt;/em&gt;. 2019. &lt;a href=&quot;https://www.usenix.org/conference/atc19/presentation/pang&quot;&gt;https://www.usenix.org/conference/atc19/presentation/pang&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;[2] OpenFGA 공식 문서, &lt;a href=&quot;https://openfga.dev/docs/authorization-concepts#what-is-relationship-based-access-control&quot;&gt;https://openfga.dev/docs/authorization-concepts#what-is-relationship-based-access-control&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;[_] &lt;a href=&quot;https://www.godaddy.com/resources/news/authorization-oauth-openfga&quot;&gt;https://www.godaddy.com/resources/news/authorization-oauth-openfga&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Ingress에 정의된 path에 regex 사용시 라우팅되지 않던 이슈]]></title><description><![CDATA[문제 상황  표면적으로 보이던 에러 상황 프론트엔드에서 로의 모든 request가 404 에러 발생 request가 도착해야할 pod에 어떠한 로그도 찍히지 않았다. 다만, ingress-nginx-controller 로그에는 request…]]></description><link>https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</guid><pubDate>Sun, 18 Feb 2024 21:48:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제-상황&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C-%EC%83%81%ED%99%A9&quot; aria-label=&quot;문제 상황 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제 상황&lt;/h2&gt;
+&lt;p&gt;[_] &lt;a href=&quot;https://www.godaddy.com/resources/news/authorization-oauth-openfga&quot;&gt;https://www.godaddy.com/resources/news/authorization-oauth-openfga&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Jetbrains IDE Kubernetes Plugin에서 CRD Validation 설정하기 (Unknown resource 해결)]]></title><description><![CDATA[Goland나 IntelliJ 등 Jetbrains IDE에서 ArgoCD Application을 작성할 때, IDE가 모르는 CRD를 
+만나면 Unknown resource라며 아래 이미지처럼 거슬리게 만드는 경우가 있다.  툴팁에 있는 Find…]]></description><link>https://blog.frec.kr/dev/jetbrains-ide-k8s-plugin/</link><guid isPermaLink="false">https://blog.frec.kr/dev/jetbrains-ide-k8s-plugin/</guid><pubDate>Thu, 12 Jun 2025 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Goland나 IntelliJ 등 Jetbrains IDE에서 ArgoCD Application을 작성할 때, IDE가 모르는 CRD를
+만나면 &lt;em&gt;Unknown resource&lt;/em&gt;라며 아래 이미지처럼 거슬리게 만드는 경우가 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 721px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 48%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABfklEQVQoz41SaU/CUBDs/1AUIgYo5bWvx2uh9Fl6oBxyeWDi//8d474lQMQY/TCZ2Z3tpLutpYSAEj6yIEMkFHp3fciuj07bxlXjFo2bFhqNJnHzzIzWd4/0NWkrpsBRFGOz2mA+WyLLK0TJGEJGkEECz49P/B3qR+3TnJWHLkZKYVyukREm0x10ucG4WEFXG+7paouM6y17pjfWJVJdsTZIdY00K2DZPQf9gQdNbzYpn5A9lCiqGaI4Ra/vkifZP/BZ24570T941tATcByBUA2hkpTZhHl+BEdIhhm8ZOEFJ23Cj7BCx4ZjO6ifFpgv13ikO05JL1dbxmyxwvN6x9r425d3rnevH3jbf1K9Z8wWa7gyhBUMBjBr148LfriazjnQwISbXj6pkYwyOkfB0HnJnBc1HibmVFMMU31Yud+zEUkJP0p4ZT+MeW0ZKATUM9oMdu0B3VSc+KiPMDWv3Gm3EbguNcVp8BKH4/8PFHgPn/5F+4/B81f93Tcf6QsDEUN4YrswIAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20250612 1&quot;
+        title=&quot;20250612 1&quot;
+        src=&quot;/static/4b3a42207d15eae3c50b27adcfb16875/01dae/20250612-1.png&quot;
+        srcset=&quot;/static/4b3a42207d15eae3c50b27adcfb16875/5a46d/20250612-1.png 300w,
+/static/4b3a42207d15eae3c50b27adcfb16875/0a47e/20250612-1.png 600w,
+/static/4b3a42207d15eae3c50b27adcfb16875/01dae/20250612-1.png 721w&quot;
+        sizes=&quot;(max-width: 721px) 100vw, 721px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;툴팁에 있는 &lt;em&gt;Find and use matching Custom Resource Definition as validation schema&lt;/em&gt; 를
+시도해도 IDE가 CRD 정의를 마법처럼 어디선가 긁어오는 것이 아니기에.. 직접 설정을 해줘야 한다.&lt;/p&gt;
+&lt;p&gt;설정 페이지를 열어 &lt;strong&gt;Language &amp;#x26; Frameworks &gt; Kubernetes&lt;/strong&gt;에 찾아가보면 CRD에 대한 정의를
+추가해줄 수 있는데, 현재 프로젝트에서는 ArgoCD 관련 yaml을 다룰거라 해당 내용만 추가했다.&lt;/p&gt;
+&lt;p&gt;ArgoCD 깃허브 &lt;a href=&quot;https://github.com/argoproj/argo-cd/tree/master/manifests/crds&quot;&gt;https://github.com/argoproj/argo-cd/tree/master/manifests/crds&lt;/a&gt;
+에 정의된 파일들의 raw content에 대한 URL을 모두 추가해주었다.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 1200px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 64.33333333333333%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACRUlEQVQ4y5WTyY7TQBCGnYQJAokDFyQEZLJ4HO9LvKVtx0ns7AzrgbPHSDwArz34ioTS6aLaZjgMMwgOn6q7bf+u+qtamJt2zw2dL5Kql6pmlgqiGXZpWJNSN+1S1c3SD0hpT7xyrOilohql/CefkauhKD0VFFm7wpdBNx1AIUAhCEkCwTQG15/Wax6b504d76M/GBHhfCAW6WIF+Xr3wwsItRyPxrMlRUEaJQu6O7yji2xLp1FKQ9LghzGS/CI+Yjy6PmHDkRgJ/aFYLFdbngXFcpnluMwPIjbxQsZfStKMoVgNSeaMxHNmTwLmuOEtAhiJEhH6g2GRo2C22lASJcz1QrBsD0zbvUVzxkvjttyA56zBBfFiHAmv+lKRZnvYXX6kYZxjVhEvH3aHN7DeHmC7v4T967f1nq8X2RqW+Qbmy1Xtr4kVzeZZLYgZoqDoFGT5HqLsA1UmObP9FLxgWjcFPQU/jOr1TeQiTdMSQFtA1a26ZJ5tk2GvV5AohhxL9vyAmZYD6OW94Hj8hu9xMhj3HkcMLiQ5Enrnw4LEKS+POtgInjofn/+AqQj3thZ82esX02gGq83+iPFkT/wT/rEGy/lHzJNuWCCNZd7lUZkuckjSZd1F7gWOCwTccNzjB3/JrrkMmondt0MYDMWYz+EnPPyOf7mWZK2SZLVCfypFMyq8alVzdjeG7VaKIn9TvG1lrL5eP3/Rd4VWq/VEEAQV0drtttbpdDS+5rRazb7dvptut6s9wOeds0f62eNn41a78/AnD+RgvNef8w0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;20250612 2&quot;
+        title=&quot;20250612 2&quot;
+        src=&quot;/static/13253ac8a85ae9083949ef77bacf38b8/c1b63/20250612-2.png&quot;
+        srcset=&quot;/static/13253ac8a85ae9083949ef77bacf38b8/5a46d/20250612-2.png 300w,
+/static/13253ac8a85ae9083949ef77bacf38b8/0a47e/20250612-2.png 600w,
+/static/13253ac8a85ae9083949ef77bacf38b8/c1b63/20250612-2.png 1200w,
+/static/13253ac8a85ae9083949ef77bacf38b8/78612/20250612-2.png 1260w&quot;
+        sizes=&quot;(max-width: 1200px) 100vw, 1200px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 IDE가 웹에서 가져오도록 URL을 세팅하면 실제 클러스터에 설치된 버전과 IDE가 요구하는 버전이
+맞지 않을 수 있기 때문에, 특정 브랜치로 고정해서 URL을 추가하거나 아예 로컬에 다운받아 설정하는
+것도 좋아보인다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Ingress에 정의된 path에 regex 사용시 라우팅되지 않던 이슈]]></title><description><![CDATA[문제 상황  표면적으로 보이던 에러 상황 프론트엔드에서 로의 모든 request가 404 에러 발생 request가 도착해야할 pod에 어떠한 로그도 찍히지 않았다. 다만, ingress-nginx-controller 로그에는 request…]]></description><link>https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</link><guid isPermaLink="false">https://blog.frec.kr/troubleshooting/ingress_nginx_regex/</guid><pubDate>Sun, 18 Feb 2024 21:48:00 GMT</pubDate><content:encoded>&lt;h2 id=&quot;문제-상황&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%A0%9C-%EC%83%81%ED%99%A9&quot; aria-label=&quot;문제 상황 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;문제 상황&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Ingress.yaml&lt;/code&gt;&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yaml&quot;&gt;&lt;pre class=&quot;language-yaml&quot;&gt;&lt;code class=&quot;language-yaml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; networking.k8s.io/v1
 &lt;span class=&quot;token key atrule&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Ingress
@@ -1208,7 +1208,15 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&quot;https://github.com/golang/go/blob/23756207fb68c34ae15a030319dc31248e21cf45/src/runtime/malloc.go#L225&quot;&gt;golang/go :: src/runtime/malloc.go&lt;/a&gt; (accessed on 2022/04/06)&lt;/li&gt;
 &lt;li&gt;[2] &lt;a href=&quot;https://youtu.be/Tl7mi9QmLns&quot;&gt;Keith Randall, “Inside the Map Implementation”, GopherCon 2016.&lt;/a&gt; (&lt;a href=&quot;https://docs.google.com/presentation/d/1CxamWsvHReswNZc7N2HMV7WPFqS8pvlPVZcDegdC_T4/edit#slide=id.g15413b4d29_0_6&quot;&gt;slide&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 2 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_2/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_2/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 : 인그레스 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_ingress/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_ingress/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_1/&quot;&gt;쿠버네티스 서비스 1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_2/&quot;&gt;쿠버네티스 서비스 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 : 인그레스&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;(작성 중)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 2 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_2/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_2/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
 &lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
 &lt;h2 id=&quot;들어가기-전에&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90&quot; aria-label=&quot;들어가기 전에 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;들어가기 전에&lt;/h2&gt;
 &lt;p&gt;지난 포스팅에서는 서비스라는 리소스에 대해 간략하게 알아봤고 가장 기본적인 서비스인 ClusterIP 타입의 서비스를 예시로 들었다. 다만 이 ClusterIP 타입은 이름에서도 알 수 있듯이 클러스터의 IP를 할당받는다. 다시 말하면, 서비스를 생성했는데 &lt;strong&gt;이 서비스는 클러스터 내부에서만 접속이 가능&lt;/strong&gt;하다는 의미이다.&lt;/p&gt;
@@ -1356,15 +1364,7 @@ bucketloop&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;[1] &lt;a href=&quot;https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/&quot;&gt;https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[이미지 1-5] M. Lukša, Kubernetes in Action, Manning Publications, 2018.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 : 인그레스 | 쿲벖넶팂슶 Ep.4]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_ingress/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_ingress/</guid><pubDate>Thu, 29 Jul 2021 02:13:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
-&lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_1/&quot;&gt;쿠버네티스 서비스 1&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.frec.kr/cloud/service_2/&quot;&gt;쿠버네티스 서비스 2&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 : 인그레스&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;p&gt;(작성 중)&lt;/p&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_1/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_1/</guid><pubDate>Mon, 26 Jul 2021 23:50:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[쿠버네티스 서비스 1 | 쿲벖넶팂슶 Ep.3]]></title><description><![CDATA[이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 Chapter 5. Services: Enabling Clients to Discover and Talk to Pods…]]></description><link>https://blog.frec.kr/cloud/service_1/</link><guid isPermaLink="false">https://blog.frec.kr/cloud/service_1/</guid><pubDate>Mon, 26 Jul 2021 23:50:00 GMT</pubDate><content:encoded>&lt;p&gt;이 포스팅은 Marko Lukša의 Kubernetes in Action (1st edition)에서 &lt;em&gt;Chapter 5. Services: Enabling Clients to Discover and Talk to Pods&lt;/em&gt;를 기반으로 재구성하였습니다.&lt;/p&gt;
 &lt;p&gt;서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;쿠버네티스 서비스 1&lt;/strong&gt;&lt;/li&gt;
