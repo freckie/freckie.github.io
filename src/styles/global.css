@@ -10,6 +10,7 @@
   /* Colors */
   --accent: #117893;
   --accent-dark: #34558b;
+  --accent-light: #d5e4eb;
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
   --gray-light: 229, 233, 240;
@@ -140,7 +141,7 @@ img {
 /* ===== Code ===== */
 code {
   padding: 2px 5px;
-  background-color: var(--accent);
+  background-color: var(--accent-light);
   color: var(--accent-dark);
   border-radius: 2px;
   font-size: 15px;
