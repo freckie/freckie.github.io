@@ -13,10 +13,6 @@ const { hideTitle = false } = Astro.props;
     {!hideTitle && <h2><a href="/">{SITE_TITLE}</a></h2>}
     {hideTitle && <div></div>}
     <div class="icon-links">
-      <a href="/about" title="About">
-        <span class="sr-only">About</span>
-        <iconify-icon icon="mdi:clipboard-user" width="24" height="24"></iconify-icon>
-      </a>
       <a href="/search" title="Search">
         <span class="sr-only">Search</span>
         <iconify-icon icon="mdi:magnify" width="24" height="24"></iconify-icon>
@@ -31,29 +27,31 @@ const { hideTitle = false } = Astro.props;
     z-index: 100;
     margin: 0;
     padding: 0 1em;
-    background: white;
+    height: 60px;
+    background: linear-gradient(72deg, #34558b, #117893);
     box-shadow: 0 2px 8px rgba(var(--black), 5%);
   }
   h2 {
     margin: 0;
-    font-size: 1em;
+    font-size: 1.5em;
   }
   h2 a,
   h2 a.active {
     text-decoration: none;
+    color: white;
   }
   nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 100%;
   }
   nav a {
-    padding: 1.5em 0.5em;
-    color: rgb(var(--gray-dark));
+    color: white;
     text-decoration: none;
   }
   nav a:hover {
-    color: var(--accent);
+    color: rgba(255, 255, 255, 0.8);
   }
   .icon-links {
     display: flex;

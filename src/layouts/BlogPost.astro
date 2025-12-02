@@ -4,10 +4,11 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import SeriesNav from '../components/SeriesNav.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, date, category } = Astro.props;
+const { title, date, category, series } = Astro.props;
 ---
 
 <html lang="ko">
@@ -36,7 +37,7 @@ const { title, date, category } = Astro.props;
         margin: 0 0 0.5em 0;
       }
       .meta {
-        margin-bottom: 0.5em;
+        margin-bottom: 1.2rem;
         color: rgb(var(--gray));
       }
       .category {
@@ -63,6 +64,7 @@ const { title, date, category } = Astro.props;
             <h1>{title}</h1>
             <hr />
           </div>
+          {series && <SeriesNav series={series} />}
           <slot />
         </div>
       </article>
