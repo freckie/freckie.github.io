@@ -8,8 +8,8 @@
 /* ===== Design Tokens ===== */
 :root {
   /* Colors */
-  --accent: #2337ff;
-  --accent-dark: #000d8a;
+  --accent: #117893;
+  --accent-dark: #34558b;
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
   --gray-light: 229, 233, 240;
@@ -95,7 +95,8 @@ p {
   margin: 0 0 1.2em 0;
 }
 
-ul li p {
+ul li p,
+ol li p {
   margin-bottom: 0.6rem;
 }
 
@@ -139,7 +140,8 @@ img {
 /* ===== Code ===== */
 code {
   padding: 2px 5px;
-  background-color: rgb(var(--gray-light));
+  background-color: var(--accent);
+  color: var(--accent-dark);
   border-radius: 2px;
   font-size: 15px;
 }
