@@ -95,6 +95,10 @@ p {
   margin: 0 0 1.2em 0;
 }
 
+ul li p {
+  margin-bottom: 0.6rem;
+}
+
 /* ===== Links ===== */
 a {
   color: var(--accent);

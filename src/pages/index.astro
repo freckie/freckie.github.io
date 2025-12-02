@@ -87,25 +87,6 @@ const categories = [...new Set(posts.map(post => post.data.category))];
       .social-links iconify-icon {
         font-size: 20px;
       }
-      .about-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3em;
-        padding: 0.3em 0.6em;
-        border: 1px solid var(--accent);
-        border-radius: 4px;
-        color: var(--accent);
-        text-decoration: none;
-        font-size: 0.85rem;
-        transition: all 0.2s;
-      }
-      .about-btn:hover {
-        background-color: var(--accent);
-        color: white;
-      }
-      .about-btn iconify-icon {
-        font-size: 16px;
-      }
       .category-filter {
         display: flex;
         flex-wrap: wrap;
@@ -197,11 +178,10 @@ const categories = [...new Set(posts.map(post => post.data.category))];
                 <iconify-icon icon="mdi:linkedin"></iconify-icon>
               </a>
               <a href="mailto:freckie@frec.kr" title="Email">
-                <iconify-icon icon="mdi:clipboard-user"></iconify-icon>
+                <iconify-icon icon="mdi:email-arrow-right"></iconify-icon>
               </a>
-              <a href="/about" class="about-btn">
+              <a href="/about" title="About">
                 <iconify-icon icon="mdi:clipboard-user"></iconify-icon>
-                About
               </a>
             </div>
           </div>
