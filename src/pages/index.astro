@@ -8,6 +8,8 @@ import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const categories = [...new Set(posts.map(post => post.data.category))];
 ---
 
 <!doctype html>
@@ -16,14 +18,75 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     <style>
       main {
-        width: 960px;
+        width: 720px;
         max-width: calc(100% - 2em);
         margin: auto;
-        padding: 3em 1em;
+        padding: 2em 1em;
+      }
+      .hero {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+      .blog-title {
+        font-family: var(--font-logo);
+        font-size: 2.5em;
+        font-weight: 600;
+        margin: 0 0 0.5em 0;
+        color: rgb(var(--black));
+      }
+      .author-intro {
+        color: rgb(var(--gray));
+        font-size: 1em;
+        line-height: 1.6;
+        margin-bottom: 1em;
+      }
+      .about-link {
+        display: inline-block;
+        padding: 0.5em 1em;
+        color: var(--accent);
+        text-decoration: none;
+        border: 1px solid var(--accent);
+        border-radius: 4px;
+        font-size: 0.875rem;
+        transition: background-color 0.2s, color 0.2s;
+      }
+      .about-link:hover {
+        background-color: var(--accent);
+        color: white;
+      }
+      .category-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        justify-content: center;
+        margin-bottom: 2em;
+        padding-bottom: 1em;
+        border-bottom: 1px solid rgb(var(--gray-light));
+      }
+      .category-btn {
+        padding: 0.4em 0.8em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 20px;
+        background: white;
+        color: rgb(var(--gray));
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .category-btn:hover,
+      .category-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .category-btn.active {
+        background-color: var(--accent);
+        color: white;
       }
       ul {
         list-style: none;
         padding: 0;
+        margin: 0;
       }
       ul li {
         margin-bottom: 1.5em;
@@ -37,6 +100,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         text-decoration: none;
       }
       .post-title {
+        font-family: var(--font-logo);
         font-size: 1.25rem;
         font-weight: 600;
         color: rgb(var(--black));
@@ -61,12 +125,28 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </style>
   </head>
   <body>
-    <Header />
+    <Header hideTitle={true} />
     <main>
+      <section class="hero">
+        <h1 class="blog-title">{SITE_TITLE}</h1>
+        <p class="author-intro">
+          소프트웨어 엔지니어로 일하고 있습니다.<br />
+          개발하면서 배운 것들을 기록합니다.
+        </p>
+        <a href="/about" class="about-link">About Me</a>
+      </section>
+
+      <div class="category-filter">
+        <button class="category-btn active" data-category="all">All</button>
+        {categories.map((category) => (
+          <button class="category-btn" data-category={category}>{category}</button>
+        ))}
+      </div>
+
       <section>
-        <ul>
+        <ul id="posts-list">
           {posts.map((post) => (
-            <li>
+            <li data-category={post.data.category}>
               <a href={`/${post.id}/`}>
                 <h4 class="post-title">{post.data.title}</h4>
               </a>
@@ -80,5 +160,27 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </section>
     </main>
     <Footer />
+
+    <script>
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      const postItems = document.querySelectorAll('#posts-list li');
+
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoryButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const category = btn.dataset.category;
+
+          postItems.forEach(item => {
+            if (category === 'all' || item.dataset.category === category) {
+              (item as HTMLElement).style.display = '';
+            } else {
+              (item as HTMLElement).style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

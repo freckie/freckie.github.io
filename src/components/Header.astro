@@ -1,10 +1,17 @@
 ---
 import { SITE_TITLE } from '../consts';
+
+interface Props {
+  hideTitle?: boolean;
+}
+
+const { hideTitle = false } = Astro.props;
 ---
 
 <header>
   <nav>
-    <h2><a href="/">{SITE_TITLE}</a></h2>
+    {!hideTitle && <h2><a href="/">{SITE_TITLE}</a></h2>}
+    {hideTitle && <div></div>}
     <div class="icon-links">
       <a href="/about" title="About">
         <span class="sr-only">About</span>

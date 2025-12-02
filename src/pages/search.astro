@@ -170,7 +170,7 @@ const postsData = posts.map(post => ({
 
       function search(query) {
         if (!query.trim()) {
-          renderResults(postsData.slice(0, 10));
+          searchResults.innerHTML = '';
           return;
         }
 
@@ -182,8 +182,8 @@ const postsData = posts.map(post => ({
         renderResults(filtered);
       }
 
-      // Initial render
-      renderResults(postsData.slice(0, 10));
+      // Initial render - empty
+      searchResults.innerHTML = '';
 
       // Search on input
       searchInput.addEventListener('input', (e) => {
