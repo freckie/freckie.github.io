@@ -4,14 +4,13 @@ interface Props {
 }
 
 const { date } = Astro.props;
+
+const year = date.getFullYear();
+const month = date.getMonth() + 1;
+const day = date.getDate();
+const formatted = `${year}년 ${month}월 ${day}일`;
 ---
 
 <time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
+	{formatted}
 </time>
