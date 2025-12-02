@@ -7,78 +7,78 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
-	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <!doctype html>
 <html lang="ko">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 3em 1em;
-			}
-			ul {
-				list-style: none;
-				padding: 0;
-			}
-			ul li {
-				margin-bottom: 1.5em;
-				padding-bottom: 1.5em;
-				border-bottom: 1px solid rgb(var(--gray-light));
-			}
-			ul li:last-child {
-				border-bottom: none;
-			}
-			ul li a {
-				text-decoration: none;
-			}
-			.post-title {
-				font-size: 1.25rem;
-				font-weight: 600;
-				color: rgb(var(--black));
-				margin: 0;
-			}
-			.post-title:hover {
-				color: var(--accent);
-			}
-			.post-meta {
-				color: rgb(var(--gray));
-				font-size: 0.875rem;
-				margin-top: 0.5em;
-			}
-			.category {
-				background-color: var(--accent);
-				color: white;
-				padding: 0.2em 0.5em;
-				border-radius: 4px;
-				font-size: 0.75em;
-				margin-right: 0.5em;
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{posts.map((post) => (
-						<li>
-							<a href={`/${post.id}/`}>
-								<h4 class="post-title">{post.data.title}</h4>
-							</a>
-							<p class="post-meta">
-								<span class="category">{post.data.category}</span>
-								<FormattedDate date={post.data.date} />
-							</p>
-						</li>
-					))}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      main {
+        width: 960px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 3em 1em;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        margin-bottom: 1.5em;
+        padding-bottom: 1.5em;
+        border-bottom: 1px solid rgb(var(--gray-light));
+      }
+      ul li:last-child {
+        border-bottom: none;
+      }
+      ul li a {
+        text-decoration: none;
+      }
+      .post-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: rgb(var(--black));
+        margin: 0;
+      }
+      .post-title:hover {
+        color: var(--accent);
+      }
+      .post-meta {
+        color: rgb(var(--gray));
+        font-size: 0.875rem;
+        margin-top: 0.5em;
+      }
+      .category {
+        background-color: var(--accent);
+        color: white;
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        font-size: 0.75em;
+        margin-right: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section>
+        <ul>
+          {posts.map((post) => (
+            <li>
+              <a href={`/${post.id}/`}>
+                <h4 class="post-title">{post.data.title}</h4>
+              </a>
+              <p class="post-meta">
+                <span class="category">{post.data.category}</span>
+                <FormattedDate date={post.data.date} />
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+    <Footer />
+  </body>
 </html>

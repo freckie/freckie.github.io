@@ -1,6 +1,6 @@
 ---
 interface Props {
-	date: Date;
+  date: Date;
 }
 
 const { date } = Astro.props;
@@ -12,5 +12,5 @@ const formatted = `${year}년 ${month}월 ${day}일`;
 ---
 
 <time datetime={date.toISOString()}>
-	{formatted}
+  {formatted}
 </time>
