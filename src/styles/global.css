@@ -1,13 +1,13 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+  Global CSS - Design Tokens & Base Styles
+*/
 
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600&display=swap");
+/* ===== Fonts ===== */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap");
 
+/* ===== Design Tokens ===== */
 :root {
+  /* Colors */
   --accent: #2337ff;
   --accent-dark: #000d8a;
   --black: 15, 18, 25;
@@ -15,14 +15,24 @@
   --gray-light: 229, 233, 240;
   --gray-dark: 34, 41, 57;
   --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+
+  /* Shadows */
   --box-shadow:
-    0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px
-    rgba(var(--gray), 33%);
-  --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-logo: "IBM Plex Sans KR", sans-serif;
+    0 2px 6px rgba(var(--gray), 25%),
+    0 8px 24px rgba(var(--gray), 33%),
+    0 16px 32px rgba(var(--gray), 33%);
+
+  /* Typography */
+  --font-family: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-size-base: 18px;
+  --line-height-base: 1.55;
 }
+
+/* ===== Base Styles ===== */
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   margin: 0;
   padding: 0;
   text-align: left;
@@ -31,97 +41,128 @@ body {
   word-wrap: break-word;
   overflow-wrap: break-word;
   color: rgb(var(--gray-dark));
-  font-size: 18px;
-  line-height: 1.55;
 }
+
+/* ===== Layout ===== */
 main {
   width: 720px;
   max-width: calc(100% - 2em);
   margin: auto;
   padding: 3em 1em;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
   color: rgb(var(--black));
   line-height: 1.3;
+  font-weight: 600;
 }
+
 h1 {
   font-size: 2em;
   margin: 1.5em 0 0.5em 0;
 }
+
 h2 {
   font-size: 1.6em;
   margin: 1.4em 0 0.4em 0;
 }
+
 h3 {
   font-size: 1.3em;
   margin: 1.2em 0 0.3em 0;
 }
+
 h4 {
   font-size: 1.1em;
   margin: 1em 0 0.25em 0;
 }
+
 h5 {
   font-size: 1em;
   margin: 0.8em 0 0.2em 0;
 }
-strong,
-b {
+
+strong, b {
   font-weight: 700;
 }
-a {
-  color: var(--accent);
-}
-a:hover {
-  color: var(--accent);
-}
+
 p {
   margin: 0 0 1em 0;
 }
+
 .prose p {
   margin: 0 0 1.2em 0;
 }
+
+/* ===== Links ===== */
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ===== Forms ===== */
 textarea {
   width: 100%;
   font-size: 16px;
+  font-family: var(--font-family);
 }
+
 input {
   font-size: 16px;
+  font-family: var(--font-family);
 }
+
+button {
+  font-family: var(--font-family);
+}
+
+/* ===== Tables ===== */
 table {
   width: 100%;
 }
+
+/* ===== Media ===== */
 img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
 }
+
+/* ===== Code ===== */
 code {
   padding: 2px 5px;
   background-color: rgb(var(--gray-light));
   border-radius: 2px;
 }
+
 pre {
   padding: 1.5em;
   border-radius: 8px;
 }
+
 pre > code {
   all: unset;
 }
+
+/* ===== Blockquote ===== */
 blockquote {
   border-left: 4px solid var(--accent);
   padding: 0 0 0 20px;
   margin: 0;
   font-size: 1.1em;
 }
+
+/* ===== Horizontal Rule ===== */
 hr {
   border: none;
   border-top: 1px solid rgb(var(--gray-light));
 }
+
+/* ===== Responsive ===== */
 @media (max-width: 720px) {
   body {
     font-size: 16px;
@@ -131,6 +172,7 @@ hr {
   }
 }
 
+/* ===== Utilities ===== */
 .sr-only {
   border: 0;
   padding: 0;
@@ -139,12 +181,8 @@ hr {
   height: 1px;
   width: 1px;
   overflow: hidden;
-  /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
   clip: rect(1px 1px 1px 1px);
-  /* maybe deprecated but we need to support legacy browsers */
   clip: rect(1px, 1px, 1px, 1px);
-  /* modern browsers, clip-path works inwards from each corner */
   clip-path: inset(50%);
-  /* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
   white-space: nowrap;
 }
