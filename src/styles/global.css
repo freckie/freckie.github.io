@@ -24,7 +24,7 @@
 
   /* Typography */
   --font-family: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-size-base: 18px;
+  --font-size-base: 17px;
   --line-height-base: 1.55;
 }
 
@@ -137,15 +137,18 @@ code {
   padding: 2px 5px;
   background-color: rgb(var(--gray-light));
   border-radius: 2px;
+  font-size: 15px;
 }
 
 pre {
   padding: 1.5em;
   border-radius: 8px;
+  font-size: 15px;
 }
 
 pre > code {
   all: unset;
+  font-size: 15px;
 }
 
 /* ===== Blockquote ===== */
