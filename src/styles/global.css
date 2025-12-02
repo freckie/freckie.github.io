@@ -140,11 +140,11 @@ img {
 
 /* ===== Code ===== */
 code {
-  padding: 2px 5px;
+  padding: 3px 6px;
   background-color: var(--accent-light);
   color: var(--accent-dark);
-  border-radius: 2px;
-  font-size: 15px;
+  border-radius: 5px;
+  font-size: 13px;
 }
 
 pre {
