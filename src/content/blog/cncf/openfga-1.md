@@ -12,7 +12,7 @@ OpenFGA는 유저-리소스 간 관계 기반의 접근 제어를 수행한다.
 
 구글에서는 역할 기반, 속성 기반이 아닌 현실 세계의 관계를 기반으로 권한을 evaluate하는 새로운 접근 제어 시스템을 시도했다. 이는 Zanzibar라는 이름으로 구현되어, 여러 구글 서비스를 넘나들며 수문장 역할을 한다.
 
-다만 Zanzibar는 구글 내부에서만 사용되고 외부로는 컨셉에 대해서 논문[1]으로만 공개되었다. [Auth0](https://auth0.com/)는 이에 영감을 받아 [OpenFGA](https://openfga.dev)라는 오픈소스를 개발해 공개했고 CNCF 샌드박스 프로젝트가 되었다. Zanzibar에 영감을 받은 프로젝트로는 [Carta](https://carta.com/sg/en/), [Ory Keto](https://www.ory.sh/keto), [AuthZed](https://authzed.com/) 가 있고 이번 포스트는 OpenFGA를 사용해보고자 한다.
+다만 Zanzibar는 구글 내부에서만 사용되고 외부로는 컨셉에 대해서 논문[^1]으로만 공개되었다. [Auth0](https://auth0.com/)는 이에 영감을 받아 [OpenFGA](https://openfga.dev)라는 오픈소스를 개발해 공개했고 CNCF 샌드박스 프로젝트가 되었다. Zanzibar에 영감을 받은 프로젝트로는 [Carta](https://carta.com/sg/en/), [Ory Keto](https://www.ory.sh/keto), [AuthZed](https://authzed.com/) 가 있고 이번 포스트는 OpenFGA를 사용해보고자 한다.
 
 추가로, FGA는 Fine-Grained Authorization의 약자이며, 이름만큼 세세한 Authorization을 지원한다.
 
@@ -32,7 +32,7 @@ Auth0에서 이 Zanzibar 컨셉에 대해 시각적으로 쉽게 설명해주는
 
 ### 1.2 ReBAC ?
 
-Zanzibar 페이퍼에서는 딱히 등장하는 단어는 아닌데, OpenFGA 측에서는 이에 영감받은 서비스를 RBAC과 차별을 두기 위해 **ReBAC**이라고 소개한다. Relation-Based Access Control 이라는 뜻으로, 유저와 오브젝트 간 관계를 모델링한 것을 기반으로 접근 규칙을 만든다. [2] 다만 OpenFGA 문서에서 ReBAC이 RBAC을 포함하는 상위 개념으로 소개한다.
+Zanzibar 페이퍼에서는 딱히 등장하는 단어는 아닌데, OpenFGA 측에서는 이에 영감받은 서비스를 RBAC과 차별을 두기 위해 **ReBAC**이라고 소개한다. Relation-Based Access Control 이라는 뜻으로, 유저와 오브젝트 간 관계를 모델링한 것을 기반으로 접근 규칙을 만든다. [^2] 다만 OpenFGA 문서에서 ReBAC이 RBAC을 포함하는 상위 개념으로 소개한다.
 
 <br>
 
@@ -197,9 +197,9 @@ document도 folder와 마찬가지로 세 가지 관계를 정의했다. `or` �
 
 위와 같이 DSL을 통해 서비스에 사용될 권한을 정의할 수 있다. 이번 포스팅은 OpenFGA에 대한 소개가 목적이므로 여기까지 다루고, 다음 포스팅에서 OpenFGA 배포, 모듈러 모델 정의, 인가 모델 테스팅, 사내 시스템에 적용했던 사례 등을 소개하고자 한다.
 
-## References
-[1] Pang, Ruoming, et al. "Zanzibar:{Google’s} Consistent, Global Authorization System." *2019 USENIX Annual Technical Conference (USENIX ATC 19)*. 2019. [https://www.usenix.org/conference/atc19/presentation/pang](https://www.usenix.org/conference/atc19/presentation/pang)
+## See Also
+- [https://www.godaddy.com/resources/news/authorization-oauth-openfga](https://www.godaddy.com/resources/news/authorization-oauth-openfga)
 
-[2] OpenFGA 공식 문서, [https://openfga.dev/docs/authorization-concepts#what-is-relationship-based-access-control](https://openfga.dev/docs/authorization-concepts#what-is-relationship-based-access-control)
+[^1]: Pang, Ruoming, et al. "Zanzibar:{Google’s} Consistent, Global Authorization System." *2019 USENIX Annual Technical Conference (USENIX ATC 19)*. 2019. [https://www.usenix.org/conference/atc19/presentation/pang](https://www.usenix.org/conference/atc19/presentation/pang)
 
-[_] [https://www.godaddy.com/resources/news/authorization-oauth-openfga](https://www.godaddy.com/resources/news/authorization-oauth-openfga)
+[^2]: OpenFGA 공식 문서, [https://openfga.dev/docs/authorization-concepts#what-is-relationship-based-access-control](https://openfga.dev/docs/authorization-concepts#what-is-relationship-based-access-control)
