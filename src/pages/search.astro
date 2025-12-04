@@ -30,35 +30,37 @@ const postsData = posts.map(post => ({
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        padding-top: 15vh;
-        background: rgba(0, 0, 0, 0.5);
+        padding-top: 12vh;
+        background: rgba(15, 18, 25, 0.6);
+        backdrop-filter: blur(4px);
         z-index: 100;
       }
       .search-modal {
-        width: 600px;
+        width: 560px;
         max-width: calc(100% - 2em);
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border-radius: 16px;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35);
         overflow: hidden;
       }
       .search-input-container {
         display: flex;
         align-items: center;
-        padding: 1em;
-        border-bottom: 1px solid rgb(var(--gray-light));
+        padding: 1.25em 1.5em;
+        border-bottom: 1px solid rgba(var(--gray-light), 0.8);
       }
       .search-icon {
-        width: 24px;
-        height: 24px;
-        margin-right: 0.75em;
-        color: rgb(var(--gray));
+        width: 22px;
+        height: 22px;
+        margin-right: 1em;
+        color: var(--accent);
+        flex-shrink: 0;
       }
       .search-input {
         flex: 1;
         border: none;
         outline: none;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         background: transparent;
         color: rgb(var(--gray-dark));
       }
@@ -66,57 +68,84 @@ const postsData = posts.map(post => ({
         color: rgb(var(--gray));
       }
       .search-results {
-        max-height: 400px;
+        max-height: 420px;
         overflow-y: auto;
+        padding: 0.5em 0;
+      }
+      .search-results::-webkit-scrollbar {
+        width: 6px;
+      }
+      .search-results::-webkit-scrollbar-thumb {
+        background: rgb(var(--gray-light));
+        border-radius: 3px;
       }
       .search-result-item {
         display: block;
-        padding: 1em;
-        border-bottom: 1px solid rgb(var(--gray-light));
+        padding: 1em 1.5em;
+        margin: 0.25em 0.5em;
+        border-radius: 10px;
         text-decoration: none;
         color: rgb(var(--gray-dark));
-        transition: background-color 0.15s;
+        transition: all 0.2s ease;
       }
       .search-result-item:hover {
-        background-color: rgb(var(--gray-light));
-      }
-      .search-result-item:last-child {
-        border-bottom: none;
+        background: linear-gradient(135deg, rgba(17, 120, 147, 0.08), rgba(52, 85, 139, 0.08));
       }
       .result-title {
         font-weight: 600;
-        margin-bottom: 0.25em;
+        font-size: 1rem;
+        margin-bottom: 0.5em;
+        line-height: 1.4;
+      }
+      .search-result-item:hover .result-title {
+        color: var(--accent);
       }
       .result-meta {
-        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75em;
+        font-size: 0.8rem;
         color: rgb(var(--gray));
       }
       .result-category {
-        background-color: var(--accent);
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
         color: white;
-        padding: 0.1em 0.4em;
-        border-radius: 4px;
-        font-size: 0.75em;
-        margin-right: 0.5em;
+        padding: 0.2em 0.6em;
+        border-radius: 5px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      .result-date {
+        color: rgb(var(--gray));
       }
       .no-results {
-        padding: 2em;
+        padding: 3em 2em;
         text-align: center;
         color: rgb(var(--gray));
       }
+      .no-results-icon {
+        font-size: 2.5em;
+        margin-bottom: 0.5em;
+        opacity: 0.5;
+      }
       .search-hint {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
         padding: 0.75em 1em;
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         color: rgb(var(--gray));
-        background: rgb(var(--gray-light));
-        text-align: center;
+        background: rgba(var(--gray-light), 0.5);
+        border-top: 1px solid rgba(var(--gray-light), 0.5);
       }
       .search-hint kbd {
         background: white;
-        padding: 0.2em 0.5em;
-        border-radius: 4px;
+        padding: 0.25em 0.6em;
+        border-radius: 5px;
         font-family: inherit;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        font-weight: 500;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       }
     </style>
   </head>
@@ -153,7 +182,12 @@ const postsData = posts.map(post => ({
 
       function renderResults(posts) {
         if (posts.length === 0) {
-          searchResults.innerHTML = '<div class="no-results">No posts found</div>';
+          searchResults.innerHTML = `
+            <div class="no-results">
+              <div class="no-results-icon">🔍</div>
+              <div>No posts found</div>
+            </div>
+          `;
           return;
         }
 
@@ -162,7 +196,7 @@ const postsData = posts.map(post => ({
             <div class="result-title">${post.title}</div>
             <div class="result-meta">
               <span class="result-category">${post.category}</span>
-              ${post.date}
+              <span class="result-date">${post.date}</span>
             </div>
           </a>
         `).join('');
