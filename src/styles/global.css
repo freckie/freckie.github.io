@@ -61,22 +61,22 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 2em;
-  margin: 1.5em 0 0.5em 0;
+  margin: 6rem 0 0.5em 0;
 }
 
 h2 {
   font-size: 1.6em;
-  margin: 1.4em 0 0.4em 0;
+  margin: 5rem 0 0.4em 0;
 }
 
 h3 {
   font-size: 1.3em;
-  margin: 1.2em 0 0.3em 0;
+  margin: 4rem 0 0.3em 0;
 }
 
 h4 {
   font-size: 1.1em;
-  margin: 1em 0 0.25em 0;
+  margin: 3rem 0 0.25em 0;
 }
 
 h5 {
@@ -180,6 +180,55 @@ hr {
   main {
     padding: 1em;
   }
+}
+
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(var(--gray-light));
+  font-size: 0.9em;
+}
+
+.footnotes::before {
+  content: "References";
+  display: block;
+  font-size: 1.4em;
+  font-weight: 600;
+  color: rgb(var(--black));
+  margin-bottom: 1rem;
+}
+
+/* Footnote reference links in body text [1], [2] */
+a[data-footnote-ref] {
+  margin: 0 3px;
+  padding: 1px 6px;
+  background-color: var(--accent-light);
+  color: var(--accent-dark);
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85em;
+}
+
+a[data-footnote-ref]:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+/* Footnote backref link ↩ */
+a[data-footnote-backref] {
+  margin-left: 6px;
+  padding: 1px 5px;
+  background-color: var(--accent-light);
+  color: var(--accent-dark);
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85em;
+}
+
+a[data-footnote-backref]:hover {
+  background-color: var(--accent);
+  color: white;
 }
 
 /* ===== Utilities ===== */
