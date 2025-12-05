@@ -48,6 +48,9 @@ const { title, date, category, series } = Astro.props;
         font-size: 0.8em;
         margin-right: 0.5em;
       }
+      .utterances-container {
+        margin-top: 3rem;
+      }
     </style>
   </head>
 
@@ -66,6 +69,16 @@ const { title, date, category, series } = Astro.props;
           </div>
           {series && <SeriesNav series={series} />}
           <slot />
+          <div class="utterances-container">
+            <script
+              src="https://utteranc.es/client.js"
+              repo="freckie/freckie.github.io"
+              issue-term="pathname"
+              theme="github-light"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
         </div>
       </article>
     </main>
