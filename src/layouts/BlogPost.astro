@@ -70,5 +70,23 @@ const { title, date, category, series } = Astro.props;
       </article>
     </main>
     <Footer />
+    <script>
+      // Transform footnote numbers to [n] format with backref links
+      document.addEventListener('DOMContentLoaded', () => {
+        const footnotes = document.querySelectorAll('.footnotes ol li');
+        footnotes.forEach((li, index) => {
+          const num = index + 1;
+          const backrefLink = li.querySelector('a[data-footnote-backref]');
+          if (backrefLink) {
+            const href = backrefLink.getAttribute('href');
+            const numberLink = document.createElement('a');
+            numberLink.href = href;
+            numberLink.className = 'footnote-number';
+            numberLink.textContent = `[${num}]`;
+            li.insertBefore(numberLink, li.firstChild);
+          }
+        });
+      });
+    </script>
   </body>
 </html>

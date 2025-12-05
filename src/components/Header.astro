@@ -8,7 +8,7 @@ interface Props {
 const { hideTitle = false } = Astro.props;
 ---
 
-<header>
+<header id="header">
   <nav>
     {!hideTitle && <h2><a href="/">{SITE_TITLE}</a></h2>}
     {hideTitle && <div></div>}
@@ -30,6 +30,10 @@ const { hideTitle = false } = Astro.props;
     height: 60px;
     background: linear-gradient(72deg, #34558b, #117893);
     box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    transition: transform 0.3s ease;
+  }
+  header.hidden {
+    transform: translateY(-100%);
   }
   h2 {
     margin: 0;
@@ -64,3 +68,21 @@ const { hideTitle = false } = Astro.props;
     padding: 0.5em;
   }
 </style>
+<script>
+  let lastScrollY = window.scrollY;
+  const header = document.getElementById('header');
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY && currentScrollY > 60) {
+      // Scrolling down & past header height
+      header?.classList.add('hidden');
+    } else {
+      // Scrolling up
+      header?.classList.remove('hidden');
+    }
+
+    lastScrollY = currentScrollY;
+  });
+</script>
