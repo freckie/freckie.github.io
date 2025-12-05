@@ -51,6 +51,9 @@ const { title, date, category, series } = Astro.props;
       .utterances-container {
         margin-top: 3rem;
       }
+      .prose img {
+        cursor: zoom-in;
+      }
     </style>
   </head>
 
@@ -84,21 +87,27 @@ const { title, date, category, series } = Astro.props;
     </main>
     <Footer />
     <script>
+      import mediumZoom from 'medium-zoom';
+
+      // Image zoom
+      mediumZoom('.prose img', {
+        margin: 24,
+        background: 'rgba(0, 0, 0, 0.9)',
+      });
+
       // Transform footnote numbers to [n] format with backref links
-      document.addEventListener('DOMContentLoaded', () => {
-        const footnotes = document.querySelectorAll('.footnotes ol li');
-        footnotes.forEach((li, index) => {
-          const num = index + 1;
-          const backrefLink = li.querySelector('a[data-footnote-backref]');
-          if (backrefLink) {
-            const href = backrefLink.getAttribute('href');
-            const numberLink = document.createElement('a');
-            numberLink.href = href;
-            numberLink.className = 'footnote-number';
-            numberLink.textContent = `[${num}]`;
-            li.insertBefore(numberLink, li.firstChild);
-          }
-        });
+      const footnotes = document.querySelectorAll('.footnotes ol li');
+      footnotes.forEach((li, index) => {
+        const num = index + 1;
+        const backrefLink = li.querySelector('a[data-footnote-backref]');
+        if (backrefLink) {
+          const href = backrefLink.getAttribute('href');
+          const numberLink = document.createElement('a');
+          numberLink.href = href;
+          numberLink.className = 'footnote-number';
+          numberLink.textContent = `[${num}]`;
+          li.insertBefore(numberLink, li.firstChild);
+        }
       });
     </script>
   </body>
