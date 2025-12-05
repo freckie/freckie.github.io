@@ -1,0 +1,64 @@
+---
+interface SeriesItem {
+  title: string;
+  link: string;
+  current?: boolean;
+}
+
+interface Props {
+  series: SeriesItem[];
+}
+
+const { series } = Astro.props;
+---
+
+<div class="series-nav">
+  <p class="series-notice">❗️ 이 포스트는 시리즈로 구성되었습니다.</p>
+  <ol>
+    {series.map((item, index) => (
+      <li class={item.current ? 'current' : ''}>
+        {item.current ? (
+          <span>{item.title}</span>
+        ) : (
+          <a href={item.link}>{item.title}</a>
+        )}
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .series-nav {
+    --padding-y: 1.75rem;
+    --li-margin: 0.5rem;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: var(--padding-y) 2rem calc(var(--padding-y) - var(--li-margin)) 2rem;
+    margin: 0 2rem 2rem 2rem;
+  }
+  .series-notice {
+    margin: 0 0 0.75rem 0;
+    font-weight: 500;
+    color: rgb(var(--gray-dark));
+  }
+  .series-nav ol {
+    margin: 0;
+    padding-left: 2.5rem;
+  }
+  .series-nav li {
+    margin: var(--li-margin) 0;
+    color: rgb(var(--gray-dark));
+  }
+  .series-nav a {
+    color: #000;
+    text-decoration: none;
+  }
+  .series-nav a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .series-nav .current span {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>

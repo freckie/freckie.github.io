@@ -1,0 +1,238 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const categories = [...new Set(posts.map(post => post.data.category))];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      main {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 2em 1em;
+      }
+      .hero {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+      .blog-title {
+        font-size: 2.5em;
+        font-weight: 600;
+        margin: 0 0 1em 0;
+        color: rgb(var(--black));
+      }
+      .author-section {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        padding: 1em;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(var(--gray), 10%);
+        margin-bottom: 1.5em;
+      }
+      .avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .author-info {
+        text-align: left;
+      }
+      .author-name {
+        font-size: 0.9rem;
+        color: rgb(var(--gray));
+        margin: 0 0 0.25em 0;
+      }
+      .author-name a {
+        color: rgb(var(--black));
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .author-name a:hover {
+        color: var(--accent);
+      }
+      .author-bio {
+        font-size: 1rem;
+        color: rgb(var(--gray-dark));
+        margin: 0 0 0.5em 0;
+      }
+      .social-links {
+        display: flex;
+        align-items: center;
+        gap: 0.75em;
+      }
+      .social-links a {
+        color: rgb(var(--gray));
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+      }
+      .social-links a:hover {
+        color: var(--accent);
+      }
+      .social-links iconify-icon {
+        font-size: 20px;
+      }
+      .category-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        justify-content: center;
+        margin-bottom: 2em;
+        padding-bottom: 1em;
+        border-bottom: 1px solid rgb(var(--gray-light));
+      }
+      .category-btn {
+        padding: 0.4em 0.8em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 20px;
+        background: white;
+        color: rgb(var(--gray));
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .category-btn:hover,
+      .category-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .category-btn.active {
+        background-color: var(--accent);
+        color: white;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      ul li {
+        margin-bottom: 1.5em;
+        padding-bottom: 1.5em;
+        border-bottom: 1px solid rgb(var(--gray-light));
+      }
+      ul li:last-child {
+        border-bottom: none;
+      }
+      ul li a {
+        text-decoration: none;
+      }
+      .post-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: rgb(var(--black));
+        margin: 0;
+      }
+      .post-title:hover {
+        color: var(--accent);
+      }
+      .post-meta {
+        color: rgb(var(--gray));
+        font-size: 0.875rem;
+        margin-top: 0.5em;
+      }
+      .category {
+        background-color: var(--accent);
+        color: white;
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        font-size: 0.75em;
+        margin-right: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <Header hideTitle={true} />
+    <main>
+      <section class="hero">
+        <h1 class="blog-title">{SITE_TITLE}</h1>
+        <div class="author-section">
+          <img
+            class="avatar"
+            src="https://github.com/freckie.png"
+            alt="Freckie"
+          />
+          <div class="author-info">
+            <p class="author-name">Written by <a href="/about">@Freckie</a></p>
+            <p class="author-bio">깃허브 스타될거야.</p>
+            <div class="social-links">
+              <a href="https://github.com/freckie" target="_blank" title="GitHub">
+                <iconify-icon icon="mdi:github"></iconify-icon>
+              </a>
+              <a href="https://linkedin.com/in/freckie" target="_blank" title="LinkedIn">
+                <iconify-icon icon="mdi:linkedin"></iconify-icon>
+              </a>
+              <a href="mailto:freckie@frec.kr" title="Email">
+                <iconify-icon icon="mdi:email-arrow-right"></iconify-icon>
+              </a>
+              <a href="/about" title="About">
+                <iconify-icon icon="mdi:clipboard-user"></iconify-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="category-filter">
+        <button class="category-btn active" data-category="all">All</button>
+        {categories.map((category) => (
+          <button class="category-btn" data-category={category}>{category}</button>
+        ))}
+      </div>
+
+      <section>
+        <ul id="posts-list">
+          {posts.map((post) => (
+            <li data-category={post.data.category}>
+              <a href={`/${post.id}/`}>
+                <h4 class="post-title">{post.data.title}</h4>
+              </a>
+              <p class="post-meta">
+                <span class="category">{post.data.category}</span>
+                <FormattedDate date={post.data.date} />
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+    <Footer />
+
+    <script>
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      const postItems = document.querySelectorAll('#posts-list li');
+
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoryButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const category = btn.dataset.category;
+
+          postItems.forEach(item => {
+            if (category === 'all' || item.dataset.category === category) {
+              (item as HTMLElement).style.display = '';
+            } else {
+              (item as HTMLElement).style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

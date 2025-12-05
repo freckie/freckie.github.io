@@ -1,0 +1,88 @@
+---
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  hideTitle?: boolean;
+}
+
+const { hideTitle = false } = Astro.props;
+---
+
+<header id="header">
+  <nav>
+    {!hideTitle && <h2><a href="/">{SITE_TITLE}</a></h2>}
+    {hideTitle && <div></div>}
+    <div class="icon-links">
+      <a href="/search" title="Search">
+        <span class="sr-only">Search</span>
+        <iconify-icon icon="mdi:magnify" width="24" height="24"></iconify-icon>
+      </a>
+    </div>
+  </nav>
+</header>
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin: 0;
+    padding: 0 1em;
+    height: 60px;
+    background: linear-gradient(72deg, #34558b, #117893);
+    box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    transition: transform 0.3s ease;
+  }
+  header.hidden {
+    transform: translateY(-100%);
+  }
+  h2 {
+    margin: 0;
+    font-size: 1.5em;
+  }
+  h2 a,
+  h2 a.active {
+    text-decoration: none;
+    color: white;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+  }
+  nav a:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .icon-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .icon-links a {
+    display: flex;
+    align-items: center;
+    padding: 0.5em;
+  }
+</style>
+<script>
+  let lastScrollY = window.scrollY;
+  const header = document.getElementById('header');
+
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY && currentScrollY > 60) {
+      // Scrolling down & past header height
+      header?.classList.add('hidden');
+    } else {
+      // Scrolling up
+      header?.classList.remove('hidden');
+    }
+
+    lastScrollY = currentScrollY;
+  });
+</script>

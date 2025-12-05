@@ -1,0 +1,297 @@
+/*
+  Global CSS - Design Tokens & Base Styles
+*/
+
+/* ===== Fonts ===== */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap");
+
+/* ===== Design Tokens ===== */
+:root {
+  /* Colors */
+  --accent: #117893;
+  --accent-dark: #34558b;
+  --accent-light: #d5e4eb;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+  --gray-dark: 34, 41, 57;
+  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+
+  /* Shadows */
+  --box-shadow:
+    0 2px 6px rgba(var(--gray), 25%),
+    0 8px 24px rgba(var(--gray), 33%),
+    0 16px 32px rgba(var(--gray), 33%);
+
+  /* Typography */
+  --font-family: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-size-base: 17px;
+  --line-height-base: 1.55;
+}
+
+/* ===== Base Styles ===== */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  background: linear-gradient(var(--gray-gradient)) no-repeat;
+  background-size: 100% 600px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: rgb(var(--gray-dark));
+}
+
+/* ===== Layout ===== */
+main {
+  width: 720px;
+  max-width: calc(100% - 2em);
+  margin: auto;
+  padding: 3em 1em;
+}
+
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
+  color: rgb(var(--black));
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 5rem 0 0.5em 0;
+}
+
+h2 {
+  font-size: 1.6em;
+  margin: 4rem 0 0.4em 0;
+}
+
+h3 {
+  font-size: 1.3em;
+  margin: 3rem 0 0.3em 0;
+}
+
+h4 {
+  font-size: 1.1em;
+  margin: 2rem 0 0.25em 0;
+}
+
+h5 {
+  font-size: 1em;
+  margin: 0.8em 0 0.2em 0;
+}
+
+strong, b {
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 1em 0;
+}
+
+.prose p {
+  margin: 0 0 1.2em 0;
+}
+
+ul li p,
+ol li p {
+  margin-bottom: 0.6rem;
+}
+
+/* ===== Links ===== */
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ===== Forms ===== */
+textarea {
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--font-family);
+}
+
+input {
+  font-size: 16px;
+  font-family: var(--font-family);
+}
+
+button {
+  font-family: var(--font-family);
+}
+
+/* ===== Tables ===== */
+table {
+  width: 100%;
+}
+
+/* ===== Media ===== */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+figure {
+  margin: 1.5em 0;
+}
+
+figcaption {
+  margin-top: 0.1em;
+  text-align: center;
+  font-size: 0.8em;
+  color: rgb(var(--gray));
+}
+
+/* ===== Code ===== */
+code {
+  padding: 3px 6px;
+  background-color: var(--accent-light);
+  color: var(--accent-dark);
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+pre {
+  padding: 1.5em;
+  border-radius: 8px;
+  font-size: 15px;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
+/* Tab size: 2 for yaml, json, js, ts, html, css, shell, etc. */
+pre[data-language="yaml"],
+pre[data-language="json"],
+pre[data-language="javascript"],
+pre[data-language="js"],
+pre[data-language="typescript"],
+pre[data-language="ts"],
+pre[data-language="html"],
+pre[data-language="css"],
+pre[data-language="astro"],
+pre[data-language="sh"],
+pre[data-language="bash"],
+pre[data-language="shell"],
+pre[data-language="zsh"] {
+  tab-size: 2;
+  -moz-tab-size: 2;
+}
+
+pre > code {
+  all: unset;
+  font-size: 15px;
+}
+
+/* ===== Blockquote ===== */
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 0 0 0 20px;
+  margin: 0;
+  font-size: 1.1em;
+}
+
+/* ===== Horizontal Rule ===== */
+hr {
+  border: none;
+  border-top: 1px solid rgb(var(--gray-light));
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 720px) {
+  body {
+    font-size: 16px;
+  }
+  main {
+    padding: 1em;
+  }
+}
+
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(var(--gray-light));
+  font-size: 0.9em;
+}
+
+.footnotes::before {
+  content: "References";
+  display: block;
+  font-size: 1.4em;
+  font-weight: 600;
+  color: rgb(var(--black));
+  margin-bottom: 1rem;
+}
+
+.footnotes ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.footnotes li {
+  display: flex;
+  margin-bottom: 0.5em;
+}
+
+.footnotes li p {
+  margin: 0;
+}
+
+.footnote-number {
+  color: var(--accent);
+  text-decoration: none;
+  margin-right: 0.5em;
+}
+
+.footnote-number:hover {
+  text-decoration: underline;
+}
+
+/* Footnote reference links in body text [1], [2] */
+a[data-footnote-ref] {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 1em;
+}
+
+a[data-footnote-ref]::before {
+  content: "[";
+}
+
+a[data-footnote-ref]::after {
+  content: "]";
+}
+
+a[data-footnote-ref]:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+/* Footnote backref link ↩ - hidden, replaced by [n] links */
+a[data-footnote-backref] {
+  display: none;
+}
+
+/* ===== Utilities ===== */
+.sr-only {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
