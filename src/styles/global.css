@@ -61,22 +61,22 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 2em;
-  margin: 6rem 0 0.5em 0;
+  margin: 5rem 0 0.5em 0;
 }
 
 h2 {
   font-size: 1.6em;
-  margin: 5rem 0 0.4em 0;
+  margin: 4rem 0 0.4em 0;
 }
 
 h3 {
   font-size: 1.3em;
-  margin: 4rem 0 0.3em 0;
+  margin: 3rem 0 0.3em 0;
 }
 
 h4 {
   font-size: 1.1em;
-  margin: 3rem 0 0.25em 0;
+  margin: 2rem 0 0.25em 0;
 }
 
 h5 {
@@ -138,6 +138,17 @@ img {
   border-radius: 8px;
 }
 
+figure {
+  margin: 1.5em 0;
+}
+
+figcaption {
+  margin-top: 0.1em;
+  text-align: center;
+  font-size: 0.8em;
+  color: rgb(var(--gray));
+}
+
 /* ===== Code ===== */
 code {
   padding: 3px 6px;
@@ -151,6 +162,26 @@ pre {
   padding: 1.5em;
   border-radius: 8px;
   font-size: 15px;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
+/* Tab size: 2 for yaml, json, js, ts, html, css, shell, etc. */
+pre[data-language="yaml"],
+pre[data-language="json"],
+pre[data-language="javascript"],
+pre[data-language="js"],
+pre[data-language="typescript"],
+pre[data-language="ts"],
+pre[data-language="html"],
+pre[data-language="css"],
+pre[data-language="astro"],
+pre[data-language="sh"],
+pre[data-language="bash"],
+pre[data-language="shell"],
+pre[data-language="zsh"] {
+  tab-size: 2;
+  -moz-tab-size: 2;
 }
 
 pre > code {
@@ -199,36 +230,55 @@ hr {
   margin-bottom: 1rem;
 }
 
+.footnotes ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.footnotes li {
+  display: flex;
+  margin-bottom: 0.5em;
+}
+
+.footnotes li p {
+  margin: 0;
+}
+
+.footnote-number {
+  color: var(--accent);
+  text-decoration: none;
+  margin-right: 0.5em;
+}
+
+.footnote-number:hover {
+  text-decoration: underline;
+}
+
 /* Footnote reference links in body text [1], [2] */
 a[data-footnote-ref] {
-  margin: 0 3px;
-  padding: 1px 6px;
-  background-color: var(--accent-light);
-  color: var(--accent-dark);
-  border-radius: 4px;
+  margin: 0;
+  padding: 0 4px;
+  color: var(--accent);
   text-decoration: none;
-  font-size: 0.85em;
+  font-size: 1em;
+}
+
+a[data-footnote-ref]::before {
+  content: "[";
+}
+
+a[data-footnote-ref]::after {
+  content: "]";
 }
 
 a[data-footnote-ref]:hover {
-  background-color: var(--accent);
-  color: white;
-}
-
-/* Footnote backref link ↩ */
-a[data-footnote-backref] {
-  margin-left: 6px;
-  padding: 1px 5px;
-  background-color: var(--accent-light);
   color: var(--accent-dark);
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 0.85em;
+  text-decoration: underline;
 }
 
-a[data-footnote-backref]:hover {
-  background-color: var(--accent);
-  color: white;
+/* Footnote backref link ↩ - hidden, replaced by [n] links */
+a[data-footnote-backref] {
+  display: none;
 }
 
 /* ===== Utilities ===== */

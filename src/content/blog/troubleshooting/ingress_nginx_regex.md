@@ -4,6 +4,7 @@ date: 2024-02-18 21:48:00
 category: 'Troubleshooting'
 draft: false
 ---
+
 ## 문제 상황
 
 `Ingress.yaml`
@@ -21,14 +22,14 @@ metadata:
 spec:
   rules:
     - http:
-        paths:
-          - path: "/api(/|$)(.*)"
-            pathType: Prefix
-            backend:
-              service:
-                name: api-spring-service
-                port:
-                  number: 80
+      paths:
+        - path: "/api(/|$)(.*)"
+          pathType: Prefix
+          backend:
+            service:
+            name: api-spring-service
+            port:
+              number: 80
 ```
 
 ### 표면적으로 보이던 에러 상황
@@ -60,11 +61,11 @@ spec:
 - 이전에 성공적으로 동작하던 클러스터와 동작하지 않는 클러스터의 ingress-nginx-controller 이미지를 비교해봤다.
     - 이전 클러스터 (동작O) : `registry.k8s.io/ingress-nginx/controller:v1.6.4`
         
-        ![20240218-1.png](/images/20240218-1.png)    
+        ![](/images/20240218-1.png)    
         
     - 지금 클러스터 (동작X) : `registry.k8s.io/ingress-nginx/controller:v1.6.3`
         
-        ![20240218-2.png](/images/20240218-2.png)    
+        ![](/images/20240218-2.png)    
     
     - 태그의 마이너 버전이 하나가 다운그레이드 된 것.
 

@@ -41,7 +41,6 @@ draft: false
 2. 맵을 생성하는 `makemap()` 함수에 대해 살펴본다.
 3. 키를 통해 맵에 접근하는 `mapaccess()` 계열 함수에 대해 살펴본다.
 
-<br>
 
 ## 1. *hmap* struct
 
@@ -78,10 +77,7 @@ type hmap struct {
 💡 (참고) **`uintptr` vs `unsafe.Pointer`**
 - uintptr은 builtin.go의 주석에 따르면 **어떤 포인터든 주소를 담을 수 있게 충분히 큰 integer** 타입이라고 한다.
 - unsafe.Pointer는 **임의의 포인터 타입**(`*ArbitraryType`)을 표현하며, 실제 Go object를 가리키고 있다. C의 `*void` 처럼 어떤 타입의 포인터로든 변환할 수 있다.
-
 - unsafe.Pointer는 Go object를 가리키는 포인터로서 동작하고 있기 때문에 **Go의 가비지 컬렉터에게 추적**된다. 그러나 uintptr는 단순히 주소를 담는 정수형 변수기 때문에 가비지 컬렉션될 수 없으며, 사용하기에 매우 위험하다.
-
-<br>
 
 ## 2. *bmap* struct
 
@@ -95,21 +91,13 @@ type bmap struct {
 ```
 
 `bucketCnt`는 8을 기본값으로 가지며 한 버킷 당 저장할 수 있는 키-밸류 데이터 개수(**슬롯 개수**)를 뜻한다.
-
-`tophash`는 이 버킷에 포함된 **각 키의 해시 값에서 최상위 바이트(8비트)**, 즉 키의 해시값에서 왼쪽부터 8비트를 가지고 있는 배열이다.
+그리고 `tophash`는 이 버킷에 포함된 **각 키의 해시 값에서 최상위 바이트(8비트)**, 즉 키의 해시값에서 왼쪽부터 8비트를 가지고 있는 배열이다.
 
 이렇게 버킷 내의 키들에 대해 해시 값을 또 갖고 있는 이유는 Go에서의 해시테이블이 **Separate Chaining** 방식을 사용하는 다른 언어 구현체들과 다르게 버킷이 Linked List 기반이 아니고 그냥 **Array**이기 때문이다.
-
-<br>
-
 여기서 버킷이 실제 키-밸류 데이터를 담는 부분이라 *bmap*에 키 값과 밸류 값, 혹은 키와 밸류를 가리키는 포인터가 있을 것이라고 생각할 수 있다.
 
 그러나 `map.go` 코드 상의 구현에는 *bmap* struct의 필드로 `tophash`만이 존재하며 키와 밸류는 존재하지 않는다.
-
 그렇다면 키와 밸류는 어디에 저장되어 있을까?
-
-<br>
-
 실제로 *bmap*이 할당되는 과정이나 밸류를 갖고 오는 과정을 살펴보면 메모리 상에 다음과 같이 할당되어 있음을 알 수 있다.
 
 ![](/images/20220407-1.png)
@@ -213,8 +201,6 @@ type maptype struct {
 }
 ```
 
-<br>
-
 ### 3.1. *makemap()* - 필요 메모리 계산
 
 ```go
@@ -230,9 +216,7 @@ if overflow || mem > maxAlloc {
 
 이 때, overflow가 발생하거나 계산된 메모리 양이 `maxAlloc`보다 크다면 `hint`가 0으로 변경되고 나중에 `B`도 0으로 계산되며, 버킷은 추후에 lazily allocated된다.
 
-(`maxAlloc`은 AMD64 시스템에서 $2^{48}$bit로 32TiB에 해당한다.[1])
-
-<br>
+(`maxAlloc`은 AMD64 시스템에서 $2^{48}$bit로 32TiB에 해당한다.[^1])
 
 ### 3.2. *makemap()* - 해시 테이블 초기화
 
@@ -248,8 +232,6 @@ h.hash0 = fastrand()
 다음 부분에서 hmap을 할당하고, `hash0` (해시 시드)를 설정한다.
 
 ([wyhash](https://github.com/wangyi-fudan/wyhash)라는 알고리즘으로 랜덤 시드를 생성한다.)
-
-<br>
 
 ### 3.3. *makemap()* - 할당할 버킷 수 계산
 
@@ -281,24 +263,15 @@ func overLoadFactor(count int, B uint bool) {
 
 결론적으로, 위 코드에서 $LoadFactor * B \ge hint$가 되는 최소 `B`를 구하게 되고, 맵은 $2^B$개의 버킷을 가질 수 있게 된다.
 
-<br>
-
 💡 (참고) **Load Factor**
 - Load Factor가 버킷 당 평균 키-밸류 데이터 개수를 뜻하는데 현재 맵에 저장된 데이터가 Load Factor를 넘어가게 된다면 맵은 자동으로 용량을 늘리게 된다. (growing 과정)
-
 - 만약 이 Load Factor가 너무 작다면 growing 과정이 자주 트리거되어 오버헤드가 발생하여 접근 시간이 낭비될 것이고, 너무 크다면 메모리 공간이 낭비될 것이다.
-
 - 즉, Load Factor에 따라 시간과 공간이 trade-off 관계에 놓이게 되며, 이 값을 적당히 조정하는 것이 성능을 좌우한다고 할 수 있다.
-
 - Java에서는 HashTable의 Load Factor로 75%를 사용한다.
-
-<br>
 
 추가) `bucketShift(B)` 함수는 $2^B$를 리턴하고 B의 범위는 32bit 시스템에서 $0 \le B \le 31$, 64bit 시스템에서 $0 \le B \le 63$이다.
 
 `B`의 정의가 버킷 개수에 $log_2$를 취한 것이기 때문에 `bucketShift(B)` 함수의 역할은 **주어진 B 값을 기반으로 가질 수 있는 버킷 개수를 계산**하는 것이라고 할 수 있다.
-
-<br>
 
 ### 3.4. *makemap()* - 버킷 Array 생성
 
@@ -318,21 +291,16 @@ return h
 마지막 부분에서는 버킷 array를 생성하고 맵에 할당하는 과정이 포함되어 있다.
 
 만약 위에서 `B`값이 0으로 정해진다면 여기서 버킷 array를 생성하지 않고, 값을 넣는 `mapassign()` 과정에서 버킷을 생성한다고 한다. (lazy allocate)
-<br>
 
 `makemap()` 함수에 파라미터로 받았던 `t *maptype`, 위에서 계산했던 `B`값을 `makeBucketArray()` 함수에 넣으면, 해당 함수에서 버킷 사이즈를 계산하여 메모리를 할당하고 반환해준다.
-
-<br>
 
 `makeBucketArray()` 함수에서 주목할 점은 버킷 개수가 충분히 클 때($B \ge 4$) 미리 overflow 버킷을 할당해둔다는 것이다.
 
 또한 해당 함수에서 *bmap*의 사이즈를 계산해서 메모리를 할당하는데, bmap struct 구현에는 필드가 tophash [8]uint8만 있지만 **실제로는 8개의 키와 8개의 밸류를 담을 공간까지 계산**하여 메모리를 할당한다.
 
-<br>
-
 ## 4. *mapaccess()* :: 맵에 접근하기
 
-2016년 GopherCon에서 Keith Randall은 다음과 같이 설명했다. [2]
+2016년 GopherCon에서 Keith Randall은 다음과 같이 설명했다. [^2]
 
 Generic이 존재하는 다른 언어 같은 경우 맵에서 특정 키에 대한 값을 갖고오고자 할 때(lookup), `v = m[k]` 코드는 다음과 같이 컴파일 될 것이다.
 
@@ -368,8 +336,6 @@ func lookup(t *mapType, m *mapHeader, k unsafe.Pointer) unsafe.Pointer
 특정 타입에 대해 따로 구현되어 있는 lookup 함수를 호출하는 대신, 단일로 존재하는 lookup 함수에 맵 타입, 헤더, 그리고 키에 대한 포인터를 파라미터로 입력함으로써 값에 대해 접근한다.
 
 키가 어떤 타입인지 런타임에 알 수 있으므로 파라미터에 키(k)가 unsafe.Pointer로 설정되어 있다.
-
-<br>
 
 실제 `map.go` 파일에는 맵 접근 함수가 리턴 타입에 따라 여러 버전으로 구현되어 있다.
 
@@ -423,8 +389,6 @@ bucketloop:
 
 ```
 
-<br>
-
 ### 4.1. *mapaccess()* - 버킷 탐색
 
 ```go
@@ -441,8 +405,6 @@ b := (bucket) add(m.buckets, bucket*t.bucketsize)) // b := &m.buckets[bucket]
 그리고 해시값의 최상위 8비트를 구하고 버킷의 주소를 가져온다.
 
 여기서 `add(p, x)` 함수는 `runtime/stubs.go` 파일에 포인터(p)를 x만큼 다음 주소로 옮기라는 의미로 구현되어 있다.
-
-<br>
 
 ### 4.2. *mapaccess()* - 키 탐색
 
@@ -472,8 +434,6 @@ return zero
 
 - $value_i = {dataOffset}\, +\, 8 * keySize\, +\, i*elemSize$
 
-<br>
-
 `dataOffset`은 map.go 상단에 다음과 같이 상수로 정의되어 있다.
 
 ```go
@@ -489,8 +449,6 @@ dataOffset = unsafe.Offsetof(struct {
 
 ![](/images/20220407-2.png)
 
-<br>
-
 ## 5. *mapassign()* :: 맵에 키 할당하기
 
 ```go
@@ -503,21 +461,15 @@ func mapassign(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
 
 또한 슬롯을 추가하기 전에 현재 맵이 Load Factor에 도달했거나 overflow 버킷이 너무 많을 경우 **growing을 시작하는 과정을 포함**한다.
 
-<br>
-
 이전에 *bmap*과 mapaccess 과정을 살펴볼 때 Go에서의 해시테이블은 Linked List가 아니라 버킷마다 8개의 슬롯을 가진 Array를 미리 할당하여 chaining을 구현한다고 소개했다.
 
 따라서 새로운 키를 할당할 시, 해시 충돌이 발생하여 같은 버킷에 키가 할당될 경우 mapassign() 함수는 mapaccess()와 마찬가지로 **버킷 내부 Array를 선형 탐색하다 빈 슬롯에 단순히 키를 할당**하는 방법을 사용한다.
 
 키를 할당하고 밸류가 들어갈 슬롯의 주소를 가리키는 포인터를 리턴하여 키를 할당하는 과정이 완료된다.
 
-<br>
-
 Java와 같이 링크드 리스트, 혹은 트리로 chaining이 구현되었다면 버킷에 키를 할당하는 과정이 보다 더 복잡했을 것이다.
 
 그러나 Go는 포인터 연산과 비트 연산이 언어 차원에서 지원되므로, **미리 할당해둔 배열에 빈 공간(슬롯)을 찾아 값을 넣기만 하면 할당이 완료**된다.
-
-<br>
 
 ## 마무리
 
@@ -525,16 +477,13 @@ Java와 같이 링크드 리스트, 혹은 트리로 chaining이 구현되었다
 
 글이 너무 길어져 growing 과정이나 맵 순회에 대해서는 다음 포스팅에서 다루고자 한다.
 
-<br>
-
-**References**
+## See Also
 
 - [golang/go :: src/runtime/map.go](https://github.com/golang/go/blob/master/src/runtime/map.go)
 - [Hash Tables Implementation in Go](https://medium.com/kalamsilicon/hash-tables-implementation-in-go-48c165c54553)
 - [Why Go cares about the difference between unsafe.Pointer and uintptr](https://utcc.utoronto.ca/~cks/space/blog/programming/GoUintptrVsUnsafePointer)
 - [How the Go runtime implements maps efficiently (without generics)](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)
 
-<br>
 
-- [1] [golang/go :: src/runtime/malloc.go](https://github.com/golang/go/blob/23756207fb68c34ae15a030319dc31248e21cf45/src/runtime/malloc.go#L225) (accessed on 2022/04/06)
-- [2] [Keith Randall, “Inside the Map Implementation”, GopherCon 2016.](https://youtu.be/Tl7mi9QmLns) ([slide](https://docs.google.com/presentation/d/1CxamWsvHReswNZc7N2HMV7WPFqS8pvlPVZcDegdC_T4/edit#slide=id.g15413b4d29_0_6))
+[^1]: [golang/go :: src/runtime/malloc.go](https://github.com/golang/go/blob/23756207fb68c34ae15a030319dc31248e21cf45/src/runtime/malloc.go#L225) (accessed on 2022/04/06)
+[^2]: [Keith Randall, “Inside the Map Implementation”, GopherCon 2016.](https://youtu.be/Tl7mi9QmLns) ([slide](https://docs.google.com/presentation/d/1CxamWsvHReswNZc7N2HMV7WPFqS8pvlPVZcDegdC_T4/edit#slide=id.g15413b4d29_0_6))

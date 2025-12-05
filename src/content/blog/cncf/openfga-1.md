@@ -18,9 +18,7 @@ OpenFGA는 유저-리소스 간 관계 기반의 접근 제어를 수행한다.
 
 ### 1.1 Zanzibar에 대해 조금만 더!
 
-![](/images/20250624-1.png)
-
-[https://kilimanjarobound.com/zanzibar-beach-holidays/](https://kilimanjarobound.com/zanzibar-beach-holidays/)
+![출처: https://kilimanjarobound.com/zanzibar-beach-holidays](/images/20250624-1.png)
 
 구글에서 발표한 논문에 따르면 Zanzibar는 구글 캘린더, 클라우드, 드라이브, 지도, 사진, 유튜브 등 서비스에서 내부적으로 사용된다. 구글 드라이브만 생각해봐도 엄청난 수의 유저가 더 엄청난 수의 파일을 관리하고, 심지어는 다른 유저에게 뷰어/에디터/오너 권한을 주어 공유까지 한다. 유저와 리소스 간의 상호작용 뿐만 아니라 드라이브에 있는 파일을 메일에 첨부하여 공유하는 것처럼, 구글 서비스의 리소스는 서비스를 가리지 않고 사용될 수 있다. 이렇게 복잡도가 높은 시스템에서 정적인 권한을 생성하고 유저에게 부여하는 방법을 사용하는 것은 확실히 어렵겠다는 생각이 든다.
 
@@ -61,47 +59,47 @@ RBAC 시스템에서 유저는 특정 "역할(Role)"을 가지고, 역할에는 
 
 OpenFGA에서 사용하는 용어들에 대해 간단히 정리해본다. 여기서 설명하는건 다음 섹션에서 소개할 OpenFGA만의 DSL (Domain-Specific Language)로 정의할 수 있다. 다만 늘 그렇듯 공식문서를 보는게 더 깔끔하다. [https://openfga.dev/docs/concepts](https://openfga.dev/docs/concepts)
 
-<u>**타입 (Type)**</u>
+##### 타입 (Type)
 
 말 그대로 타입이다. 위에서 설명했던 예시 중, `user`, `document`, `folder` 등이 타입이 될 수 있다.
 
-<u>**오브젝트 (Object)**</u>
+##### 오브젝트 (Object)
 
 오브젝트는 **타입과 ID로 정의되는 실제 Entity**이다. `user:freckie`, `document:01979ac4-f4c3-7330-98f7-c51fe8f4e4ed` 등이 오브젝트가 될 수 있다.
 
-<u>**유저 (User)**</u>
+##### 유저 (User)
 
 유저는 실제 권한을 가진 엔드 유저일 수도 있지만 **사용자 뿐만 아니라 다른 어떤 타입도 모두 가능**하다. 이전 문단에서 관계를 계층구조로 설정할 수 있다고 설명했는데, 폴더-문서의 구조를 가질 경우 둘 중 하나가 유저가 된다. 즉 **"유저 $U$와 오브젝트 $O$가 관계 $R$을 가진다"** 라는 것은 사실 **SPO (주어-서술어-목적어)** 로 이해하는 것이 편리하다.
 
 추가로, 와일드카드를 사용해 `user:*` 처럼 표현이 가능하다.
 
-<u>**관계 (Relation)**</u>
+##### 관계 (Relation)
 
 유저와 오브젝트 간 설정하는 것이 기본이지만, 오브젝트와 오브젝트 간에도 관계가 성립하며 유저셋(userset)과 오브젝트 간에도 설정할 수 있다. 
 
-<u>**인가 모델 (Authorization Model)**</u>
+##### 인가 모델 (Authorization Model)
 
 여러 타입을 정의, 타입 간에 존재할 수 있는 관계들을 정의한 것을 인가 모델이라고 표현한다. 즉, 스키마이다. 한 번 정의되어 생성된 **인가 모델은 불변**하며, 수정이 있다면 새로운 버전의 인가 모델이 생성된다.
 
-<u>**관계 튜플 (Relationship Tuple)**</u>
+##### 관계 튜플 (Relationship Tuple)
 
 이제 시스템의 런타임에서, 인가 모델에 정의한 관계 스키마를 따라 유저와 오브젝트 간 관계가 맺어질 수 있다. 예시로, 인가 모델에 **user와 document는 editor란 관계를 맺을 수 있다**는 것을 정의한다. `user:freckie`와 `document:some.txt`가 `editor` 관계를 가진다면 다음 관계 튜플이 생성된다.
 
 ```json
 {
-    "user": "user:freckie",
-    "relation": "editor",
-    "object": "document:some.txt"
+  "user": "user:freckie",
+  "relation": "editor",
+  "object": "document:some.txt"
 }
 ```
 
 즉, 관계는 일종의 클래스 정의이고 관계 튜플은 인스턴스라고 표현할 수 있다. 튜플은 관계 모델에 종속되기 때문에 같은 스키마로 생성된 관계 모델이 여러개 있더라도 동시에 소속되지는 않는다.
 
-<u>**스토어 (Store)**</u>
+##### 스토어 (Store)
 
 여러 버전의 인가 모델, 그리고 거기에 종속된 관계 튜플들을 관리하는 최상위 단위이다. **각 스토어는 격리**되어 서로 튜플들이 공유되지 않는다. 주로 dev / prod 등과 같이 완전히 격리가 필요한 상황에서 스토어를 분리하라고 공식 문서에서 추천한다.
 
-<u>**기타 컨셉**</u>
+##### 기타 컨셉
 
 이 정도만 알아도 나머지 컨셉에 대해서는 부딪혀보며 익힐 수 있다고 생각한다. 공식 문서에서 추가로 설명하는 컨셉은 **Condition**, **Directly Related User Type**, **Contextual Tuple** 등등 이 있다. 관계가 성립하려면 특정 조건을 만족해야 하는 제약도 걸 수 있지만 아직 모델링에 사용해본 적은 없다.
 
@@ -109,7 +107,7 @@ OpenFGA에서 사용하는 용어들에 대해 간단히 정리해본다. 여기
 
 위에서 설명했던 구글 드라이브 예제를 다시 떠올려보면, 관계 모델에 `user`, `folder`, `document` 세 가지 타입이 정의될 것이다. 시스템이 동작하면서 여러 관계 튜플이 쌓였을 것이고 이제는 유저가 권한이 있는지 확인해볼 차례가 왔다. OpenFGA에서는 세 가지 종류의 쿼리를 지원한다. (i) ***Check Request***, (ii) ***List Objects Request***, (iii) ***List Users Request*** 이다.
 
-<u>**Check Request**</u>
+##### Check Request
 
 **"유저 $U$와 오브젝트 $O$가 관계 $R$을 가지는가?"** 제일 대표적인 쿼리로 볼 수 있다. true/false `Boolean` 값이 반환된다. 공식 문서의 슈도코드 예시를 따라보면 다음과 같다.
 
@@ -123,8 +121,9 @@ check(
 
 Reply: true
 ```
+<br>
 
-<u>**List Objects Request**</u>
+##### List Objects Request
 
 **"유저 $U$와 관계 $R$을 가지는 오브젝트 리스트(타입 $T_O$)를 반환하라."** 반환값이 `Object<T_O>[]`인 쿼리이다.
 
@@ -138,8 +137,9 @@ listObjects(
 
 Reply: ["document:some.txt", "document:some2.txt"]
 ```
+<br>
 
-<u>**List Users Request**</u>
+##### List Users Request
 
 **"오브젝트 $O$와 관계 $R$을 가지는 유저 리스트(타입 $T_U$)를 반환하라."** 유저의 타입은 여러개를 지정해줄 수 있으며 반환값이 `{ User<T_U1>[], User<T_U2>[], … }`인 쿼리이다.
 
@@ -153,33 +153,34 @@ listUsers(
 
 Reply: {"users": [{"object":{"type":"user","id":"freckie"}}, {"object":{"type":"user","id":"donald"}}]}
 ```
+<br>
 
 ### 2.2 DSL (Domain-Specific Language)
 
 인가 모델(Authorization Model)을 정의하기 위해 JSON으로 스키마를 작성할 수 있지만 가독성이 떨어져 OpenFGA에서는 자체 DSL을 개발했다. 물론 이전 문단과 마찬가지로 [공식 문서](https://openfga.dev/docs/configuration-language)가 더 깔끔하게 정리되어 있고 [Playground](https://play.fga.dev/) 또한 미려한 그래프와 함께 지원하니 참고하면 좋다.
 
-![](/images/20250624-3.png)
+![출처: https://play.fga.dev](/images/20250624-3.png)
 
 지금까지 설명한 **유저 - 폴더 - 문서 관계**에 대해 FGA DSL로 작성하면 다음과 같다. 공식 문서와 유사한 예제지만 지금 섹션에서는 DSL의 구조 소개가 목적이므로 조금 간략화했다. 
 
 ```
 model
-    schema 1.1
+  schema 1.1
     
 type user
 
 type folder
-    relations
-        define owner: [user]
-        define editor: [user] or owner
-        define viewer: [user] or editor
+  relations
+    define owner: [user]
+    define editor: [user] or owner
+    define viewer: [user] or editor
 
 type document
-    relations
-        define parent_folder: [folder]
-        define owner: [user] or (owner from parent_folder)
-        define editor: [user] or owner or (editor from parent_folder)
-        define viewer: [user] or editor or (viewer from parent_folder)
+  relations
+    define parent_folder: [folder]
+    define owner: [user] or (owner from parent_folder)
+    define editor: [user] or owner or (editor from parent_folder)
+    define viewer: [user] or editor or (viewer from parent_folder)
 ```
 
 우선 타입의 정의는 `type {name}` 식으로 정의하고 relations 필드 아래에 관계를 `define` 키워드와 함께 정의한다.
@@ -192,7 +193,6 @@ folder 타입을 살펴보면 user 타입과 `owner`, `editor`, `viewer` 세 관
 
 document도 folder와 마찬가지로 세 가지 관계를 정의했다. `or` 키워드로 owner를 editor가 상속하고, editor를 viewer가 상속한다. 한 가지 다른 점으로 document를 가지는 folder를 `parent_folder`라는 이름으로 관계를 정의하고 있다. `folder:root`와 `document:some.txt`가 해당 관계를 가진다면 folder의 owner, editor, viewer 관계가 모두 상속되는 것이다.
 
-<br>
 <br>
 
 위와 같이 DSL을 통해 서비스에 사용될 권한을 정의할 수 있다. 이번 포스팅은 OpenFGA에 대한 소개가 목적이므로 여기까지 다루고, 다음 포스팅에서 OpenFGA 배포, 모듈러 모델 정의, 인가 모델 테스팅, 사내 시스템에 적용했던 사례 등을 소개하고자 한다.

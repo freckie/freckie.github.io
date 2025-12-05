@@ -13,19 +13,13 @@ series: [
 
 서비스에 관련된 내용은 총 3편의 시리즈로 포스팅할 예정입니다.
 
-- **쿠버네티스 서비스 1**
-- [쿠버네티스 서비스 2](https://blog.frec.kr/cloud/service_2/)
-- [쿠버네티스 서비스 : 인그레스](https://blog.frec.kr/cloud/service_ingress/) (작성 중)
-
----
-
 ## 1. 서비스(Service)의 등장 배경
 
 먼저 서비스(Service)라는 쿠버네티스 리소스가 등장하게 된 배경을 살펴본다.
 
 쿠버네티스 상에서 파드(Pod)는 기본적으로 격리되어 있다. 그러나 요즘 대부분의 어플리케이션은 외부의 요청에 결과값을 반환하길 원하고, 이를 위해서 파드들은 다음의 마이크로서비스 아키텍처 그림과 같이 다른 파드에 요청을 하기도 한다.
 
-![](/images/20210726-1.png)  
+![출처: https://microservices.io](/images/20210726-1.png)  
 
 파드가 서로 격리된 상황에서, 파드는 다른 파드로 접근하기 위한 방법을 찾아야 한다. 쿠버네티스가 아닌 상황이었다면 시스템 관리자가 직접 각 서버의 IP로 접근하도록 할 수 있었겠지만, 쿠버네티스에서 이 방법은 좋은 방법이 아니다.
 
@@ -43,7 +37,7 @@ series: [
 
 프론트엔드와 백엔드로 나뉘어 쿠버네티스 상에 배포된 웹 서비스를 예시로 들어보겠다.
 
-![](/images/20210726-2.png)  
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210726-2.png)  
 
 프론트엔드 파드는 사용자 로그인 웹 페이지를 제공하는 웹 서버로, 백엔드 파드를 로그인 로직을 처리하는 API 서버로 생각을 해보자. API 서버에서 문제가 생겨서 파드가 재시작되거나, 요청이 너무 많아져서 추가로 파드가 생성되었을 수 있다.
 
@@ -111,13 +105,13 @@ ClusterIP, NodePort, LoadBalancer 타입에 대해서는 다음 포스팅에서 
 
 `$ kubectl exec kubia-7nog1 —curl -s http://10.11.249.153`
 
-![](/images/20210726-3.png)  
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210726-3.png)  
 
 이 그림에서 중요하게 볼 것은, 서비스 리소스에 요청이 들어갔을 때, 쿠버네티스의 프록시가 이 연결을 가로채서, **랜덤하게 선택된 백엔드 파드로 포워딩**해준다는 것이다.
 
 이렇게 해서 지금까지 서비스에 대해 대략적으로 알아봤고, 백엔드 파드에 대해 접속할 수 있는 IP 주소와 포트를 얻었다. 다만 여기서 한 가지 의문이 생길 수 있다.
 
-![](/images/20210726-2.png)  
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210726-2.png)  
 
 이전의 웹 서비스 예시에서, 백엔드 파드와 프론트엔드 파드는 서로 독립적으로 생성되었다. 그렇다면 프론트엔드 파드에서는 백엔드 서비스의 주소를 모르지 않을까? 프론트엔드 어플리케이션을 만들 때 백엔드 서비스의 IP와 포트를 지정을 해둬야 할까?
 
@@ -133,7 +127,7 @@ ClusterIP, NodePort, LoadBalancer 타입에 대해서는 다음 포스팅에서 
 
 첫번째 환경변수부터 설명을 해보자면, 쿠버네티스가 파드를 시작할 때 그 시점에 존재하는 환경변수를 그 파드에도 설정한다.
 
-![](/images/20210726-4.png)  
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210726-4.png)  
 
 책에서는 `kubectl exec` 명령으로 파드에 환경변수를 확인하는 명령을 전달하고 있다.
 
@@ -158,10 +152,3 @@ ClusterIP, NodePort, LoadBalancer 타입에 대해서는 다음 포스팅에서 
 간단히 말하면, 접근하고자 하는 서비스의 이름과 네임스페이스만 안다면 이렇게 조합된 도메인을 통해 해당 서비스에 접근할 수 있게 된다.
 
 이번 포스팅에서는 이렇게 서비스 리소스의 등장 배경과, 서비스의 생성, 서비스에 대한 접근 방법에 대해 살펴보았다. 다음 포스팅에서는 ClusterIP, NodePort, LoadBalancer 타입의 서비스에 대해 상세히 알아볼 예정이다.
-
----
-
-### References
-
-- [이미지 1] : https://microservices.io
-- [이미지 2-5] : M. Lukša, Kubernetes in Action, Manning Publications, 2018.

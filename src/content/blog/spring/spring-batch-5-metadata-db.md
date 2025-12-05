@@ -6,7 +6,7 @@ draft: false
 ---
 ## 스프링 배치 메타데이터
 
-- 스프링 배치에서는 `Job`과 `Step`의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. [1]
+- 스프링 배치에서는 `Job`과 `Step`의 실행 상태, 파라미터, 컨텍스트 등을 관리하기 위해 메타데이터 테이블을 필요로 한다. [^1]
 
 - 메타데이터 엔티티들은 `JobInstance`, `JobExecution`, `JobParameters`, `StepExecution` 등이 있고, 이들을 관리하는 테이블들은 총 6개로 다음과 같다.
     - `BATCH_JOB_INSTANCE` : Job이 실행될 때마다 생성된 JobInstance
@@ -17,16 +17,14 @@ draft: false
     - `BATCH_STEP_EXECUTION_CONTEXT` : Step 범위에서 관리하는 컨텍스트가 serialize되어 기록됨.
     
 
-![](/images/20230526-1.png)
-
-(이미지 출처 : [https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html](https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html))
+![출처 : https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html](/images/20230526-1.png)
 
 <br>
 
 **문제 상황**
 
 - 배치 Job에서 사용하는 서비스 DB에 배치 메타데이터 테이블이 위치하는 것이 바람직하지 않을 수 있다.
-- 혹은 비주류 DB에 메타데이터를 저장하려 할 경우, 스프링 배치에서 지원하지 않을 수 있다. [2] (ex. Tibero)
+- 혹은 비주류 DB에 메타데이터를 저장하려 할 경우, 스프링 배치에서 지원하지 않을 수 있다. [^2] (ex. Tibero)
     - 지원하는 DB: DB2, Derby, H2, HANA, HSQL, MariaDB, MySQL, Postgres, Sqlite, SqlServer, Sybase
 
 ## 메타데이터 DB 분리하기 (Spring Batch 5.0 이전)
@@ -37,7 +35,7 @@ draft: false
     - ex) [https://stackoverflow.com/a/42677607](https://stackoverflow.com/a/42677607)
     - DataSource가 설정되지 않을 때, 스프링 배치는 `MapJobRepositoryFactoryBean`을 이용해 메타데이터를 **Map 기반으로 인메모리 관리**한다.
         - 이 경우 Thread-safe하지 않아 Job을 병렬로 구동할 경우 문제가 발생할 수 있으며,
-        - 퍼포먼스 또한 형편없어서 deprecated 처리되었다. [3]
+        - 퍼포먼스 또한 형편없어서 deprecated 처리되었다. [^3]
     - 또한 Spring Batch 5.0에서는 DefaultBatchConfigurer가 제거되어 이 방법을 사용할 수 없는데,
         - 대체로 생긴 DefaultBatchConfiguration은 DataSource 설정을 지원하지 않는다.
 
@@ -171,9 +169,9 @@ public class DailyAggregationJobConfig {
 
 `resources/application.yaml`
 
-```java
+```yaml
 spring:
-	// ...
+  # ...
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:20000/playground?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
@@ -184,13 +182,11 @@ spring:
     url: jdbc:mariadb://localhost:20001/batch_metadata?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: username
     password: password
-	// ...
+  # ...
 ```
 
-## References
+[^1]: [https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html](https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html)
 
-- [1] [https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html](https://docs.spring.io/spring-batch/docs/current/reference/html/schema-appendix.html)
+[^2]: org.springframework.batch.support.DatabaseType ([https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/support/DatabaseType.html](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/support/DatabaseType.html))
 
-- [2] org.springframework.batch.support.DatabaseType ([https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/support/DatabaseType.html](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/support/DatabaseType.html))
-
-- [3] [https://github.com/spring-projects/spring-batch/issues/3780](https://github.com/spring-projects/spring-batch/issues/3780)
+[^3]: [https://github.com/spring-projects/spring-batch/issues/3780](https://github.com/spring-projects/spring-batch/issues/3780)

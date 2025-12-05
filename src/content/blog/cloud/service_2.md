@@ -19,17 +19,17 @@ series: [
 
 지난 포스팅에서 소개했던 서비스의 사용 예시 중에 웹 서비스 예시가 있었다. 웹 프론트엔드 파드가 있었고 이 파드들은 API 서버를 구동 중인 백엔드 파드에 요청을 하는 구조였다. 이 API 서버 파드들을 클러스터 내부에서 사용하기 위해서 ClusterIP 타입의 서비스를 통해 노출하는 것은 적절했다.
 
-![](/images/20210729-1.png)
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210729-1.png)
 
 다만 웹 프론트엔드 서비스는 외부에서 클라이언트가 접근해야 할텐데, **ClusterIP 타입 서비스로는 클러스터 외부로 노출할 수 없다**는 단점이 있다. 다행히도 *NodePort* 타입, *LoadBalancer* 타입 서비스는 클러스터 외부로 노출이 가능하다.
 
-따라서 이번 포스팅에서는 두 가지 타입의 서비스를 소개하고자 하고, 그 전에 서비스를 구성하는 ***엔드포인트(Endpoints)***라는 리소스와 그 확장 버전인 ***엔드포인트슬라이스(EndpointSlice)***에 대해 먼저 간단히 소개한다.
+따라서 이번 포스팅에서는 두 가지 타입의 서비스를 소개하고자 하고, 그 전에 서비스를 구성하는 **엔드포인트(Endpoints)**라는 리소스와 그 확장 버전인 **엔드포인트슬라이스(EndpointSlice)**에 대해 먼저 간단히 소개한다.
 
 ## 4. Endpoints 리소스
 
 서비스와 파드는 우리가 생각하는 것처럼 직접 연결되어 있는 구조가 아니라, 실제로는 그 사이에 엔드포인트 리소스가 위치해서 관리한다고 한다.
 
-![](/images/20210729-2.png)
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210729-2.png)
 
 책에서 생성한 서비스를 `kubectl describe` 명령을 통해 확인한 예시이다. 서비스 하위에 Endpoints라는 항목이 **서비스와 연결된 파드들의 IP와 포트를 리스트 형태**로 가지고 있다. 쿠버네티스는 서비스에 요청이 들어오면 이 엔드포인트 중 하나로 리다이렉트한다.
 
@@ -37,7 +37,7 @@ series: [
 
 ## 5. EndpointSlice 리소스
 
-엔드포인트 리소스는 위에서 언급한대로 서비스와 연결된 파드의 IP, 포트를 가지고 있다. 다만 쿠버네티스 클러스터에서 서비스가 초창기 설계보다 더 많은 수의 파드로 더 많은 트래픽을 전송하는 방향으로 성장함에 따라, 엔드포인트 리소스가 처리할 수 있는 한계에 도달했다고 한다. [1]
+엔드포인트 리소스는 위에서 언급한대로 서비스와 연결된 파드의 IP, 포트를 가지고 있다. 다만 쿠버네티스 클러스터에서 서비스가 초창기 설계보다 더 많은 수의 파드로 더 많은 트래픽을 전송하는 방향으로 성장함에 따라, 엔드포인트 리소스가 처리할 수 있는 한계에 도달했다고 한다. [^1]
 
 서비스에 연결된 모든 네트워크 엔드포인트가 한 엔드포인트 리소스에 연결되다보니 엔드포인트가 변경될 때 성능에 큰 영향을 미쳤다고 공식 문서에서 표현하고 있다.
 
@@ -49,13 +49,13 @@ series: [
 
 NodePort 타입은 기본형 서비스였던 **ClusterIP 타입 서비스를 기반**으로 하고 있다. ClusterIP 타입 서비스가 생성되고 이 서비스를 노드(Node)의 특정한 포트와 연결한다. 예시로, NodePort를 30123으로 설정한다면 **클러스터를 구성하고 있는 모든 노드**의 30123 포트와 서비스가 연결된다.
 
-![](/images/20210729-3.png)
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210729-3.png)
 
 책에서 제시하는 NodePort 타입 서비스의 YAML 파일 예시인데, 타입이 ClusterIP에서 NodePort로 설정된 것과, `spec.ports` 항목에서 `nodePort` 값이 추가된 것 정도가 변경된 점이다. 만약 `nodePort` 항목을 설정하지 않는다면 쿠버네티스가 **30000-32767** 범위 내에서 자동으로 할당할 것이다. 이 범위는 *kube-apiserver*의 설정을 바꿈으로써 변경할 수 있다. (방법에 대해서는 [7월 23일 포스팅](https://blog.frec.kr/cloud/modify_nodeport_range/)을 참고)
 
 위의 YAML 파일을 통해 생성된 NodePort 서비스로 요청이 들어올 경우, 연결된 파드로 라우팅되는 과정은 다음 그림과 같을 것이다.
 
-![](/images/20210729-4.png)
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210729-4.png)
 
 간단히 표시하면 **{클라이언트} → {노드IP:노드포트} → {ClusterIP:포트} → {파드IP:포트}** 의 구조이다.
 
@@ -77,7 +77,7 @@ LoadBalancer 타입 또한 클러스터 외부에서 접속할 수 있으며 **N
 
 LoadBalancer 서비스를 사용한 구조는 다음과 같다.
 
-![](/images/20210729-5.png)
+![출처: M. Lukša, Kubernetes in Action, Manning Publications, 2018.](/images/20210729-5.png)
 
 위에서 소개했던 NodePort의 구조와 거의 유사하나 한 가지 컴포넌트가 추가됐다. 외부 로드 밸런서가 NodePort 서비스의 위에서 동작하는데, 이는 외부에서 접속 가능한 단일 IP와 포트를 클라우드 프로바이더로부터 할당받아 사용한다.
 
@@ -89,9 +89,4 @@ LoadBalancer 서비스를 사용한 구조는 다음과 같다.
 
 다음 포스팅에서는 서비스보다 한 단계 더 추상화된 리소스로, **L7 계층(애플리케이션 계층)에서 HTTP 패킷을 로드밸런싱**을 수행하는 Ingress라는 리소스에 대해 살펴볼 예정이다.
 
----
-
-### References
-
-- [1] [https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/](https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/)
-- [이미지 1-5] M. Lukša, Kubernetes in Action, Manning Publications, 2018.
+[^1]: [https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/](https://kubernetes.io/ko/docs/concepts/services-networking/endpoint-slices/)

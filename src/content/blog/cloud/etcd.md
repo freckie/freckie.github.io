@@ -22,7 +22,6 @@ draft: false
 - 클라우드와 컨테이너에 최적화된 경량 리눅스 배포판 (약 100MB)
 - 보안을 위해 자동으로 OS를 업데이트한다.
 - read-only 루트 파일 시스템을 2개 생성하여 업데이트 후 교체하는 방법으로 OS를 라이브 업데이트한다.
-
 - 그러나, RedHat에 인수된 후 2020.05 서비스 지원 종료되었다. (End of Service)
 - 후속 버전들 : ***Fedora CoreOS** / **RHCOS***(RedHat CoreOS)
 - RHCOS : OpenShift에 포함하기 위해 OCI를 지원하고 보안을 강화(SELinux 지원)
@@ -38,7 +37,6 @@ draft: false
 - 인스턴스 당 1초에 1000건의 write 성능
 - SSL을 통한 인증 기능
 - Fully Replicated
-
 - key에 TTL (Time-to-live) 적용 가능
 - Raft 알고리즘을 통해 분산됨
 - Highly Available
@@ -55,9 +53,9 @@ draft: false
 
 \: a *Large-scale Time Series Metrics Platform for Prometheus*
 
-![](/images/20210630-2.png)
+![출처: https://eng.uber.com/m3/](/images/20210630-2.png)
 
-![](/images/20210630-3.png)
+![출처: https://eng.uber.com/m3/](/images/20210630-3.png)
 
 **Components**
 
@@ -77,16 +75,12 @@ draft: false
 
 ## 2. Architecture
 
-![](/images/20210630-4.png)
-
-([https://alibaba-cloud.medium.com/getting-started-with-kubernetes-etcd-a26cba0b4258](https://alibaba-cloud.medium.com/getting-started-with-kubernetes-etcd-a26cba0b4258))
+![출처: https://alibaba-cloud.medium.com/getting-started-with-kubernetes-etcd-a26cba0b4258](/images/20210630-4.png)
 
 - etcd의 백엔드 DB는 BoltDB로 구성되어 있다. Go로 작성되었으며, 빠르고 가벼운 Key-Value Store이다.
     - 공식 깃허브 [링크](https://github.com/boltdb/bolt)로 들어가보니 리포지토리가 아카이브 되었고, 17년을 마지막으로 더 릴리즈가 올라오지 않고 있다.
-
 - etcd는 주로 3개의 노드나 5개의 홀수 개 노드로 구성되며, 노드들은 *Raft* 합의 알고리즘을 이용해 협력한다.
     - Quorum(정족수)은 ${n+1 \over 2}$로 설정되어, 5노드 클러스터에서 2개 노드에서 fail이 발생해도 fault-tolerant하도록 구성되었다.
-
 - 클러스터에서 노드들은 *leader*와 *follower*로 구분되고, leader는 알고리즘에 따라 선출된다.
     - leader는 follower들을 관리하고, 클라이언트에서 들어온 요청을 수락하고 follower에게 포워딩한다.
     - 만약 leader에서 fail이 발생한다면, 자동으로 다른 노드를 leader로 선출한다.
@@ -142,9 +136,7 @@ draft: false
 - **Cluster** : Provides membership information and configuration facilities.
 - **Maintenance** : 리커버리를 위한 스냅샷, 저장소 조각모음, 멤버별 상태 정보 유지
 
-![](/images/20210630-9.png)
-
-[https://alibaba-cloud.medium.com/getting-started-with-kubernetes-etcd-a26cba0b4258](https://alibaba-cloud.medium.com/getting-started-with-kubernetes-etcd-a26cba0b4258)
+![출처: https://alibaba-cloud.medium.com/getting-started-with-kubernetes-etcd-a26cba0b4258](/images/20210630-9.png)
 
 **Data Model - Logical View**
 
