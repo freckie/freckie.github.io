@@ -30,6 +30,10 @@
 }
 
 /* ===== Base Styles ===== */
+html, body {
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);
