@@ -1,0 +1,486 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={`PNG to PDF | ${SITE_TITLE}`} description="PNG 이미지를 PDF로 변환" />
+    <style is:global>
+      main {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 2em 1em;
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+      .page-title {
+        font-size: 2em;
+        font-weight: 600;
+        margin: 0 0 0.5em 0;
+        color: rgb(var(--black));
+      }
+      .page-description {
+        color: rgb(var(--gray));
+        font-size: 1rem;
+        margin: 0;
+      }
+      .tool-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2em;
+        box-shadow: 0 2px 8px rgba(var(--gray), 10%);
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .upload-area {
+        border: 2px dashed rgb(var(--gray-light));
+        border-radius: 8px;
+        padding: 3em 2em;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 1.5em;
+      }
+      .upload-area:hover {
+        border-color: var(--accent);
+        background: rgba(var(--accent-rgb), 0.05);
+      }
+      .upload-area.has-files {
+        border-style: solid;
+        border-color: var(--accent);
+      }
+      .upload-area iconify-icon {
+        font-size: 3rem;
+        color: rgb(var(--gray));
+        margin-bottom: 0.5em;
+      }
+      .upload-text {
+        color: rgb(var(--gray));
+        margin: 0;
+      }
+      .upload-hint {
+        font-size: 0.875rem;
+        color: rgb(var(--gray-light));
+        margin-top: 0.5em;
+      }
+      .file-input {
+        display: none;
+      }
+      .image-list {
+        display: none;
+        flex-direction: column;
+        gap: 0.75em;
+        margin-bottom: 1.5em;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .image-list.visible {
+        display: flex;
+      }
+      .image-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75em;
+        padding: 0.75em 1em;
+        background: rgba(var(--gray-light), 0.2);
+        border-radius: 8px;
+        cursor: grab;
+        transition: all 0.2s;
+      }
+      .image-item:active {
+        cursor: grabbing;
+      }
+      .image-item.dragging {
+        opacity: 0.5;
+        background: rgba(var(--accent-rgb), 0.1);
+      }
+      .image-item.drag-over {
+        border: 2px dashed var(--accent);
+        background: rgba(var(--accent-rgb), 0.05);
+      }
+      .drag-handle {
+        color: rgb(var(--gray));
+        font-size: 1.25rem;
+        cursor: grab;
+        flex-shrink: 0;
+      }
+      .order-number {
+        width: 28px;
+        height: 28px;
+        background: var(--accent);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .image-thumbnail {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        object-position: center;
+        border-radius: 4px;
+        background: rgba(var(--gray-light), 0.5);
+        flex-shrink: 0;
+      }
+      .image-details {
+        flex: 1;
+        min-width: 0;
+      }
+      .image-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: rgb(var(--black));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .image-size {
+        font-size: 0.75rem;
+        color: rgb(var(--gray));
+      }
+      .remove-btn {
+        background: none;
+        border: none;
+        color: rgb(var(--gray));
+        cursor: pointer;
+        font-size: 1.25rem;
+        padding: 0.25em;
+        transition: color 0.2s;
+      }
+      .remove-btn:hover {
+        color: #e74c3c;
+      }
+      .options-section {
+        display: none;
+        flex-direction: column;
+        gap: 1em;
+        margin-bottom: 1.5em;
+        padding: 1em;
+        background: rgba(var(--gray-light), 0.2);
+        border-radius: 8px;
+      }
+      .options-section.visible {
+        display: flex;
+      }
+      .option-row {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+      }
+      .option-label {
+        font-size: 0.875rem;
+        color: rgb(var(--gray-dark));
+        min-width: 80px;
+      }
+      .option-input {
+        flex: 1;
+        padding: 0.5em 0.75em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 6px;
+        font-size: 0.875rem;
+      }
+      .option-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .page-size-select {
+        padding: 0.5em 0.75em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 6px;
+        font-size: 0.875rem;
+        background: white;
+      }
+      .page-size-select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .file-count {
+        text-align: center;
+        font-size: 0.875rem;
+        color: rgb(var(--gray));
+        margin-bottom: 1em;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 1em;
+      }
+      .btn {
+        flex: 1;
+        padding: 1em 1.5em;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+      .btn-primary:disabled {
+        background: rgb(var(--gray-light));
+        cursor: not-allowed;
+      }
+      .btn-secondary {
+        background: white;
+        color: rgb(var(--gray-dark));
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="page-header">
+        <h1 class="page-title">PNG to PDF</h1>
+        <p class="page-description">이미지를 PDF로 변환합니다.</p>
+      </section>
+
+      <div class="tool-container">
+        <input type="file" class="file-input" id="fileInput" accept="image/*" multiple />
+        <div class="upload-area" id="uploadArea">
+          <iconify-icon icon="mdi:file-image-plus"></iconify-icon>
+          <p class="upload-text">클릭하거나 이미지를 드래그하세요.</p>
+          <p class="upload-hint">PNG, JPG, GIF, WebP 지원 (여러 장 선택 가능)</p>
+        </div>
+
+        <div class="image-list" id="imageList"></div>
+
+        <p class="file-count" id="fileCount" style="display: none;"></p>
+
+        <div class="options-section" id="optionsSection">
+          <div class="option-row">
+            <span class="option-label">파일명</span>
+            <input type="text" class="option-input" id="outputFilename" placeholder="output.pdf" />
+          </div>
+          <div class="option-row">
+            <span class="option-label">페이지 크기</span>
+            <select class="page-size-select" id="pageSize">
+              <option value="fit">이미지에 맞춤</option>
+              <option value="a4">A4</option>
+              <option value="letter">Letter</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="resetBtn">
+            <iconify-icon icon="mdi:refresh"></iconify-icon>
+            초기화
+          </button>
+          <button class="btn btn-primary" id="convertBtn" disabled>
+            <iconify-icon icon="mdi:file-pdf-box"></iconify-icon>
+            PDF 변환
+          </button>
+        </div>
+      </div>
+    </main>
+    <Footer />
+
+    <script>
+      interface ImageFile {
+        id: string;
+        file: File;
+        dataUrl: string;
+      }
+
+      const uploadArea = document.getElementById('uploadArea') as HTMLDivElement;
+      const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+      const imageList = document.getElementById('imageList') as HTMLDivElement;
+      const fileCount = document.getElementById('fileCount') as HTMLParagraphElement;
+      const optionsSection = document.getElementById('optionsSection') as HTMLDivElement;
+      const outputFilename = document.getElementById('outputFilename') as HTMLInputElement;
+      const convertBtn = document.getElementById('convertBtn') as HTMLButtonElement;
+      const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement;
+
+      let images: ImageFile[] = [];
+      let draggedItem: HTMLElement | null = null;
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--accent)';
+      });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '';
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '';
+        const files = e.dataTransfer?.files;
+        if (files) {
+          handleFiles(Array.from(files));
+        }
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files) {
+          handleFiles(Array.from(fileInput.files));
+        }
+      });
+
+      function handleFiles(files: File[]) {
+        const imageFiles = files.filter(f => f.type.startsWith('image/'));
+        if (imageFiles.length === 0) {
+          alert('이미지 파일만 지원합니다.');
+          return;
+        }
+
+        imageFiles.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const imageFile: ImageFile = {
+              id: Math.random().toString(36).substr(2, 9),
+              file,
+              dataUrl: e.target?.result as string
+            };
+            images.push(imageFile);
+            updateUI();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function updateUI() {
+        imageList.innerHTML = '';
+        images.forEach((img, index) => {
+          const item = document.createElement('div');
+          item.className = 'image-item';
+          item.draggable = true;
+          item.dataset.id = img.id;
+          item.innerHTML = `
+            <iconify-icon icon="mdi:drag" class="drag-handle"></iconify-icon>
+            <span class="order-number">${index + 1}</span>
+            <img src="${img.dataUrl}" class="image-thumbnail" alt="${img.file.name}" />
+            <div class="image-details">
+              <div class="image-name">${img.file.name}</div>
+              <div class="image-size">${formatFileSize(img.file.size)}</div>
+            </div>
+            <button class="remove-btn" data-id="${img.id}">
+              <iconify-icon icon="mdi:close"></iconify-icon>
+            </button>
+          `;
+
+          item.addEventListener('dragstart', handleDragStart);
+          item.addEventListener('dragend', handleDragEnd);
+          item.addEventListener('dragover', handleDragOver);
+          item.addEventListener('drop', handleDrop);
+
+          imageList.appendChild(item);
+        });
+
+        if (images.length > 0) {
+          imageList.classList.add('visible');
+          optionsSection.classList.add('visible');
+          uploadArea.classList.add('has-files');
+          fileCount.style.display = 'block';
+          fileCount.textContent = `${images.length}개의 이미지가 선택됨.`;
+          convertBtn.disabled = false;
+
+          if (!outputFilename.value) {
+            const now = new Date();
+            outputFilename.value = `images_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.pdf`;
+          }
+        } else {
+          imageList.classList.remove('visible');
+          optionsSection.classList.remove('visible');
+          uploadArea.classList.remove('has-files');
+          fileCount.style.display = 'none';
+          convertBtn.disabled = true;
+        }
+
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = (e.currentTarget as HTMLElement).dataset.id;
+            images = images.filter(img => img.id !== id);
+            updateUI();
+          });
+        });
+      }
+
+      function handleDragStart(e: DragEvent) {
+        draggedItem = e.currentTarget as HTMLElement;
+        draggedItem.classList.add('dragging');
+      }
+
+      function handleDragEnd(e: DragEvent) {
+        if (draggedItem) {
+          draggedItem.classList.remove('dragging');
+          draggedItem = null;
+        }
+        document.querySelectorAll('.image-item').forEach(item => {
+          item.classList.remove('drag-over');
+        });
+      }
+
+      function handleDragOver(e: DragEvent) {
+        e.preventDefault();
+        const target = e.currentTarget as HTMLElement;
+        if (target !== draggedItem) {
+          target.classList.add('drag-over');
+        }
+      }
+
+      function handleDrop(e: DragEvent) {
+        e.preventDefault();
+        const target = e.currentTarget as HTMLElement;
+        target.classList.remove('drag-over');
+
+        if (draggedItem && target !== draggedItem) {
+          const draggedId = draggedItem.dataset.id;
+          const targetId = target.dataset.id;
+
+          const draggedIndex = images.findIndex(img => img.id === draggedId);
+          const targetIndex = images.findIndex(img => img.id === targetId);
+
+          if (draggedIndex !== -1 && targetIndex !== -1) {
+            const [removed] = images.splice(draggedIndex, 1);
+            images.splice(targetIndex, 0, removed);
+            updateUI();
+          }
+        }
+      }
+
+      function formatFileSize(bytes: number): string {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
+      resetBtn.addEventListener('click', () => {
+        images = [];
+        fileInput.value = '';
+        outputFilename.value = '';
+        updateUI();
+      });
+
+      convertBtn.addEventListener('click', async () => {
+        if (images.length === 0) return;
+
+        // TODO: WASM으로 PDF 변환 구현
+        alert('PDF 변환 기능은 WASM 구현 후 활성화됩니다.');
+      });
+    </script>
+  </body>
+</html>

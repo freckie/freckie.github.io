@@ -1,0 +1,549 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={`Image Resizer | ${SITE_TITLE}`} description="이미지 크기 조절" />
+    <style is:global>
+      main {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 2em 1em;
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+      .page-title {
+        font-size: 2em;
+        font-weight: 600;
+        margin: 0 0 0.5em 0;
+        color: rgb(var(--black));
+      }
+      .page-description {
+        color: rgb(var(--gray));
+        font-size: 1rem;
+        margin: 0;
+      }
+      .tool-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2em;
+        box-shadow: 0 2px 8px rgba(var(--gray), 10%);
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .upload-area {
+        border: 2px dashed rgb(var(--gray-light));
+        border-radius: 8px;
+        padding: 3em 2em;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 1.5em;
+      }
+      .upload-area:hover {
+        border-color: var(--accent);
+        background: rgba(var(--accent-rgb), 0.05);
+      }
+      .upload-area.has-file {
+        display: none;
+      }
+      .upload-area iconify-icon {
+        font-size: 3rem;
+        color: rgb(var(--gray));
+        margin-bottom: 0.5em;
+      }
+      .upload-text {
+        color: rgb(var(--gray));
+        margin: 0;
+      }
+      .upload-hint {
+        font-size: 0.875rem;
+        color: rgb(var(--gray-light));
+        margin-top: 0.5em;
+      }
+      .file-input {
+        display: none;
+      }
+      .preview-container {
+        display: none;
+        margin-bottom: 1.5em;
+        text-align: center;
+      }
+      .preview-container.visible {
+        display: block;
+      }
+      .preview-image {
+        max-width: 100%;
+        max-height: 300px;
+        display: block;
+        margin: 0 auto;
+        border-radius: 8px;
+        margin-bottom: 0.5em;
+      }
+      .image-info {
+        font-size: 0.875rem;
+        color: rgb(var(--gray));
+        text-align: center;
+      }
+      .resize-options {
+        display: none;
+        flex-direction: column;
+        gap: 1.5em;
+      }
+      .resize-options.visible {
+        display: flex;
+      }
+      .option-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+      }
+      .option-label {
+        font-weight: 600;
+        color: rgb(var(--black));
+        font-size: 0.875rem;
+      }
+      .resize-mode-tabs {
+        display: flex;
+        gap: 0.5em;
+        margin-bottom: 1em;
+      }
+      .mode-tab {
+        flex: 1;
+        padding: 0.75em 1em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 8px;
+        background: white;
+        color: rgb(var(--gray));
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+      }
+      .mode-tab:hover {
+        border-color: var(--accent);
+      }
+      .mode-tab.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      .dimension-inputs {
+        display: flex;
+        gap: 1em;
+        align-items: center;
+      }
+      .dimension-input-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+      }
+      .dimension-input-group label {
+        font-size: 0.75rem;
+        color: rgb(var(--gray));
+      }
+      .dimension-input-group input {
+        padding: 0.75em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 6px;
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .dimension-input-group input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .link-icon {
+        color: rgb(var(--gray));
+        font-size: 1.5rem;
+        padding-top: 1.25em;
+      }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .checkbox-group input[type="checkbox"] {
+        width: 1.25em;
+        height: 1.25em;
+        accent-color: var(--accent);
+      }
+      .checkbox-group label {
+        font-size: 0.875rem;
+        color: rgb(var(--gray-dark));
+      }
+      .percentage-input {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .percentage-input input {
+        width: 100px;
+        padding: 0.75em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      .percentage-input input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .percentage-input span {
+        color: rgb(var(--gray));
+      }
+      .output-info {
+        background: rgba(var(--gray-light), 0.3);
+        padding: 1em;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        color: rgb(var(--gray-dark));
+      }
+      .action-buttons {
+        display: flex;
+        gap: 1em;
+        margin-top: 1.5em;
+      }
+      .btn {
+        flex: 1;
+        padding: 1em 1.5em;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+      .btn-primary:disabled {
+        background: rgb(var(--gray-light));
+        cursor: not-allowed;
+      }
+      .btn-secondary {
+        background: white;
+        color: rgb(var(--gray-dark));
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="page-header">
+        <h1 class="page-title">Image Resizer</h1>
+        <p class="page-description">이미지 크기를 조절합니다.</p>
+      </section>
+
+      <div class="tool-container">
+        <input type="file" class="file-input" id="fileInput" accept="image/*" />
+        <div class="upload-area" id="uploadArea">
+          <iconify-icon icon="mdi:image-plus"></iconify-icon>
+          <p class="upload-text">클릭하거나 이미지를 드래그하세요.</p>
+          <p class="upload-hint">PNG, JPG, GIF, WebP 지원</p>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+          <img class="preview-image" id="previewImage" alt="Preview" />
+          <p class="image-info" id="imageInfo"></p>
+        </div>
+
+        <div class="resize-options" id="resizeOptions">
+          <div class="resize-mode-tabs">
+            <button class="mode-tab active" data-mode="pixels">픽셀 지정</button>
+            <button class="mode-tab" data-mode="percentage">비율 조정</button>
+          </div>
+
+          <div id="pixelsMode">
+            <div class="dimension-inputs">
+              <div class="dimension-input-group">
+                <label for="widthInput">너비 (px)</label>
+                <input type="number" id="widthInput" min="4" max="8192" />
+              </div>
+              <iconify-icon icon="mdi:link" class="link-icon" id="linkIcon"></iconify-icon>
+              <div class="dimension-input-group">
+                <label for="heightInput">높이 (px)</label>
+                <input type="number" id="heightInput" min="4" max="8192" />
+              </div>
+            </div>
+            <div class="checkbox-group" style="margin-top: 1em;">
+              <input type="checkbox" id="keepAspectRatio" checked />
+              <label for="keepAspectRatio">비율 유지</label>
+            </div>
+          </div>
+
+          <div id="percentageMode" class="hidden">
+            <div class="percentage-input">
+              <input type="number" id="percentageInput" min="1" max="1000" value="100" />
+              <span>%</span>
+            </div>
+          </div>
+
+          <div class="output-info" id="outputInfo">
+            출력 크기: -
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn btn-secondary" id="resetBtn">
+              <iconify-icon icon="mdi:refresh"></iconify-icon>
+              초기화
+            </button>
+            <button class="btn btn-primary" id="resizeBtn" disabled>
+              <iconify-icon icon="mdi:download"></iconify-icon>
+              리사이즈 & 다운로드
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <Footer />
+
+    <script>
+      const uploadArea = document.getElementById('uploadArea') as HTMLDivElement;
+      const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+      const previewContainer = document.getElementById('previewContainer') as HTMLDivElement;
+      const previewImage = document.getElementById('previewImage') as HTMLImageElement;
+      const imageInfo = document.getElementById('imageInfo') as HTMLParagraphElement;
+      const resizeOptions = document.getElementById('resizeOptions') as HTMLDivElement;
+      const widthInput = document.getElementById('widthInput') as HTMLInputElement;
+      const heightInput = document.getElementById('heightInput') as HTMLInputElement;
+      const keepAspectRatio = document.getElementById('keepAspectRatio') as HTMLInputElement;
+      const percentageInput = document.getElementById('percentageInput') as HTMLInputElement;
+      const outputInfo = document.getElementById('outputInfo') as HTMLDivElement;
+      const resizeBtn = document.getElementById('resizeBtn') as HTMLButtonElement;
+      const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement;
+      const linkIcon = document.getElementById('linkIcon') as HTMLElement;
+      const pixelsMode = document.getElementById('pixelsMode') as HTMLDivElement;
+      const percentageMode = document.getElementById('percentageMode') as HTMLDivElement;
+      const modeTabs = document.querySelectorAll('.mode-tab');
+
+      let originalWidth = 0;
+      let originalHeight = 0;
+      let aspectRatio = 1;
+      let currentFile: File | null = null;
+      let currentMode = 'pixels';
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--accent)';
+      });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '';
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '';
+        const files = e.dataTransfer?.files;
+        if (files && files[0]) {
+          handleFile(files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files[0]) {
+          handleFile(fileInput.files[0]);
+        }
+      });
+
+      function handleFile(file: File) {
+        if (!file.type.startsWith('image/')) {
+          alert('이미지 파일만 지원합니다.');
+          return;
+        }
+        currentFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            originalWidth = img.width;
+            originalHeight = img.height;
+            aspectRatio = originalWidth / originalHeight;
+
+            previewImage.src = e.target?.result as string;
+            imageInfo.textContent = `원본: ${originalWidth} x ${originalHeight} px`;
+            previewContainer.classList.add('visible');
+            resizeOptions.classList.add('visible');
+            uploadArea.classList.add('has-file');
+
+            widthInput.value = String(originalWidth);
+            heightInput.value = String(originalHeight);
+            updateOutputInfo();
+            resizeBtn.disabled = false;
+          };
+          img.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      modeTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          modeTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentMode = (tab as HTMLElement).dataset.mode || 'pixels';
+
+          if (currentMode === 'pixels') {
+            pixelsMode.classList.remove('hidden');
+            percentageMode.classList.add('hidden');
+          } else {
+            pixelsMode.classList.add('hidden');
+            percentageMode.classList.remove('hidden');
+          }
+          updateOutputInfo();
+        });
+      });
+
+      widthInput.addEventListener('input', () => {
+        if (keepAspectRatio.checked && originalWidth > 0) {
+          const newWidth = parseInt(widthInput.value) || 0;
+          heightInput.value = String(Math.round(newWidth / aspectRatio));
+        }
+        updateOutputInfo();
+      });
+
+      heightInput.addEventListener('input', () => {
+        if (keepAspectRatio.checked && originalHeight > 0) {
+          const newHeight = parseInt(heightInput.value) || 0;
+          widthInput.value = String(Math.round(newHeight * aspectRatio));
+        }
+        updateOutputInfo();
+      });
+
+      keepAspectRatio.addEventListener('change', () => {
+        linkIcon.style.color = keepAspectRatio.checked ? 'var(--accent)' : 'rgb(var(--gray))';
+        if (keepAspectRatio.checked) {
+          const newWidth = parseInt(widthInput.value) || originalWidth;
+          heightInput.value = String(Math.round(newWidth / aspectRatio));
+          updateOutputInfo();
+        }
+      });
+
+      percentageInput.addEventListener('input', updateOutputInfo);
+
+      const MIN_SIZE = 4;
+      const MAX_SIZE = 8192;
+
+      function validateDimensions(width: number, height: number): { valid: boolean; error?: string } {
+        if (width < MIN_SIZE || height < MIN_SIZE) {
+          return { valid: false, error: `최소 ${MIN_SIZE}x${MIN_SIZE} px 이상이어야 합니다.` };
+        }
+        if (width > MAX_SIZE || height > MAX_SIZE) {
+          return { valid: false, error: `최대 ${MAX_SIZE}x${MAX_SIZE} px까지 가능합니다.` };
+        }
+        return { valid: true };
+      }
+
+      function updateOutputInfo() {
+        let newWidth: number, newHeight: number;
+
+        if (currentMode === 'pixels') {
+          newWidth = parseInt(widthInput.value) || 0;
+          newHeight = parseInt(heightInput.value) || 0;
+        } else {
+          const percentage = parseInt(percentageInput.value) || 100;
+          newWidth = Math.round(originalWidth * percentage / 100);
+          newHeight = Math.round(originalHeight * percentage / 100);
+        }
+
+        if (newWidth > 0 && newHeight > 0) {
+          const validation = validateDimensions(newWidth, newHeight);
+          if (validation.valid) {
+            outputInfo.textContent = `출력 크기: ${newWidth} x ${newHeight} px`;
+            outputInfo.style.color = '';
+            resizeBtn.disabled = false;
+          } else {
+            outputInfo.textContent = validation.error || '';
+            outputInfo.style.color = '#e74c3c';
+            resizeBtn.disabled = true;
+          }
+        } else {
+          outputInfo.textContent = '출력 크기: -';
+          outputInfo.style.color = '';
+          resizeBtn.disabled = true;
+        }
+      }
+
+      resetBtn.addEventListener('click', () => {
+        currentFile = null;
+        fileInput.value = '';
+        previewContainer.classList.remove('visible');
+        resizeOptions.classList.remove('visible');
+        uploadArea.classList.remove('has-file');
+        resizeBtn.disabled = true;
+        widthInput.value = '';
+        heightInput.value = '';
+        percentageInput.value = '100';
+        outputInfo.textContent = '출력 크기: -';
+      });
+
+      resizeBtn.addEventListener('click', async () => {
+        if (!currentFile) return;
+
+        let newWidth: number, newHeight: number;
+
+        if (currentMode === 'pixels') {
+          newWidth = parseInt(widthInput.value) || originalWidth;
+          newHeight = parseInt(heightInput.value) || originalHeight;
+        } else {
+          const percentage = parseInt(percentageInput.value) || 100;
+          newWidth = Math.round(originalWidth * percentage / 100);
+          newHeight = Math.round(originalHeight * percentage / 100);
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+          alert('Canvas를 생성할 수 없습니다.');
+          return;
+        }
+
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              alert('이미지 변환에 실패했습니다.');
+              return;
+            }
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const ext = currentFile?.name.split('.').pop() || 'png';
+            const baseName = currentFile?.name.replace(/\.[^/.]+$/, '') || 'resized';
+            a.download = `${baseName}_${newWidth}x${newHeight}.${ext}`;
+            a.click();
+            URL.revokeObjectURL(url);
+          }, currentFile?.type || 'image/png');
+        };
+        img.src = previewImage.src;
+      });
+    </script>
+  </body>
+</html>
