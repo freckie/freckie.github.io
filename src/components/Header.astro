@@ -13,6 +13,10 @@ const { hideTitle = false } = Astro.props;
     {!hideTitle && <h2><a href="/">{SITE_TITLE}</a></h2>}
     {hideTitle && <div></div>}
     <div class="icon-links">
+      <a href="/tools" title="Tools">
+        <span class="sr-only">Tools</span>
+        <iconify-icon icon="mdi:pickaxe" width="24" height="24"></iconify-icon>
+      </a>
       <a href="/search" title="Search">
         <span class="sr-only">Search</span>
         <iconify-icon icon="mdi:magnify" width="24" height="24"></iconify-icon>

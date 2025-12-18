@@ -9,6 +9,7 @@
 :root {
   /* Colors */
   --accent: #117893;
+  --accent-rgb: 17, 120, 147;
   --accent-dark: #34558b;
   --accent-light: #d5e4eb;
   --black: 15, 18, 25;

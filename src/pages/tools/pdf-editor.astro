@@ -1,0 +1,841 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={`PDF Editor | ${SITE_TITLE}`} description="PDF 페이지 삭제/추출" />
+    <script is:inline src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script is:inline src="/wasm/wasm_exec.js"></script>
+    <style is:global>
+      main {
+        width: 900px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 2em 1em;
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+      .page-title {
+        font-size: 2em;
+        font-weight: 600;
+        margin: 0 0 0.5em 0;
+        color: rgb(var(--black));
+      }
+      .page-description {
+        color: rgb(var(--gray));
+        font-size: 1rem;
+        margin: 0;
+      }
+      .tool-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2em;
+        box-shadow: 0 2px 8px rgba(var(--gray), 10%);
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .upload-area {
+        border: 2px dashed rgb(var(--gray-light));
+        border-radius: 8px;
+        padding: 3em 2em;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 1.5em;
+      }
+      .upload-area:hover {
+        border-color: var(--accent);
+        background: rgba(var(--accent-rgb), 0.05);
+      }
+      .upload-area.has-file {
+        display: none;
+      }
+      .upload-area iconify-icon {
+        font-size: 3rem;
+        color: rgb(var(--gray));
+        margin-bottom: 0.5em;
+      }
+      .upload-text {
+        color: rgb(var(--gray));
+        margin: 0;
+      }
+      .upload-hint {
+        font-size: 0.875rem;
+        color: rgb(var(--gray-light));
+        margin-top: 0.5em;
+      }
+      .file-input {
+        display: none;
+      }
+      .editor-section {
+        display: none;
+      }
+      .editor-section.visible {
+        display: block;
+      }
+      .file-info {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        padding: 1em;
+        background: rgba(var(--gray-light), 0.2);
+        border-radius: 8px;
+        margin-bottom: 1.5em;
+      }
+      .file-info-icon {
+        color: #e74c3c;
+        font-size: 2rem;
+      }
+      .file-info-details {
+        flex: 1;
+      }
+      .file-info-name {
+        font-weight: 600;
+        color: rgb(var(--black));
+      }
+      .file-info-meta {
+        font-size: 0.875rem;
+        color: rgb(var(--gray));
+      }
+      .change-file-btn {
+        background: none;
+        border: 1px solid rgb(var(--gray-light));
+        padding: 0.5em 1em;
+        border-radius: 6px;
+        color: rgb(var(--gray-dark));
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+      }
+      .change-file-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        margin-bottom: 1em;
+        padding: 0.75em 1em;
+        background: rgba(var(--gray-light), 0.2);
+        border-radius: 8px;
+        flex-wrap: wrap;
+      }
+      .toolbar-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .toolbar-btn {
+        background: white;
+        border: 1px solid rgb(var(--gray-light));
+        padding: 0.5em 0.75em;
+        border-radius: 6px;
+        color: rgb(var(--gray-dark));
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+      }
+      .toolbar-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .toolbar-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .toolbar-btn.danger:hover:not(:disabled) {
+        border-color: #e74c3c;
+        color: #e74c3c;
+      }
+      .toolbar-divider {
+        width: 1px;
+        height: 24px;
+        background: rgb(var(--gray-light));
+      }
+      .selection-info {
+        font-size: 0.875rem;
+        color: rgb(var(--gray));
+        margin-left: auto;
+      }
+      .pages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1em;
+        margin-bottom: 1.5em;
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 0.5em;
+      }
+      .page-item {
+        position: relative;
+        border: 2px solid rgb(var(--gray-light));
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: grab;
+        transition: all 0.2s;
+        aspect-ratio: 1 / 1.414;
+        background: #f5f5f5;
+      }
+      .page-item:active {
+        cursor: grabbing;
+      }
+      .page-item:hover {
+        border-color: var(--accent);
+      }
+      .page-item.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.3);
+      }
+      .page-item.deleted {
+        opacity: 0.4;
+        border-color: #e74c3c;
+        cursor: not-allowed;
+      }
+      .page-item.dragging {
+        opacity: 0.5;
+      }
+      .page-item.drag-over {
+        border: 2px dashed var(--accent);
+        background: rgba(var(--accent-rgb), 0.1);
+      }
+      .page-drag-handle {
+        position: absolute;
+        top: 0.25em;
+        right: 0.25em;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        padding: 0 0.25em;
+        cursor: grab;
+      }
+      .page-item.deleted .page-drag-handle {
+        display: none;
+      }
+      .drag-hint {
+        text-align: center;
+        font-size: 0.75rem;
+        color: rgb(var(--gray));
+        margin: 0 0 0.5em 0;
+      }
+      .page-thumbnail {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: white;
+        display: block;
+      }
+      .page-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        color: rgb(var(--gray));
+      }
+      .page-number {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        text-align: center;
+        font-size: 0.75rem;
+        padding: 0.25em;
+      }
+      .page-checkbox {
+        position: absolute;
+        top: 0.5em;
+        left: 0.5em;
+        width: 1.25em;
+        height: 1.25em;
+        accent-color: var(--accent);
+        cursor: pointer;
+        z-index: 10;
+      }
+      .page-delete-badge {
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
+        background: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        width: 1.5em;
+        height: 1.5em;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+      }
+      .page-item.deleted .page-delete-badge {
+        display: flex;
+      }
+      .options-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        margin-bottom: 1.5em;
+        padding: 1em;
+        background: rgba(var(--gray-light), 0.2);
+        border-radius: 8px;
+      }
+      .option-row {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+      }
+      .option-label {
+        font-size: 0.875rem;
+        color: rgb(var(--gray-dark));
+        min-width: 100px;
+      }
+      .option-input {
+        flex: 1;
+        padding: 0.5em 0.75em;
+        border: 1px solid rgb(var(--gray-light));
+        border-radius: 6px;
+        font-size: 0.875rem;
+        max-width: 300px;
+      }
+      .option-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .action-buttons {
+        display: flex;
+        gap: 1em;
+      }
+      .btn {
+        flex: 1;
+        padding: 1em 1.5em;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+      .btn-primary:disabled {
+        background: rgb(var(--gray-light));
+        cursor: not-allowed;
+      }
+      .btn-secondary {
+        background: white;
+        color: rgb(var(--gray-dark));
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .btn-secondary:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        flex-direction: column;
+        gap: 1em;
+      }
+      .loading-overlay.visible {
+        display: flex;
+      }
+      .loading-spinner {
+        font-size: 3rem;
+        color: var(--accent);
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .loading-text {
+        color: rgb(var(--gray-dark));
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="page-header">
+        <h1 class="page-title">PDF Editor</h1>
+        <p class="page-description">PDF 페이지를 삭제하거나 추출합니다.</p>
+      </section>
+
+      <div class="tool-container">
+        <input type="file" class="file-input" id="fileInput" accept=".pdf" />
+        <div class="upload-area" id="uploadArea">
+          <iconify-icon icon="mdi:file-pdf-box"></iconify-icon>
+          <p class="upload-text">클릭하거나 PDF 파일을 드래그하세요.</p>
+          <p class="upload-hint">단일 PDF 파일 선택</p>
+        </div>
+
+        <div class="editor-section" id="editorSection">
+          <div class="file-info">
+            <iconify-icon icon="mdi:file-pdf-box" class="file-info-icon"></iconify-icon>
+            <div class="file-info-details">
+              <div class="file-info-name" id="fileName"></div>
+              <div class="file-info-meta" id="fileMeta"></div>
+            </div>
+            <button class="change-file-btn" id="changeFileBtn">파일 변경</button>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="selectAllBtn">
+                <iconify-icon icon="mdi:checkbox-multiple-marked"></iconify-icon>
+                전체 선택
+              </button>
+              <button class="toolbar-btn" id="deselectAllBtn">
+                <iconify-icon icon="mdi:checkbox-multiple-blank-outline"></iconify-icon>
+                선택 해제
+              </button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-group">
+              <button class="toolbar-btn danger" id="deleteSelectedBtn" disabled>
+                <iconify-icon icon="mdi:delete"></iconify-icon>
+                선택 삭제
+              </button>
+              <button class="toolbar-btn" id="restoreAllBtn" disabled>
+                <iconify-icon icon="mdi:restore"></iconify-icon>
+                삭제 복원
+              </button>
+            </div>
+            <span class="selection-info" id="selectionInfo">0개 선택됨</span>
+          </div>
+
+          <p class="drag-hint">드래그하여 페이지 순서를 변경할 수 있습니다.</p>
+
+          <div class="pages-grid" id="pagesGrid"></div>
+
+          <div class="options-section">
+            <div class="option-row">
+              <span class="option-label">출력 파일명</span>
+              <input type="text" class="option-input" id="outputFilename" placeholder="edited.pdf" />
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn btn-secondary" id="resetBtn">
+              <iconify-icon icon="mdi:refresh"></iconify-icon>
+              초기화
+            </button>
+            <button class="btn btn-primary" id="downloadBtn" disabled>
+              <iconify-icon icon="mdi:download"></iconify-icon>
+              다운로드
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-overlay" id="loadingOverlay">
+        <iconify-icon icon="mdi:loading" class="loading-spinner"></iconify-icon>
+        <span class="loading-text" id="loadingText">PDF 로딩 중...</span>
+      </div>
+    </main>
+    <Footer />
+
+    <script>
+      // @ts-ignore
+      const pdfjsLib = (window as any).pdfjsLib;
+      if (pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+      }
+
+      interface PageState {
+        pageNum: number;
+        selected: boolean;
+        deleted: boolean;
+        thumbnailUrl: string;
+      }
+
+      const uploadArea = document.getElementById('uploadArea') as HTMLDivElement;
+      const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+      const editorSection = document.getElementById('editorSection') as HTMLDivElement;
+      const fileName = document.getElementById('fileName') as HTMLDivElement;
+      const fileMeta = document.getElementById('fileMeta') as HTMLDivElement;
+      const changeFileBtn = document.getElementById('changeFileBtn') as HTMLButtonElement;
+      const pagesGrid = document.getElementById('pagesGrid') as HTMLDivElement;
+      const selectAllBtn = document.getElementById('selectAllBtn') as HTMLButtonElement;
+      const deselectAllBtn = document.getElementById('deselectAllBtn') as HTMLButtonElement;
+      const deleteSelectedBtn = document.getElementById('deleteSelectedBtn') as HTMLButtonElement;
+      const restoreAllBtn = document.getElementById('restoreAllBtn') as HTMLButtonElement;
+      const selectionInfo = document.getElementById('selectionInfo') as HTMLSpanElement;
+      const outputFilename = document.getElementById('outputFilename') as HTMLInputElement;
+      const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement;
+      const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement;
+      const loadingOverlay = document.getElementById('loadingOverlay') as HTMLDivElement;
+      const loadingText = document.getElementById('loadingText') as HTMLSpanElement;
+
+      let currentFile: File | null = null;
+      let pageStates: PageState[] = [];
+      let totalPages = 0;
+      let draggedItem: HTMLElement | null = null;
+
+      uploadArea.addEventListener('click', () => fileInput.click());
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--accent)';
+      });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '';
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '';
+        const files = e.dataTransfer?.files;
+        if (files && files[0]) {
+          handleFile(files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files[0]) {
+          handleFile(fileInput.files[0]);
+        }
+      });
+
+      changeFileBtn.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      async function handleFile(file: File) {
+        if (!pdfjsLib) {
+          alert('PDF.js 라이브러리가 로드되지 않았습니다. 페이지를 새로고침 해주세요.');
+          return;
+        }
+
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+          alert('PDF 파일만 지원합니다.');
+          return;
+        }
+
+        currentFile = file;
+        showLoading('PDF 분석 중...');
+
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          totalPages = pdf.numPages;
+
+          pageStates = [];
+
+          for (let i = 1; i <= totalPages; i++) {
+            showLoading(`페이지 ${i}/${totalPages} 렌더링 중...`);
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 0.3 });
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d')!;
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            await page.render({
+              canvasContext: context,
+              viewport: viewport
+            }).promise;
+
+            pageStates.push({
+              pageNum: i,
+              selected: false,
+              deleted: false,
+              thumbnailUrl: canvas.toDataURL()
+            });
+          }
+
+          fileName.textContent = file.name;
+          fileMeta.textContent = `${formatFileSize(file.size)} · ${totalPages}페이지`;
+
+          const baseName = file.name.replace(/\.pdf$/i, '');
+          outputFilename.value = `${baseName}_edited.pdf`;
+
+          uploadArea.classList.add('has-file');
+          editorSection.classList.add('visible');
+
+          renderPages();
+          updateUI();
+        } catch (error) {
+          console.error('PDF 로딩 오류:', error);
+          alert('PDF 파일을 읽는 중 오류가 발생했습니다.');
+        } finally {
+          hideLoading();
+        }
+      }
+
+      function renderPages() {
+        pagesGrid.innerHTML = '';
+        pageStates.forEach((state, index) => {
+          const item = document.createElement('div');
+          item.className = `page-item${state.selected ? ' selected' : ''}${state.deleted ? ' deleted' : ''}`;
+          item.dataset.index = String(index);
+          item.draggable = !state.deleted;
+          item.innerHTML = `
+            <iconify-icon icon="mdi:drag" class="page-drag-handle"></iconify-icon>
+            <input type="checkbox" class="page-checkbox" ${state.selected ? 'checked' : ''} ${state.deleted ? 'disabled' : ''} />
+            <img src="${state.thumbnailUrl}" class="page-thumbnail" alt="Page ${state.pageNum}" />
+            <span class="page-number">${index + 1}</span>
+            <span class="page-delete-badge">
+              <iconify-icon icon="mdi:close"></iconify-icon>
+            </span>
+          `;
+
+          const checkbox = item.querySelector('.page-checkbox') as HTMLInputElement;
+
+          checkbox.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+
+          checkbox.addEventListener('change', () => {
+            state.selected = checkbox.checked;
+            item.classList.toggle('selected', state.selected);
+            updateUI();
+          });
+
+          item.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'INPUT') return;
+            if (state.deleted) return;
+            state.selected = !state.selected;
+            checkbox.checked = state.selected;
+            item.classList.toggle('selected', state.selected);
+            updateUI();
+          });
+
+          // Drag events
+          item.addEventListener('dragstart', handleDragStart);
+          item.addEventListener('dragend', handleDragEnd);
+          item.addEventListener('dragover', handleDragOver);
+          item.addEventListener('dragleave', handleDragLeave);
+          item.addEventListener('drop', handleDrop);
+
+          pagesGrid.appendChild(item);
+        });
+      }
+
+      function handleDragStart(e: DragEvent) {
+        const target = e.currentTarget as HTMLElement;
+        const index = parseInt(target.dataset.index || '0');
+        if (pageStates[index]?.deleted) {
+          e.preventDefault();
+          return;
+        }
+        draggedItem = target;
+        target.classList.add('dragging');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+        }
+      }
+
+      function handleDragEnd(e: DragEvent) {
+        if (draggedItem) {
+          draggedItem.classList.remove('dragging');
+          draggedItem = null;
+        }
+        document.querySelectorAll('.page-item').forEach(item => {
+          item.classList.remove('drag-over');
+        });
+      }
+
+      function handleDragOver(e: DragEvent) {
+        e.preventDefault();
+        const target = e.currentTarget as HTMLElement;
+        const index = parseInt(target.dataset.index || '0');
+        if (target !== draggedItem && draggedItem && !pageStates[index]?.deleted) {
+          target.classList.add('drag-over');
+        }
+      }
+
+      function handleDragLeave(e: DragEvent) {
+        const target = e.currentTarget as HTMLElement;
+        target.classList.remove('drag-over');
+      }
+
+      function handleDrop(e: DragEvent) {
+        e.preventDefault();
+        const target = e.currentTarget as HTMLElement;
+        target.classList.remove('drag-over');
+
+        if (draggedItem && target !== draggedItem) {
+          const draggedIndex = parseInt(draggedItem.dataset.index || '0');
+          const targetIndex = parseInt(target.dataset.index || '0');
+
+          if (!pageStates[targetIndex]?.deleted) {
+            const [removed] = pageStates.splice(draggedIndex, 1);
+            pageStates.splice(targetIndex, 0, removed);
+            renderPages();
+            updateUI();
+          }
+        }
+      }
+
+      function updateUI() {
+        const selectedCount = pageStates.filter(s => s.selected && !s.deleted).length;
+        const deletedCount = pageStates.filter(s => s.deleted).length;
+        const remainingPages = totalPages - deletedCount;
+
+        selectionInfo.textContent = `${selectedCount}개 선택됨`;
+        downloadBtn.disabled = remainingPages === 0;
+
+        deleteSelectedBtn.disabled = selectedCount === 0;
+        restoreAllBtn.disabled = deletedCount === 0;
+      }
+
+      selectAllBtn.addEventListener('click', () => {
+        pageStates.forEach(state => {
+          if (!state.deleted) state.selected = true;
+        });
+        renderPages();
+        updateUI();
+      });
+
+      deselectAllBtn.addEventListener('click', () => {
+        pageStates.forEach(state => {
+          state.selected = false;
+        });
+        renderPages();
+        updateUI();
+      });
+
+      deleteSelectedBtn.addEventListener('click', () => {
+        pageStates.forEach(state => {
+          if (state.selected && !state.deleted) {
+            state.deleted = true;
+            state.selected = false;
+          }
+        });
+        renderPages();
+        updateUI();
+      });
+
+      restoreAllBtn.addEventListener('click', () => {
+        pageStates.forEach(state => {
+          state.deleted = false;
+        });
+        renderPages();
+        updateUI();
+      });
+
+      resetBtn.addEventListener('click', () => {
+        currentFile = null;
+        fileInput.value = '';
+        pageStates = [];
+        totalPages = 0;
+        uploadArea.classList.remove('has-file');
+        editorSection.classList.remove('visible');
+        outputFilename.value = '';
+      });
+
+      // WASM 로딩
+      let wasmReady = false;
+      const go = new Go();
+
+      async function loadEditorWasm() {
+        try {
+          const result = await WebAssembly.instantiateStreaming(
+            fetch('/wasm/pdf-editor.wasm'),
+            go.importObject
+          );
+          go.run(result.instance);
+          wasmReady = true;
+        } catch (err) {
+          console.error('WASM 로딩 실패:', err);
+        }
+      }
+
+      loadEditorWasm();
+
+      downloadBtn.addEventListener('click', async () => {
+        if (!currentFile) return;
+
+        const remainingPages = pageStates.filter(s => !s.deleted).map(s => s.pageNum);
+        if (remainingPages.length === 0) {
+          alert('최소 1페이지 이상 남아있어야 합니다.');
+          return;
+        }
+
+        if (!wasmReady) {
+          alert('WASM 모듈을 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        downloadBtn.disabled = true;
+        downloadBtn.innerHTML = '<iconify-icon icon="mdi:loading" class="spin"></iconify-icon> 처리 중...';
+
+        try {
+          // PDF 파일을 Uint8Array로 변환
+          const arrayBuffer = await currentFile.arrayBuffer();
+          const pdfArray = new Uint8Array(arrayBuffer);
+
+          // WASM 함수 호출 (페이지 순서대로 추출)
+          const result = await (window as any).pdfEditor.extractPages(pdfArray, {
+            pages: remainingPages
+          });
+
+          // 결과 다운로드
+          const blob = new Blob([result], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = outputFilename.value || 'edited.pdf';
+          a.click();
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error('PDF 편집 실패:', err);
+          alert('PDF 편집 중 오류가 발생했습니다: ' + (err as Error).message);
+        } finally {
+          downloadBtn.disabled = false;
+          downloadBtn.innerHTML = '<iconify-icon icon="mdi:download"></iconify-icon> 다운로드';
+        }
+      });
+
+      function showLoading(text: string) {
+        loadingText.textContent = text;
+        loadingOverlay.classList.add('visible');
+      }
+
+      function hideLoading() {
+        loadingOverlay.classList.remove('visible');
+      }
+
+      function formatFileSize(bytes: number): string {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+    </script>
+    <style>
+      .spin {
+        animation: spin 1s linear infinite;
+      }
+    </style>
+  </body>
+</html>

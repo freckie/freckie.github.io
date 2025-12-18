@@ -1,0 +1,142 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const tools = [
+  {
+    title: 'PDF Merger',
+    description: '여러 PDF 파일 병합',
+    href: '/tools/pdf-merger',
+    icon: 'mdi:file-pdf-box',
+  },
+  {
+    title: 'PDF Editor',
+    description: 'PDF 페이지 삭제/추출',
+    href: '/tools/pdf-editor',
+    icon: 'mdi:file-pdf-box',
+  },
+  {
+    title: 'PNG to PDF',
+    description: 'PNG 이미지를 PDF로 변환',
+    href: '/tools/png-to-pdf',
+    icon: 'mdi:file-image',
+  },
+  {
+    title: 'Image Resizer',
+    description: '이미지 크기 조절',
+    href: '/tools/image-resizer',
+    icon: 'mdi:resize',
+  },
+];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={`Tools | ${SITE_TITLE}`} description="곡괭이, 삽, 도끼" />
+    <style>
+      main {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 2em 1em;
+      }
+      .page-header {
+        text-align: center;
+        margin-bottom: 2em;
+      }
+      .page-title {
+        font-size: 2.5em;
+        font-weight: 600;
+        margin: 0 0 0.5em 0;
+        color: rgb(var(--black));
+      }
+      .page-description {
+        color: rgb(var(--gray));
+        font-size: 1rem;
+        margin: 0;
+      }
+      .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5em;
+        margin-top: 2em;
+      }
+      .tool-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5em;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(var(--gray), 10%);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid rgb(var(--gray-light));
+      }
+      .tool-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(var(--gray), 20%);
+        border-color: var(--accent);
+      }
+      .tool-icon {
+        font-size: 3rem;
+        color: var(--accent);
+        margin-bottom: 0.5em;
+      }
+      .tool-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: rgb(var(--black));
+        margin: 0 0 0.25em 0;
+        text-align: center;
+      }
+      .tool-description {
+        font-size: 0.875rem;
+        color: rgb(var(--gray));
+        margin: 0;
+        text-align: center;
+      }
+      .wasm-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        font-size: 0.75rem;
+        margin-top: 1em;
+        padding: 0.25em 0.5em;
+        background: rgba(var(--gray-light), 0.5);
+        border-radius: 4px;
+        color: rgb(var(--gray));
+      }
+      .wasm-badge iconify-icon {
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="page-header">
+        <h1 class="page-title">Tools</h1>
+        <p class="page-description">곡괭이, 삽, 도끼</p>
+      </section>
+
+      <div class="tools-grid">
+        {tools.map((tool) => (
+          <a href={tool.href} class="tool-card">
+            <iconify-icon icon={tool.icon} class="tool-icon"></iconify-icon>
+            <h2 class="tool-title">{tool.title}</h2>
+            <p class="tool-description">{tool.description}</p>
+            <span class="wasm-badge">
+              <iconify-icon icon="mdi:language-go"></iconify-icon>
+              WASM
+            </span>
+          </a>
+        ))}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
