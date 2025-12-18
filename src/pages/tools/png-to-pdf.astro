@@ -9,6 +9,7 @@ import { SITE_TITLE } from '../../consts';
 <html lang="ko">
   <head>
     <BaseHead title={`PNG to PDF | ${SITE_TITLE}`} description="PNG 이미지를 PDF로 변환" />
+    <script is:inline src="/wasm/wasm_exec.js"></script>
     <style is:global>
       main {
         width: 720px;
@@ -475,12 +476,76 @@ import { SITE_TITLE } from '../../consts';
         updateUI();
       });
 
+      // WASM 로딩
+      let wasmReady = false;
+      const go = new Go();
+      const pageSize = document.getElementById('pageSize') as HTMLSelectElement;
+
+      async function loadWasm() {
+        try {
+          const result = await WebAssembly.instantiateStreaming(
+            fetch('/wasm/png-to-pdf.wasm'),
+            go.importObject
+          );
+          go.run(result.instance);
+          wasmReady = true;
+        } catch (err) {
+          console.error('WASM 로딩 실패:', err);
+        }
+      }
+
+      loadWasm();
+
       convertBtn.addEventListener('click', async () => {
         if (images.length === 0) return;
 
-        // TODO: WASM으로 PDF 변환 구현
-        alert('PDF 변환 기능은 WASM 구현 후 활성화됩니다.');
+        if (!wasmReady) {
+          alert('WASM 모듈을 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<iconify-icon icon="mdi:loading" class="spin"></iconify-icon> 변환 중...';
+
+        try {
+          // 이미지들을 Uint8Array로 변환
+          const imageArrays = await Promise.all(
+            images.map(async (img) => {
+              const arrayBuffer = await img.file.arrayBuffer();
+              return new Uint8Array(arrayBuffer);
+            })
+          );
+
+          // WASM 함수 호출
+          const result = await (window as any).pngToPdf.convert(imageArrays, {
+            pageSize: pageSize.value
+          });
+
+          // 결과 다운로드
+          const blob = new Blob([result], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = outputFilename.value || 'output.pdf';
+          a.click();
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error('PDF 변환 실패:', err);
+          alert('PDF 변환 중 오류가 발생했습니다: ' + (err as Error).message);
+        } finally {
+          convertBtn.disabled = false;
+          convertBtn.innerHTML = '<iconify-icon icon="mdi:file-pdf-box"></iconify-icon> PDF 변환';
+        }
       });
     </script>
+    <style>
+      .spin {
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    </style>
   </body>
 </html>

@@ -10,6 +10,7 @@ import { SITE_TITLE } from '../../consts';
   <head>
     <BaseHead title={`PDF Editor | ${SITE_TITLE}`} description="PDF 페이지 삭제/추출" />
     <script is:inline src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script is:inline src="/wasm/wasm_exec.js"></script>
     <style is:global>
       main {
         width: 900px;
@@ -753,6 +754,25 @@ import { SITE_TITLE } from '../../consts';
         outputFilename.value = '';
       });
 
+      // WASM 로딩
+      let wasmReady = false;
+      const go = new Go();
+
+      async function loadEditorWasm() {
+        try {
+          const result = await WebAssembly.instantiateStreaming(
+            fetch('/wasm/pdf-editor.wasm'),
+            go.importObject
+          );
+          go.run(result.instance);
+          wasmReady = true;
+        } catch (err) {
+          console.error('WASM 로딩 실패:', err);
+        }
+      }
+
+      loadEditorWasm();
+
       downloadBtn.addEventListener('click', async () => {
         if (!currentFile) return;
 
@@ -762,8 +782,39 @@ import { SITE_TITLE } from '../../consts';
           return;
         }
 
-        // TODO: WASM으로 PDF 편집 구현
-        alert(`PDF 편집 기능은 WASM 구현 후 활성화됩니다.\n페이지 순서 (원본 페이지 번호): ${remainingPages.join(' → ')}`);
+        if (!wasmReady) {
+          alert('WASM 모듈을 로딩 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        downloadBtn.disabled = true;
+        downloadBtn.innerHTML = '<iconify-icon icon="mdi:loading" class="spin"></iconify-icon> 처리 중...';
+
+        try {
+          // PDF 파일을 Uint8Array로 변환
+          const arrayBuffer = await currentFile.arrayBuffer();
+          const pdfArray = new Uint8Array(arrayBuffer);
+
+          // WASM 함수 호출 (페이지 순서대로 추출)
+          const result = await (window as any).pdfEditor.extractPages(pdfArray, {
+            pages: remainingPages
+          });
+
+          // 결과 다운로드
+          const blob = new Blob([result], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = outputFilename.value || 'edited.pdf';
+          a.click();
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          console.error('PDF 편집 실패:', err);
+          alert('PDF 편집 중 오류가 발생했습니다: ' + (err as Error).message);
+        } finally {
+          downloadBtn.disabled = false;
+          downloadBtn.innerHTML = '<iconify-icon icon="mdi:download"></iconify-icon> 다운로드';
+        }
       });
 
       function showLoading(text: string) {
@@ -781,5 +832,10 @@ import { SITE_TITLE } from '../../consts';
         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
       }
     </script>
+    <style>
+      .spin {
+        animation: spin 1s linear infinite;
+      }
+    </style>
   </body>
 </html>
